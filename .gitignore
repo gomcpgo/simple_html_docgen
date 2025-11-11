@@ -1,0 +1,21 @@
+# Build output
+bin/
+simple_html_docgen
+
+# Go module cache
+go.sum
+
+# Test coverage
+*.out
+coverage.txt
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
