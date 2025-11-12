@@ -20,7 +20,7 @@ type Handler struct {
 
 // ExportService defines the interface for export functionality
 type ExportService interface {
-	ExportDocument(documentID, format string, docSvc *document.Service) (string, error)
+	ExportDocument(documentID, format, outputPath string, docSvc *document.Service) (string, error)
 }
 
 // NewHandler creates a new handler instance
@@ -215,7 +215,13 @@ func (h *Handler) handleExportDocument(ctx context.Context, args map[string]inte
 		return nil, fmt.Errorf("invalid format: %s (must be html, pdf, or docx)", format)
 	}
 
-	outputPath, err := h.exportSvc.ExportDocument(documentID, format, h.docSvc)
+	// Get optional output_path
+	outputPath := ""
+	if path, ok := args["output_path"].(string); ok && path != "" {
+		outputPath = path
+	}
+
+	exportedPath, err := h.exportSvc.ExportDocument(documentID, format, outputPath, h.docSvc)
 	if err != nil {
 		return h.errorResponse(fmt.Sprintf("Failed to export document: %v", err)), nil
 	}
@@ -224,7 +230,7 @@ func (h *Handler) handleExportDocument(ctx context.Context, args map[string]inte
 		"status":      "succeeded",
 		"document_id": documentID,
 		"format":      format,
-		"output_path": outputPath,
+		"output_path": exportedPath,
 	}
 
 	return h.successResponse(result), nil

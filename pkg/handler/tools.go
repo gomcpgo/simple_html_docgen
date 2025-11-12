@@ -104,6 +104,10 @@ func (h *Handler) GetTools() []protocol.Tool {
 						"type": "string",
 						"enum": ["html", "pdf", "docx"],
 						"description": "The export format"
+					},
+					"output_path": {
+						"type": "string",
+						"description": "Optional output file path. If not provided, exports to the document's directory."
 					}
 				},
 				"required": ["document_id", "format"]

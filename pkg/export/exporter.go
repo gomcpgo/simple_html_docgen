@@ -2,6 +2,7 @@ package export
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"os"
@@ -9,30 +10,46 @@ import (
 	"path/filepath"
 	"simple_html_docgen/pkg/document"
 	"time"
+
+	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/launcher"
+	"github.com/go-rod/rod/lib/proto"
+	"github.com/go-rod/rod/lib/utils"
+	"github.com/ysmood/gson"
 )
 
 // Exporter handles document export operations
 type Exporter struct {
 	pandocTimeout time.Duration
+	chromeTimeout time.Duration
 }
 
 // NewExporter creates a new exporter instance
 func NewExporter() *Exporter {
 	return &Exporter{
 		pandocTimeout: 30 * time.Second,
+		chromeTimeout: 30 * time.Second,
 	}
 }
 
 // ExportDocument exports a document to the specified format
-func (e *Exporter) ExportDocument(documentID, format string, docSvc *document.Service) (string, error) {
+func (e *Exporter) ExportDocument(documentID, format, outputPath string, docSvc *document.Service) (string, error) {
 	// Get the document
 	doc, err := docSvc.GetDocument(documentID)
 	if err != nil {
 		return "", fmt.Errorf("failed to get document: %w", err)
 	}
 
-	// Generate output filename
-	outputPath := filepath.Join(docSvc.GetDocumentPath(documentID), fmt.Sprintf("%s.%s", documentID, format))
+	// Use provided output path or generate default
+	if outputPath == "" {
+		outputPath = filepath.Join(docSvc.GetDocumentPath(documentID), fmt.Sprintf("%s.%s", documentID, format))
+	} else {
+		// Ensure parent directory exists
+		dir := filepath.Dir(outputPath)
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			return "", fmt.Errorf("failed to create output directory: %w", err)
+		}
+	}
 
 	switch format {
 	case "html":
@@ -56,8 +73,85 @@ func (e *Exporter) exportHTML(doc *document.Document, outputPath string) (string
 	return outputPath, nil
 }
 
-// exportPDF exports the document as PDF using Pandoc
+// exportPDF exports the document as PDF, trying Chrome first, then falling back to Pandoc
 func (e *Exporter) exportPDF(doc *document.Document, outputPath string, docSvc *document.Service) (string, error) {
+	// Try Chrome/Chromium first (best CSS preservation)
+	if err := e.exportPDFWithChrome(doc, outputPath, docSvc); err == nil {
+		return outputPath, nil
+	}
+
+	// Fallback to Pandoc if Chrome is not available
+	return e.exportPDFWithPandoc(doc, outputPath, docSvc)
+}
+
+// exportPDFWithChrome exports the document as PDF using headless Chrome
+func (e *Exporter) exportPDFWithChrome(doc *document.Document, outputPath string, docSvc *document.Service) error {
+	// Create a temporary HTML file
+	tmpHTMLPath := filepath.Join(docSvc.GetDocumentPath(doc.ID), "temp_export.html")
+	if err := os.WriteFile(tmpHTMLPath, []byte(doc.HTMLContent), 0644); err != nil {
+		return fmt.Errorf("failed to write temp HTML file: %w", err)
+	}
+	defer os.Remove(tmpHTMLPath)
+
+	// Create context with timeout
+	ctx, cancel := context.WithTimeout(context.Background(), e.chromeTimeout)
+	defer cancel()
+
+	// Try to find existing Chrome/Chromium installation first
+	chromePath, _ := launcher.LookPath()
+
+	// Launch browser with system Chrome if available, otherwise auto-download
+	var controlURL string
+	if chromePath != "" {
+		// Use system Chrome/Chromium
+		l := launcher.New().Bin(chromePath).Headless(true)
+		controlURL = l.MustLaunch()
+	} else {
+		// Let rod auto-download Chromium as fallback
+		l := launcher.New().Headless(true)
+		controlURL = l.MustLaunch()
+	}
+
+	browser := rod.New().ControlURL(controlURL).Context(ctx)
+	if err := browser.Connect(); err != nil {
+		return fmt.Errorf("chrome not available: %w", err)
+	}
+	defer browser.MustClose()
+
+	// Load the HTML file
+	page, err := browser.Page(proto.TargetCreateTarget{URL: "file://" + tmpHTMLPath})
+	if err != nil {
+		return fmt.Errorf("failed to create page: %w", err)
+	}
+
+	// Wait for page to load
+	if err := page.WaitLoad(); err != nil {
+		return fmt.Errorf("failed to load page: %w", err)
+	}
+
+	// Generate PDF with custom settings
+	pdfStream, err := page.PDF(&proto.PagePrintToPDF{
+		PrintBackground:   true, // Include background colors and images
+		MarginTop:         gson.Num(0.4),
+		MarginBottom:      gson.Num(0.4),
+		MarginLeft:        gson.Num(0.4),
+		MarginRight:       gson.Num(0.4),
+		PreferCSSPageSize: true, // Use CSS @page size if specified
+	})
+	if err != nil {
+		return fmt.Errorf("failed to generate PDF: %w", err)
+	}
+
+	// Write PDF stream to output file
+	if err := utils.OutputFile(outputPath, pdfStream); err != nil {
+		return fmt.Errorf("failed to write PDF file: %w", err)
+	}
+
+	return nil
+}
+
+// exportPDFWithPandoc exports the document as PDF using Pandoc (fallback)
+func (e *Exporter) exportPDFWithPandoc(doc *document.Document, outputPath string, docSvc *document.Service) (string, error) {
 	if err := e.checkPandoc(); err != nil {
 		return "", err
 	}
