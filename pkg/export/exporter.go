@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"simple_html_docgen/pkg/document"
+	"strings"
 	"time"
 
 	"github.com/go-rod/rod"
@@ -86,9 +87,13 @@ func (e *Exporter) exportPDF(doc *document.Document, outputPath string, docSvc *
 
 // exportPDFWithChrome exports the document as PDF using headless Chrome
 func (e *Exporter) exportPDFWithChrome(doc *document.Document, outputPath string, docSvc *document.Service) error {
+	// Inject default print styles as fallback (conservative approach)
+	// These will be overridden by any @media print rules the LLM includes
+	htmlWithPrintStyles := InjectDefaultPrintStyles(doc.HTMLContent)
+
 	// Create a temporary HTML file
 	tmpHTMLPath := filepath.Join(docSvc.GetDocumentPath(doc.ID), "temp_export.html")
-	if err := os.WriteFile(tmpHTMLPath, []byte(doc.HTMLContent), 0644); err != nil {
+	if err := os.WriteFile(tmpHTMLPath, []byte(htmlWithPrintStyles), 0644); err != nil {
 		return fmt.Errorf("failed to write temp HTML file: %w", err)
 	}
 	defer os.Remove(tmpHTMLPath)
@@ -267,4 +272,52 @@ func CopyFile(src, dst string) error {
 
 	_, err = io.Copy(destFile, sourceFile)
 	return err
+}
+
+// InjectDefaultPrintStyles adds conservative default print styles to HTML content
+// These styles act as a fallback if the LLM didn't include @media print rules
+// The styles use !important only for decorative properties that should be removed in print
+func InjectDefaultPrintStyles(htmlContent string) string {
+	// Default print styles - conservative approach
+	// Only removes obvious decorative elements (backgrounds, shadows)
+	// Preserves layout, fonts, and meaningful colors
+	defaultPrintStyles := `
+<style media="print">
+/* Auto-injected print optimization fallback */
+/* These rules apply only if document doesn't define its own @media print styles */
+@media print {
+  /* Remove decorative body backgrounds */
+  body {
+    background: white !important;
+    background-color: white !important;
+    background-image: none !important;
+  }
+
+  /* Remove decorative shadows that waste ink */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Preserve page breaks and layout */
+  @page {
+    margin: 0.5in;
+  }
+}
+</style>`
+
+	// Find the closing </head> tag and inject before it
+	// If no </head>, inject at the beginning of <body> or start of document
+	if idx := strings.Index(strings.ToLower(htmlContent), "</head>"); idx != -1 {
+		return htmlContent[:idx] + defaultPrintStyles + "\n" + htmlContent[idx:]
+	} else if idx := strings.Index(strings.ToLower(htmlContent), "<body"); idx != -1 {
+		// Find the end of the <body> tag
+		if endIdx := strings.Index(htmlContent[idx:], ">"); endIdx != -1 {
+			insertPos := idx + endIdx + 1
+			return htmlContent[:insertPos] + "\n" + defaultPrintStyles + "\n" + htmlContent[insertPos:]
+		}
+	}
+
+	// Fallback: prepend to the entire document
+	return defaultPrintStyles + "\n" + htmlContent
 }

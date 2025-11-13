@@ -21,7 +21,7 @@ func (h *Handler) GetTools() []protocol.Tool {
 					},
 					"html_content": {
 						"type": "string",
-						"description": "The HTML content of the document. Can include embedded CSS in <style> tags."
+						"description": "The HTML content of the document. Can include embedded CSS in <style> tags. Please include @media print CSS rules to optimize for PDF export: remove decorative backgrounds (gradients, colors), box-shadow, and text-shadow properties while preserving essential styling like fonts, colors that convey meaning, and layout. Example: @media print { body { background: white !important; } .container { box-shadow: none !important; } }"
 					}
 				},
 				"required": ["name", "html_content"]
@@ -39,7 +39,7 @@ func (h *Handler) GetTools() []protocol.Tool {
 					},
 					"html_content": {
 						"type": "string",
-						"description": "The new HTML content for the document"
+						"description": "The new HTML content for the document. Please include @media print CSS rules to optimize for PDF export: remove decorative backgrounds (gradients, colors), box-shadow, and text-shadow properties while preserving essential styling like fonts, colors that convey meaning, and layout. Example: @media print { body { background: white !important; } .container { box-shadow: none !important; } }"
 					}
 				},
 				"required": ["document_id", "html_content"]
