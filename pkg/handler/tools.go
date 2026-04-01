@@ -11,7 +11,7 @@ func (h *Handler) GetTools() []protocol.Tool {
 	return []protocol.Tool{
 		{
 			Name:        "create_document",
-			Description: "Create a new HTML document with a name and HTML content. Returns the document ID and file path.",
+			Description: "Create a new HTML document. Required parameters: 'name' (string) and 'html_content' (string containing the HTML). Returns the document ID and file path.",
 			InputSchema: json.RawMessage(`{
 				"type": "object",
 				"properties": {
