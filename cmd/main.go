@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	_ "embed"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -14,6 +15,9 @@ import (
 	"github.com/gomcpgo/mcp/pkg/protocol"
 	"github.com/gomcpgo/mcp/pkg/server"
 )
+
+//go:embed icon.svg
+var iconSVG []byte
 
 func main() {
 	// Define terminal mode flags
@@ -114,7 +118,9 @@ func main() {
 
 	srv := server.New(server.Options{
 		Name:     "simple-html-docgen",
+		Title:    "HTML Doc Generator",
 		Version:  "1.0.0",
+		Icons:    protocol.IconFromSVG(iconSVG),
 		Registry: registry,
 	})
 
