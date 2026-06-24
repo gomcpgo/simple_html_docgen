@@ -50,6 +50,10 @@ func (h *Handler) CallTool(ctx context.Context, req *protocol.CallToolRequest) (
 		return h.handleCreateDocument(ctx, req.Arguments)
 	case "update_document":
 		return h.handleUpdateDocument(ctx, req.Arguments)
+	case "append_html":
+		return h.handleAppendHTML(ctx, req.Arguments)
+	case "replace_in_document":
+		return h.handleReplaceInDocument(ctx, req.Arguments)
 	case "add_media":
 		return h.handleAddMedia(ctx, req.Arguments)
 	case "get_document":
@@ -118,6 +122,63 @@ func (h *Handler) handleUpdateDocument(ctx context.Context, args map[string]inte
 	return h.successResponse(result), nil
 }
 
+func (h *Handler) handleAppendHTML(ctx context.Context, args map[string]interface{}) (*protocol.CallToolResponse, error) {
+	documentID, ok := args["document_id"].(string)
+	if !ok || documentID == "" {
+		return nil, fmt.Errorf("document_id is required and must be a string")
+	}
+
+	html, ok := args["html"].(string)
+	if !ok || html == "" {
+		return nil, fmt.Errorf("html is required and must be a string")
+	}
+
+	doc, err := h.docSvc.AppendHTML(documentID, html)
+	if err != nil {
+		return h.errorResponse(fmt.Sprintf("Failed to append html: %v", err)), nil
+	}
+
+	result := map[string]interface{}{
+		"status":      "succeeded",
+		"document_id": doc.ID,
+		"name":        doc.Name,
+		"file_path":   h.docSvc.GetHTMLPath(doc.ID),
+		"updated_at":  doc.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+	}
+
+	return h.successResponse(result), nil
+}
+
+func (h *Handler) handleReplaceInDocument(ctx context.Context, args map[string]interface{}) (*protocol.CallToolResponse, error) {
+	documentID, ok := args["document_id"].(string)
+	if !ok || documentID == "" {
+		return nil, fmt.Errorf("document_id is required and must be a string")
+	}
+
+	oldStr, ok := args["old_str"].(string)
+	if !ok || oldStr == "" {
+		return nil, fmt.Errorf("old_str is required and must be a string")
+	}
+
+	// new_str may be empty (deletion), so don't require non-empty.
+	newStr, _ := args["new_str"].(string)
+
+	doc, err := h.docSvc.ReplaceInDocument(documentID, oldStr, newStr)
+	if err != nil {
+		return h.errorResponse(fmt.Sprintf("Failed to replace in document: %v", err)), nil
+	}
+
+	result := map[string]interface{}{
+		"status":      "succeeded",
+		"document_id": doc.ID,
+		"name":        doc.Name,
+		"file_path":   h.docSvc.GetHTMLPath(doc.ID),
+		"updated_at":  doc.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+	}
+
+	return h.successResponse(result), nil
+}
+
 func (h *Handler) handleAddMedia(ctx context.Context, args map[string]interface{}) (*protocol.CallToolResponse, error) {
 	documentID, ok := args["document_id"].(string)
 	if !ok || documentID == "" {
@@ -161,13 +222,23 @@ func (h *Handler) handleGetDocument(ctx context.Context, args map[string]interfa
 	}
 
 	result := map[string]interface{}{
-		"status":       "succeeded",
-		"document_id":  doc.ID,
-		"name":         doc.Name,
-		"html_content": doc.HTMLContent,
-		"file_path":    h.docSvc.GetHTMLPath(doc.ID),
-		"created_at":   doc.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
-		"updated_at":   doc.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		"status":      "succeeded",
+		"document_id": doc.ID,
+		"name":        doc.Name,
+		"file_path":   h.docSvc.GetHTMLPath(doc.ID),
+		"created_at":  doc.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		"updated_at":  doc.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+	}
+
+	// content="outline" returns the heading structure and size instead of the
+	// full body, so the model can inspect a large document cheaply. Default
+	// "full" returns the whole html_content for back-compat.
+	if content, _ := args["content"].(string); content == "outline" {
+		result["content"] = "outline"
+		result["headings"] = document.ParseHeadings(doc.HTMLContent)
+		result["size_bytes"] = len(doc.HTMLContent)
+	} else {
+		result["html_content"] = doc.HTMLContent
 	}
 
 	return h.successResponse(result), nil

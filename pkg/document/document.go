@@ -2,6 +2,7 @@ package document
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -77,6 +78,71 @@ func (s *Service) UpdateDocument(documentID, htmlContent string) (*Document, err
 
 	// Update content and timestamp
 	doc.HTMLContent = htmlContent
+	doc.UpdatedAt = time.Now()
+
+	if err := s.storage.UpdateDocument(doc); err != nil {
+		return nil, fmt.Errorf("failed to update document: %w", err)
+	}
+
+	return doc, nil
+}
+
+// AppendHTML appends an HTML fragment to an existing document.
+// Inserts before the closing </body> tag if present, otherwise appends at the end.
+func (s *Service) AppendHTML(documentID, html string) (*Document, error) {
+	if !ValidateDocumentID(documentID) {
+		return nil, fmt.Errorf("invalid document ID: %s", documentID)
+	}
+
+	if html == "" {
+		return nil, fmt.Errorf("html fragment cannot be empty")
+	}
+
+	doc, err := s.storage.GetDocument(documentID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get document: %w", err)
+	}
+
+	if idx := strings.LastIndex(doc.HTMLContent, "</body>"); idx != -1 {
+		doc.HTMLContent = doc.HTMLContent[:idx] + html + doc.HTMLContent[idx:]
+	} else {
+		doc.HTMLContent += html
+	}
+	doc.UpdatedAt = time.Now()
+
+	if err := s.storage.UpdateDocument(doc); err != nil {
+		return nil, fmt.Errorf("failed to update document: %w", err)
+	}
+
+	return doc, nil
+}
+
+// ReplaceInDocument replaces a single occurrence of oldStr with newStr in the
+// document's HTML. Fails if oldStr is not found or occurs more than once, so the
+// edit is always unambiguous.
+func (s *Service) ReplaceInDocument(documentID, oldStr, newStr string) (*Document, error) {
+	if !ValidateDocumentID(documentID) {
+		return nil, fmt.Errorf("invalid document ID: %s", documentID)
+	}
+
+	if oldStr == "" {
+		return nil, fmt.Errorf("old_str cannot be empty")
+	}
+
+	doc, err := s.storage.GetDocument(documentID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get document: %w", err)
+	}
+
+	count := strings.Count(doc.HTMLContent, oldStr)
+	if count == 0 {
+		return nil, fmt.Errorf("old_str not found in document")
+	}
+	if count > 1 {
+		return nil, fmt.Errorf("old_str matches %d times; it must match exactly once (add surrounding context to make it unique)", count)
+	}
+
+	doc.HTMLContent = strings.Replace(doc.HTMLContent, oldStr, newStr, 1)
 	doc.UpdatedAt = time.Now()
 
 	if err := s.storage.UpdateDocument(doc); err != nil {
