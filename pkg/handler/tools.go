@@ -29,7 +29,7 @@ func (h *Handler) GetTools() []protocol.Tool {
 		},
 		{
 			Name:        "update_document",
-			Description: "Update an existing HTML document's content. Preserves metadata like name and created_at.",
+			Description: "Replace an existing HTML document's entire content. Preserves metadata like name and created_at. For edits, prefer append_html or replace_in_document, which send only the changed fragment instead of the whole document.",
 			InputSchema: json.RawMessage(`{
 				"type": "object",
 				"properties": {
@@ -43,6 +43,46 @@ func (h *Handler) GetTools() []protocol.Tool {
 					}
 				},
 				"required": ["document_id", "html_content"]
+			}`),
+		},
+		{
+			Name:        "append_html",
+			Description: "Append an HTML fragment to the end of an existing document's body. Use this to add content (e.g. a new section or an answer key) without resending the whole document. Inserts before the closing </body> tag if present, otherwise appends at the end.",
+			InputSchema: json.RawMessage(`{
+				"type": "object",
+				"properties": {
+					"document_id": {
+						"type": "string",
+						"description": "The unique document ID (e.g., 'my-report-a3f9')"
+					},
+					"html": {
+						"type": "string",
+						"description": "The HTML fragment to append (only the new content, not the whole document)"
+					}
+				},
+				"required": ["document_id", "html"]
+			}`),
+		},
+		{
+			Name:        "replace_in_document",
+			Description: "Make a targeted edit by replacing a single occurrence of old_str with new_str in an existing document. old_str must match exactly once; if it matches zero or multiple times the call fails, so include enough surrounding context to make it unique. Use this for small edits instead of resending the whole document.",
+			InputSchema: json.RawMessage(`{
+				"type": "object",
+				"properties": {
+					"document_id": {
+						"type": "string",
+						"description": "The unique document ID (e.g., 'my-report-a3f9')"
+					},
+					"old_str": {
+						"type": "string",
+						"description": "The exact existing HTML substring to replace. Must occur exactly once in the document."
+					},
+					"new_str": {
+						"type": "string",
+						"description": "The replacement HTML (may be empty to delete the matched text)"
+					}
+				},
+				"required": ["document_id", "old_str", "new_str"]
 			}`),
 		},
 		{
@@ -70,13 +110,18 @@ func (h *Handler) GetTools() []protocol.Tool {
 		},
 		{
 			Name:        "get_document",
-			Description: "Retrieve a document's content and metadata by ID.",
+			Description: "Retrieve a document's content and metadata by ID. For large documents, pass content='outline' first to get just the heading structure and size instead of the full HTML body.",
 			InputSchema: json.RawMessage(`{
 				"type": "object",
 				"properties": {
 					"document_id": {
 						"type": "string",
 						"description": "The unique document ID"
+					},
+					"content": {
+						"type": "string",
+						"enum": ["full", "outline"],
+						"description": "What to return. 'full' (default) returns the entire html_content. 'outline' returns only the list of headings (level + text) and the document size in bytes — use this to inspect a large document without pulling the whole body."
 					}
 				},
 				"required": ["document_id"]
