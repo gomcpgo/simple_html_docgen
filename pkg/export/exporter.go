@@ -64,6 +64,30 @@ func (e *Exporter) ExportDocument(documentID, format, outputPath string, docSvc 
 	}
 }
 
+// writeTempHTML writes content to a uniquely-named temp file inside the
+// document's own folder and returns its path plus a cleanup func. The name must
+// be unique per export: every export used to write the same "temp_export.html"
+// and remove it on the way out, so two exports of one document issued in the
+// same turn (a model asking for PDF and DOCX together) raced — one deleted the
+// file the other was still converting, and the PDF route's failure was then
+// reported as pandoc's "xelatex not found".
+func writeTempHTML(dir, content string) (string, func(), error) {
+	f, err := os.CreateTemp(dir, "temp_export_*.html")
+	if err != nil {
+		return "", nil, fmt.Errorf("failed to create temp HTML file: %w", err)
+	}
+	if _, err := f.WriteString(content); err != nil {
+		f.Close()
+		os.Remove(f.Name())
+		return "", nil, fmt.Errorf("failed to write temp HTML file: %w", err)
+	}
+	if err := f.Close(); err != nil {
+		os.Remove(f.Name())
+		return "", nil, fmt.Errorf("failed to write temp HTML file: %w", err)
+	}
+	return f.Name(), func() { os.Remove(f.Name()) }, nil
+}
+
 // exportHTML exports the document as HTML (simple copy)
 func (e *Exporter) exportHTML(doc *document.Document, outputPath string) (string, error) {
 	// Write HTML content to output file
@@ -77,12 +101,19 @@ func (e *Exporter) exportHTML(doc *document.Document, outputPath string) (string
 // exportPDF exports the document as PDF, trying Chrome first, then falling back to Pandoc
 func (e *Exporter) exportPDF(doc *document.Document, outputPath string, docSvc *document.Service) (string, error) {
 	// Try Chrome/Chromium first (best CSS preservation)
-	if err := e.exportPDFWithChrome(doc, outputPath, docSvc); err == nil {
+	chromeErr := e.exportPDFWithChrome(doc, outputPath, docSvc)
+	if chromeErr == nil {
 		return outputPath, nil
 	}
 
-	// Fallback to Pandoc if Chrome is not available
-	return e.exportPDFWithPandoc(doc, outputPath, docSvc)
+	// Fallback to Pandoc. Chrome is the route that works on a machine with no
+	// LaTeX engine, so when the fallback fails too its "install xelatex" message
+	// describes the fallback and not the real failure. Report both, Chrome first.
+	path, pandocErr := e.exportPDFWithPandoc(doc, outputPath, docSvc)
+	if pandocErr != nil {
+		return "", fmt.Errorf("PDF export failed: %w (fallback also failed: %v)", chromeErr, pandocErr)
+	}
+	return path, nil
 }
 
 // exportPDFWithChrome exports the document as PDF using headless Chrome
@@ -92,11 +123,11 @@ func (e *Exporter) exportPDFWithChrome(doc *document.Document, outputPath string
 	htmlWithPrintStyles := InjectDefaultPrintStyles(doc.HTMLContent)
 
 	// Create a temporary HTML file
-	tmpHTMLPath := filepath.Join(docSvc.GetDocumentPath(doc.ID), "temp_export.html")
-	if err := os.WriteFile(tmpHTMLPath, []byte(htmlWithPrintStyles), 0644); err != nil {
-		return fmt.Errorf("failed to write temp HTML file: %w", err)
+	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), htmlWithPrintStyles)
+	if err != nil {
+		return err
 	}
-	defer os.Remove(tmpHTMLPath)
+	defer cleanup()
 
 	// Create context with timeout
 	ctx, cancel := context.WithTimeout(context.Background(), e.chromeTimeout)
@@ -162,11 +193,11 @@ func (e *Exporter) exportPDFWithPandoc(doc *document.Document, outputPath string
 	}
 
 	// Create a temporary HTML file for Pandoc
-	tmpHTMLPath := filepath.Join(docSvc.GetDocumentPath(doc.ID), "temp_export.html")
-	if err := os.WriteFile(tmpHTMLPath, []byte(doc.HTMLContent), 0644); err != nil {
-		return "", fmt.Errorf("failed to write temp HTML file: %w", err)
+	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), doc.HTMLContent)
+	if err != nil {
+		return "", err
 	}
-	defer os.Remove(tmpHTMLPath)
+	defer cleanup()
 
 	// Run Pandoc conversion
 	args := []string{
@@ -190,11 +221,11 @@ func (e *Exporter) exportDOCX(doc *document.Document, outputPath string, docSvc 
 	}
 
 	// Create a temporary HTML file for Pandoc
-	tmpHTMLPath := filepath.Join(docSvc.GetDocumentPath(doc.ID), "temp_export.html")
-	if err := os.WriteFile(tmpHTMLPath, []byte(doc.HTMLContent), 0644); err != nil {
-		return "", fmt.Errorf("failed to write temp HTML file: %w", err)
+	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), doc.HTMLContent)
+	if err != nil {
+		return "", err
 	}
-	defer os.Remove(tmpHTMLPath)
+	defer cleanup()
 
 	// Run Pandoc conversion
 	args := []string{

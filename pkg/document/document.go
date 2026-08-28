@@ -3,12 +3,39 @@ package document
 import (
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 )
 
 // Service provides document operations
 type Service struct {
 	storage StorageInterface
+
+	// docLocks serialises the read-modify-write mutations of a single document.
+	// A model routinely issues several edits for one document in one turn and
+	// they arrive concurrently; without this each call read the same original,
+	// applied its own edit, and wrote the whole file back, so every call
+	// reported success and only the last write survived.
+	locksMu  sync.Mutex
+	docLocks map[string]*sync.Mutex
+}
+
+// lockDocument returns the mutex guarding mutations of documentID, creating it
+// on first use. Callers must Unlock it.
+func (s *Service) lockDocument(documentID string) *sync.Mutex {
+	s.locksMu.Lock()
+	if s.docLocks == nil {
+		s.docLocks = make(map[string]*sync.Mutex)
+	}
+	mu, ok := s.docLocks[documentID]
+	if !ok {
+		mu = &sync.Mutex{}
+		s.docLocks[documentID] = mu
+	}
+	s.locksMu.Unlock()
+
+	mu.Lock()
+	return mu
 }
 
 // StorageInterface defines the storage operations needed by the service
@@ -70,6 +97,8 @@ func (s *Service) UpdateDocument(documentID, htmlContent string) (*Document, err
 		return nil, fmt.Errorf("HTML content cannot be empty")
 	}
 
+	defer s.lockDocument(documentID).Unlock()
+
 	// Get existing document to preserve metadata
 	doc, err := s.storage.GetDocument(documentID)
 	if err != nil {
@@ -97,6 +126,8 @@ func (s *Service) AppendHTML(documentID, html string) (*Document, error) {
 	if html == "" {
 		return nil, fmt.Errorf("html fragment cannot be empty")
 	}
+
+	defer s.lockDocument(documentID).Unlock()
 
 	doc, err := s.storage.GetDocument(documentID)
 	if err != nil {
@@ -128,6 +159,8 @@ func (s *Service) ReplaceInDocument(documentID, oldStr, newStr string) (*Documen
 	if oldStr == "" {
 		return nil, fmt.Errorf("old_str cannot be empty")
 	}
+
+	defer s.lockDocument(documentID).Unlock()
 
 	doc, err := s.storage.GetDocument(documentID)
 	if err != nil {
