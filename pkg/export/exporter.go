@@ -2,12 +2,10 @@ package export
 
 import (
 	"bufio"
-	"bytes"
 	"context"
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"simple_html_docgen/pkg/document"
 	"strings"
@@ -16,14 +14,12 @@ import (
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
 	"github.com/go-rod/rod/lib/proto"
-	"github.com/go-rod/rod/lib/utils"
 	"github.com/gomcpgo/htmltodocx"
 	"github.com/ysmood/gson"
 )
 
 // Exporter handles document export operations
 type Exporter struct {
-	pandocTimeout time.Duration
 	chromeTimeout time.Duration
 	docxTimeout   time.Duration
 	// defaultPageSize gives the page size when the caller names none.
@@ -33,7 +29,6 @@ type Exporter struct {
 // NewExporter creates a new exporter instance
 func NewExporter() *Exporter {
 	return &Exporter{
-		pandocTimeout:   30 * time.Second,
 		chromeTimeout:   30 * time.Second,
 		docxTimeout:     30 * time.Second,
 		defaultPageSize: DefaultPageSize,
@@ -127,8 +122,7 @@ func (e *Exporter) ExportDocument(ctx context.Context, documentID, format, outpu
 // be unique per export: every export used to write the same "temp_export.html"
 // and remove it on the way out, so two exports of one document issued in the
 // same turn (a model asking for PDF and DOCX together) raced — one deleted the
-// file the other was still converting, and the PDF route's failure was then
-// reported as pandoc's "xelatex not found".
+// file the other was still converting.
 func writeTempHTML(dir, content string) (string, func(), error) {
 	f, err := os.CreateTemp(dir, "temp_export_*.html")
 	if err != nil {
@@ -156,74 +150,48 @@ func (e *Exporter) exportHTML(doc *document.Document, outputPath string) (string
 	return outputPath, nil
 }
 
-// exportPDF exports the document as PDF, trying Chrome first, then falling back to Pandoc
+// exportPDF prints the document to PDF with headless Chrome or Chromium,
+// using an installed browser if there is one and letting rod download
+// Chromium otherwise. Like DOCX, the file is written under a temporary name
+// and renamed into place.
 func (e *Exporter) exportPDF(ctx context.Context, doc *document.Document, outputPath string, ps pageSize, docSvc *document.Service) (string, error) {
-	// Try Chrome/Chromium first (best CSS preservation)
-	chromeErr := e.exportPDFWithChrome(ctx, doc, outputPath, ps, docSvc)
-	if chromeErr == nil {
-		return outputPath, nil
+	ctx, cancel := context.WithTimeout(ctx, e.chromeTimeout)
+	defer cancel()
+	if err := ctx.Err(); err != nil {
+		return "", fmt.Errorf("PDF export failed: %w", err)
 	}
 
-	// Fallback to Pandoc. Chrome is the route that works on a machine with no
-	// LaTeX engine, so when the fallback fails too its "install xelatex" message
-	// describes the fallback and not the real failure. Report both, Chrome first.
-	path, pandocErr := e.exportPDFWithPandoc(doc, outputPath, docSvc)
-	if pandocErr != nil {
-		return "", fmt.Errorf("PDF export failed: %w (fallback also failed: %v)", chromeErr, pandocErr)
-	}
-	return path, nil
-}
-
-// exportPDFWithChrome exports the document as PDF using headless Chrome
-func (e *Exporter) exportPDFWithChrome(ctx context.Context, doc *document.Document, outputPath string, ps pageSize, docSvc *document.Service) error {
-	// Inject default print styles as fallback (conservative approach)
-	// These will be overridden by any @media print rules the LLM includes
-	htmlWithPrintStyles := InjectDefaultPrintStyles(doc.HTMLContent)
-
-	// Create a temporary HTML file
-	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), htmlWithPrintStyles)
+	// Default print styles; the document's own @media print rules win.
+	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), InjectDefaultPrintStyles(doc.HTMLContent))
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer cleanup()
 
-	// Create context with timeout
-	ctx, cancel := context.WithTimeout(ctx, e.chromeTimeout)
-	defer cancel()
-
-	// Try to find existing Chrome/Chromium installation first
-	chromePath, _ := launcher.LookPath()
-
-	// Launch browser with system Chrome if available, otherwise auto-download
-	var controlURL string
-	if chromePath != "" {
-		// Use system Chrome/Chromium
-		l := launcher.New().Bin(chromePath).Headless(true)
-		controlURL = l.MustLaunch()
-	} else {
-		// Let rod auto-download Chromium as fallback
-		l := launcher.New().Headless(true)
-		controlURL = l.MustLaunch()
+	l := launcher.New().Context(ctx).Headless(true)
+	if chromePath, ok := launcher.LookPath(); ok {
+		l = l.Bin(chromePath)
 	}
+	controlURL, err := l.Launch()
+	if err != nil {
+		return "", fmt.Errorf("PDF export needs Google Chrome or Chromium, which could not be started: %w", err)
+	}
+	defer l.Kill()
 
 	browser := rod.New().ControlURL(controlURL).Context(ctx)
 	if err := browser.Connect(); err != nil {
-		return fmt.Errorf("chrome not available: %w", err)
+		return "", fmt.Errorf("PDF export could not connect to Chrome: %w", err)
 	}
-	defer browser.MustClose()
+	defer browser.Close()
 
-	// Load the HTML file
 	page, err := browser.Page(proto.TargetCreateTarget{URL: "file://" + tmpHTMLPath})
 	if err != nil {
-		return fmt.Errorf("failed to create page: %w", err)
+		return "", fmt.Errorf("failed to create page: %w", err)
 	}
-
-	// Wait for page to load
 	if err := page.WaitLoad(); err != nil {
-		return fmt.Errorf("failed to load page: %w", err)
+		return "", fmt.Errorf("failed to load page: %w", err)
 	}
 
-	// Generate PDF with custom settings
 	pdfStream, err := page.PDF(&proto.PagePrintToPDF{
 		PrintBackground:   true, // Include background colors and images
 		PaperWidth:        gson.Num(ps.widthIn),
@@ -235,42 +203,15 @@ func (e *Exporter) exportPDFWithChrome(ctx context.Context, doc *document.Docume
 		PreferCSSPageSize: true, // A CSS @page size wins over PaperWidth/PaperHeight
 	})
 	if err != nil {
-		return fmt.Errorf("failed to generate PDF: %w", err)
+		return "", fmt.Errorf("failed to generate PDF: %w", err)
 	}
-
-	// Write PDF stream to output file
-	if err := utils.OutputFile(outputPath, pdfStream); err != nil {
-		return fmt.Errorf("failed to write PDF file: %w", err)
-	}
-
-	return nil
-}
-
-// exportPDFWithPandoc exports the document as PDF using Pandoc (fallback)
-func (e *Exporter) exportPDFWithPandoc(doc *document.Document, outputPath string, docSvc *document.Service) (string, error) {
-	if err := e.checkPandoc(); err != nil {
-		return "", err
-	}
-
-	// Create a temporary HTML file for Pandoc
-	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), doc.HTMLContent)
+	err = writeFileAtomic(outputPath, func(w io.Writer) error {
+		_, err := io.Copy(w, pdfStream)
+		return err
+	})
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to write PDF file: %w", err)
 	}
-	defer cleanup()
-
-	// Run Pandoc conversion
-	args := []string{
-		"-f", "html",
-		"-o", outputPath,
-		"--pdf-engine=xelatex", // For Unicode/emoji support
-		tmpHTMLPath,
-	}
-
-	if err := e.runPandoc(args, docSvc.GetDocumentPath(doc.ID)); err != nil {
-		return "", fmt.Errorf("PDF conversion failed: %w", err)
-	}
-
 	return outputPath, nil
 }
 
@@ -337,52 +278,6 @@ func writeFileAtomic(path string, write func(io.Writer) error) (err error) {
 		return fmt.Errorf("failed to write output file: %w", err)
 	}
 	return nil
-}
-
-// checkPandoc checks if Pandoc is installed
-func (e *Exporter) checkPandoc() error {
-	cmd := exec.Command("pandoc", "--version")
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("pandoc not found: please install pandoc to enable PDF/DOCX export")
-	}
-	return nil
-}
-
-// runPandoc executes a Pandoc command with timeout
-func (e *Exporter) runPandoc(args []string, workDir string) error {
-	cmd := exec.Command("pandoc", args...)
-	cmd.Dir = workDir
-
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-
-	// Run with timeout
-	done := make(chan error, 1)
-	go func() {
-		done <- cmd.Run()
-	}()
-
-	select {
-	case err := <-done:
-		if err != nil {
-			if stderr.Len() > 0 {
-				return fmt.Errorf("pandoc error: %s", stderr.String())
-			}
-			return fmt.Errorf("pandoc failed: %w", err)
-		}
-		return nil
-	case <-time.After(e.pandocTimeout):
-		if cmd.Process != nil {
-			cmd.Process.Kill()
-		}
-		return fmt.Errorf("pandoc conversion timed out after %v", e.pandocTimeout)
-	}
-}
-
-// CheckPandocAvailable checks if Pandoc is available (exported for terminal mode)
-func CheckPandocAvailable() bool {
-	cmd := exec.Command("pandoc", "--version")
-	return cmd.Run() == nil
 }
 
 // CopyFile copies a file from src to dst

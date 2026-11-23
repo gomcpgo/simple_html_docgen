@@ -181,8 +181,8 @@ them.
   from the document's own folder only, so remote URLs and paths outside the folder are skipped with
   a warning. The file is written under a temporary name and renamed into place, so a failed export
   leaves no partial file.
-- PDF uses Chrome or Chromium (rod downloads Chromium if none is installed). Pandoc with XeLaTeX
-  is still tried as a fallback when Chrome fails.
+- PDF is printed by headless Chrome or Chromium. An installed browser is used if there is one;
+  otherwise rod downloads Chromium on first use. Nothing else is needed.
 
 ## Testing
 

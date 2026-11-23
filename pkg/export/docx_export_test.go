@@ -279,3 +279,34 @@ func TestExportDOCXFailureLeavesNoFile(t *testing.T) {
 		t.Errorf("output folder holds %v, want only c.docx", names)
 	}
 }
+
+// PDF export uses Chrome only. When Chrome cannot produce the PDF the error
+// is Chrome's, and pandoc is never run as a fallback.
+func TestExportPDFDoesNotFallBackToPandoc(t *testing.T) {
+	bin := t.TempDir()
+	marker := filepath.Join(t.TempDir(), "pandoc-ran")
+	script := "#!/bin/sh\ntouch " + marker + "\n"
+	if err := os.WriteFile(filepath.Join(bin, "pandoc"), []byte(script), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("PATH", bin)
+
+	svc, root := newDocService(t)
+	doc := createDoc(t, svc, "<p>pdf</p>")
+	out := filepath.Join(root, "x.pdf")
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	_, err := NewExporter().ExportDocument(ctx, doc.ID, "pdf", out, Options{PageSize: "a4"}, svc)
+	if err == nil {
+		t.Fatal("PDF export with a cancelled context succeeded")
+	}
+	if strings.Contains(strings.ToLower(err.Error()), "pandoc") || strings.Contains(err.Error(), "fallback") {
+		t.Errorf("error mentions a pandoc fallback: %v", err)
+	}
+	if _, err := os.Stat(marker); err == nil {
+		t.Error("pandoc was run")
+	}
+	if _, err := os.Stat(out); !os.IsNotExist(err) {
+		t.Error("a failed PDF export left an output file")
+	}
+}
