@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Proposal: Cloud Migration of Electronic Health Records (EHR) System</title>
+  <style>
+    :root {
+      --primary: #0f4c81;
+      --primary-light: #e8f1f8;
+      --accent: #0d9488;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #cbd5e1;
+      --bg-subtle: #f8fafc;
+      --danger: #b91c1c;
+      --warning: #b45309;
+      --success: #15803d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background-color: #ffffff;
+      line-height: 1.6;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 40px 48px 64px;
+    }
+
+    header.doc-header {
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 24px;
+      margin-bottom: 28px;
+      background: linear-gradient(135deg, #f0f7ff 0%, #ffffff 100%);
+      padding: 28px 32px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(15, 76, 129, 0.08);
+    }
+
+    .doc-badge {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      line-height: 1.25;
+      color: var(--primary);
+      margin: 0 0 12px 0;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .meta-grid strong {
+      color: var(--text);
+      display: block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    nav.toc {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      padding: 16px 24px;
+      margin-bottom: 32px;
+    }
+
+    nav.toc h2 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin: 0 0 10px 0;
+      border: none;
+      padding: 0;
+    }
+
+    nav.toc ol {
+      margin: 0;
+      padding-left: 20px;
+      columns: 2;
+      column-gap: 32px;
+      font-size: 0.92rem;
+    }
+
+    nav.toc li {
+      margin-bottom: 4px;
+    }
+
+    nav.toc a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    section.proposal-section {
+      margin-bottom: 36px;
+      page-break-inside: avoid;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 8px;
+      margin: 0 0 16px 0;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      color: var(--text);
+      margin: 18px 0 8px 0;
+    }
+
+    p {
+      margin: 0 0 12px 0;
+    }
+
+    ul, ol {
+      margin: 0 0 14px 0;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px 20px;
+      background: var(--bg-subtle);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px 0;
+      font-size: 0.92rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: var(--bg-subtle);
+    }
+
+    tfoot td {
+      background-color: var(--primary-light);
+      font-weight: 700;
+      color: var(--primary);
+      border-top: 2px solid var(--primary);
+    }
+
+    .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .pill-high {
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      background: #fef2f2;
+    }
+
+    .pill-med {
+      color: var(--warning);
+      border: 1px solid var(--warning);
+      background: #fffbeb;
+    }
+
+    .pill-low {
+      color: var(--success);
+      border: 1px solid var(--success);
+      background: #f0fdf4;
+    }
+
+    .cta-box {
+      border: 2px solid var(--primary);
+      border-left-width: 6px;
+      border-radius: 8px;
+      padding: 24px 28px;
+      background: var(--primary-light);
+      box-shadow: 0 4px 12px rgba(15, 76, 129, 0.08);
+    }
+
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      margin-top: 28px;
+      padding-top: 16px;
+    }
+
+    .sig-line {
+      border-top: 1px solid var(--text);
+      padding-top: 6px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      header.doc-header,
+      nav.toc,
+      .card,
+      .cta-box,
+      tbody tr:nth-child(even) {
+        background: #ffffff !important;
+        background-image: none !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+      th {
+        background: #ffffff !important;
+        color: var(--primary) !important;
+        border-bottom: 2px solid var(--primary) !important;
+      }
+      tfoot td {
+        background: #ffffff !important;
+      }
+      section.proposal-section,
+      table,
+      .card,
+      .cta-box {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="doc-header">
+    <span class="doc-badge">Healthcare IT Modernization Proposal</span>
+    <h1>Cloud Migration of Electronic Health Records (EHR) System</h1>
+    <p>A HIPAA-compliant, zero-data-loss transition strategy to modernize St. Jude Metropolitan Hospital's clinical data infrastructure for high availability, interoperability, and long-term cost efficiency.</p>
+    <div class="meta-grid">
+      <div><strong>Prepared For</strong>Executive Leadership &amp; Board of Trustees, St. Jude Metropolitan Hospital</div>
+      <div><strong>Prepared By</strong>Enterprise Health IT &amp; Cloud Transformation Office</div>
+      <div><strong>Proposal Date</strong>November 23, 2026</div>
+      <div><strong>Target Duration</strong>9 Months (Q1 2027 &ndash; Q3 2027)</div>
+    </div>
+  </header>
+
+  <nav class="toc" aria-label="Proposal Sections">
+    <h2>Proposal Contents</h2>
+    <ol>
+      <li><a href="#background">Background &amp; Current State</a></li>
+      <li><a href="#objectives">Project Objectives &amp; Success Metrics</a></li>
+      <li><a href="#scope">Project Scope</a></li>
+      <li><a href="#timeline">Phased Implementation Timeline</a></li>
+      <li><a href="#budget">Estimated Project Budget</a></li>
+      <li><a href="#team">Governance &amp; Team Roles</a></li>
+      <li><a href="#risks">Risk Register &amp; Mitigations</a></li>
+      <li><a href="#cta">Call to Action &amp; Approval</a></li>
+    </ol>
+  </nav>
+  <section id="background" class="proposal-section">
+    <h2>1. Background &amp; Current State</h2>
+    <p>St. Jude Metropolitan Hospital operates a 450-bed acute care facility, three outpatient specialty clinics, and a regional diagnostic center serving over 280,000 active patients. Currently, our core Electronic Health Records (EHR) platform, clinical document repository, and Picture Archiving and Communication System (PACS) run on legacy on-premises servers housed in a primary hospital data closet and a secondary colocation site.</p>
+    <p>Installed in 2018, this infrastructure is approaching hardware end-of-support in Q4 2027 and faces critical operational, clinical, and security pressures:</p>
+    <ul>
+      <li><strong>Reliability &amp; Clinical Downtime:</strong> Over the past 12 months, the hospital experienced 19.5 hours of unplanned EHR degradation or downtime due to storage controller bottlenecks and patch-window outages, forcing clinicians onto paper-charting contingency workflows.</li>
+      <li><strong>Escalating Capital &amp; Maintenance Costs:</strong> Refreshing the aging SAN storage arrays and virtualization hosts on-premises would require $1.15M in upfront hardware capital expenditure, plus rising annual maintenance renewals for 85 TB of rapidly growing imaging and clinical records.</li>
+      <li><strong>Interoperability Bottlenecks:</strong> Legacy firewall topologies and batch-based HL7 v2 interfaces limit real-time data exchange with telehealth platforms, regional health information exchanges (HIEs), and patient mobile portals via modern HL7 FHIR R4 APIs.</li>
+      <li><strong>Cybersecurity &amp; Disaster Recovery Exposure:</strong> While compliant with baseline HIPAA controls, our current backup architecture yields a Recovery Time Objective (RTO) of 12 hours and a Recovery Point Objective (RPO) of 4 hours&mdash;insufficient against modern healthcare ransomware threats and regional power disruptions.</li>
+    </ul>
+    <p>Migrating the patient records ecosystem to a HIPAA-eligible, HITRUST CSF-certified cloud environment (under a signed Business Associate Agreement) eliminates imminent hardware refresh debt while establishing a resilient, scalable clinical foundation.</p>
+  </section>  <section id="objectives" class="proposal-section">
+    <h2>2. Project Objectives &amp; Success Metrics</h2>
+    <p>The overarching goal of this initiative is to transition St. Jude Metropolitan Hospital's patient record workloads to a multi-zone cloud architecture safely, predictably, and without compromising active patient care. Success will be measured against six quantifiable objectives:</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>High Availability &amp; Disaster Recovery</h3>
+        <p>Achieve <strong>99.99% clinical application availability</strong> (&lt;53 minutes unplanned downtime/year) across active-active availability zones, reducing Disaster Recovery RTO from 12 hours to <strong>&le;15 minutes</strong> and RPO from 4 hours to <strong>zero data loss (synchronous replication)</strong> for transactional EHR records.</p>
+      </div>
+      <div class="card">
+        <h3>Clinical Performance &amp; Workflow Speed</h3>
+        <p>Reduce average chart-load and longitudinal history query times by <strong>at least 35%</strong> (&lt;1.2 seconds p95 response time) during peak morning rounding hours, directly saving physician and nursing documentation time.</p>
+      </div>
+      <div class="card">
+        <h3>Security, Privacy &amp; Regulatory Compliance</h3>
+        <p>Enforce end-to-end Zero Trust security compliant with <strong>HIPAA, HITECH, 21st Century Cures Act, and HITRUST CSF v11</strong>, including FIPS 140-3 customer-managed encryption keys (CMEK), immutable air-gapped backups, and automated PHI audit logging.</p>
+      </div>
+      <div class="card">
+        <h3>Interoperability &amp; Financial Sustainability</h3>
+        <p>Deploy a managed <strong>HL7 FHIR R4 API gateway</strong> for seamless HIE, lab, and patient portal integration, while lowering 5-year Total Cost of Ownership (TCO) by an estimated <strong>24% ($1.08M net savings)</strong> compared to an on-premises hardware refresh.</p>
+      </div>
+    </div>
+  </section>  <section id="scope" class="proposal-section">
+    <h2>3. Project Scope</h2>
+    <p>To maintain strict governance over schedule and budget, project boundaries have been clearly established between in-scope migration deliverables and excluded adjacent systems.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>In Scope</h3>
+        <ul>
+          <li><strong>Core EHR &amp; Clinical Databases:</strong> Full migration of inpatient, outpatient, emergency department, pharmacy, and order-entry modules (~14 TB structured relational data, 1.4M historical and active patient records).</li>
+          <li><strong>Medical Imaging &amp; Unstructured Records:</strong> Tiered cloud migration of 71 TB of PACS DICOM studies, scanned consent forms, and pathology PDFs (hot tier for &lt;24-month studies; instant-retrieval archive tier for older records).</li>
+          <li><strong>Cloud Landing Zone &amp; Network Connectivity:</strong> Redundant 10 Gbps private dedicated cloud interconnects from the main hospital campus, HIPAA security guardrails, SIEM logging, and Single Sign-On (SSO) + MFA federation.</li>
+          <li><strong>Clinical Integration Engine:</strong> Re-platforming 42 active HL7 v2, DICOM, and FHIR R4 interfaces (labs, radiology modalities, e-prescribing, billing feed, and regional HIE).</li>
+          <li><strong>Validation, Training &amp; Legacy Decommissioning:</strong> End-to-end clinical UAT, dress-rehearsal cutovers, super-user training for 1,100 clinical/administrative staff, 60-day hypercare, and certified HIPAA media sanitization of retired servers.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Out of Scope</h3>
+        <ul>
+          <li><strong>EHR Vendor Replacement:</strong> Re-platforming uses our existing EHR software suite upgraded to its cloud-native release; switching to a different EHR vendor is excluded.</li>
+          <li><strong>Biomedical &amp; Bedside Hardware Procurement:</strong> Replacement of physical bedside patient monitors, infusion pumps, or workstation-on-wheels (WoW) fleet hardware.</li>
+          <li><strong>Non-Clinical ERP Systems:</strong> Hospital payroll, general ledger finance, and HR human-capital systems (scheduled under a separate FY2028 administrative IT roadmap).</li>
+          <li><strong>Paper Chart Digitization Backlogs:</strong> Pre-2010 physical microfiche and off-site paper archives not currently indexed in the electronic document management system.</li>
+        </ul>
+      </div>
+    </div>
+  </section>  <section id="timeline" class="proposal-section">
+    <h2>4. Phased Implementation Timeline</h2>
+    <p>The migration follows a <strong>9-month (36-week)</strong> structured healthcare methodology beginning January 11, 2027, and concluding September 17, 2027. Continuous background data seeding and two full mock cutovers ensure the live weekend cutover window requires less than 90 minutes of read-only mode.</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 14%;">Phase</th>
+          <th style="width: 16%;">Timeframe &amp; Duration</th>
+          <th style="width: 42%;">Key Activities</th>
+          <th style="width: 28%;">Key Deliverables &amp; Exit Gate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Phase 1</strong><br>Discovery &amp; Governance</td>
+          <td>Weeks 1&ndash;4<br><em>Jan 11 &ndash; Feb 5, 2027</em><br>(4 Weeks)</td>
+          <td>Execute Cloud Provider BAA; inventory all 42 clinical interfaces; conduct HIPAA Security Risk Analysis (SRA); establish Clinical Advisory Council and baseline performance metrics.</td>
+          <td>Signed BAA, Approved Project Charter, Interface Dependency Map, Baseline SRA Report.</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 2</strong><br>Cloud Architecture &amp; Landing Zone</td>
+          <td>Weeks 5&ndash;10<br><em>Feb 8 &ndash; Mar 19, 2027</em><br>(6 Weeks)</td>
+          <td>Provision multi-AZ HIPAA Landing Zone via Infrastructure-as-Code; install redundant 10 Gbps private circuits; configure KMS encryption, IAM/MFA, immutable backup vaults, and SIEM integration.</td>
+          <td>Production-ready Cloud Landing Zone, Failover-tested Network Links, Security Architecture Sign-off.</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 3</strong><br>Data Seeding &amp; Interface Build</td>
+          <td>Weeks 11&ndash;20<br><em>Mar 22 &ndash; May 28, 2027</em><br>(10 Weeks)</td>
+          <td>Stand up staging and production EHR/PACS clusters; execute encrypted bulk historical transfer (85 TB) with automated checksum reconciliation; migrate HL7 v2, DICOM, and FHIR R4 interfaces.</td>
+          <td>98% Historical Data Pre-seeded &amp; Verified, All 42 Clinical Interfaces Connected in Staging.</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 4</strong><br>Clinical UAT, Security Audit &amp; Dress Rehearsals</td>
+          <td>Weeks 21&ndash;26<br><em>May 31 &ndash; Jul 9, 2027</em><br>(6 Weeks)</td>
+          <td>Conduct physician/nurse clinical workflow UAT; run third-party penetration test and DR failover drill; perform two timed end-to-end Mock Cutover Dress Rehearsals; train 65 clinical super-users.</td>
+          <td>Clinical UAT Sign-off, Zero Critical Pen-Test Findings, Mock Cutover &lt;90 Mins Verified, Go/No-Go Approval.</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 5</strong><br>Production Cutover &amp; Go-Live</td>
+          <td>Weeks 27&ndash;28<br><em>Jul 12 &ndash; Jul 23, 2027</em><br>(2 Weeks)</td>
+          <td>Execute final delta sync during low-census Sunday 02:00&ndash;03:30 AM window; validate record counts, lab/radiology live feeds, and e-prescribing; staff 24/7 floor-side clinical command center.</td>
+          <td>Cloud EHR Live in Production, 100% Data Integrity Audit Passed, Command Center Operational.</td>
+        </tr>
+        <tr>
+          <td><strong>Phase 6</strong><br>Hypercare, Optimization &amp; Decommission</td>
+          <td>Weeks 29&ndash;36<br><em>Jul 26 &ndash; Sep 17, 2027</em><br>(8 Weeks)</td>
+          <td>Provide 60-day enhanced support and query tuning; implement FinOps cloud cost right-sizing; transition to steady-state IT operations; NIST 800-88 sanitization of legacy on-prem SANs.</td>
+          <td>SLA Targets Met (&ge;99.99% Uptime), Operations Runbooks Handed Over, Certificate of Media Destruction.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>  <section id="budget" class="proposal-section">
+    <h2>5. Estimated Project Budget</h2>
+    <p>Total Year-1 funding requested is <strong>$1,388,000</strong>, comprising <strong>$880,000</strong> in one-time migration and contingency capital/implementation costs and <strong>$508,000</strong> in Year-1 recurring cloud infrastructure, security, and licensing operations.</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 43%;">Cost Category &amp; Description</th>
+          <th class="num" style="width: 19%;">One-Time Migration</th>
+          <th class="num" style="width: 19%;">Year-1 Cloud OpEx</th>
+          <th class="num" style="width: 19%;">Year-1 Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Cloud Infrastructure &amp; Direct Network Connectivity</strong><br>Multi-AZ production/DR compute, 85 TB tiered storage, synchronous DB clusters, and dual 10 Gbps private circuits.</td>
+          <td class="num">$65,000</td>
+          <td class="num">$308,000</td>
+          <td class="num">$373,000</td>
+        </tr>
+        <tr>
+          <td><strong>2. EHR Cloud Release &amp; Interoperability Licensing</strong><br>Vendor cloud-edition upgrade fee, managed HL7 FHIR R4 API gateway, and e-prescribing/HIE connector licenses.</td>
+          <td class="num">$115,000</td>
+          <td class="num">$145,000</td>
+          <td class="num">$260,000</td>
+        </tr>
+        <tr>
+          <td><strong>3. Data Migration &amp; Clinical Interface Engineering</strong><br>Professional services for 85 TB historical data seeding, checksum validation, IaC automation, and 42 clinical interfaces.</td>
+          <td class="num">$385,000</td>
+          <td class="num">$0</td>
+          <td class="num">$385,000</td>
+        </tr>
+        <tr>
+          <td><strong>4. Cybersecurity, HIPAA/HITRUST Audit &amp; Managed SIEM</strong><br>FIPS 140-3 HSM key management, immutable backup vaulting, third-party penetration test, and 24/7 SOC/SIEM telemetry.</td>
+          <td class="num">$95,000</td>
+          <td class="num">$55,000</td>
+          <td class="num">$150,000</td>
+        </tr>
+        <tr>
+          <td><strong>5. Clinical Change Management, Training &amp; Go-Live Support</strong><br>Curriculum build for 1,100 staff, clinical backfill for 65 super-users, and 24/7 floor-side command center during cutover.</td>
+          <td class="num">$105,000</td>
+          <td class="num">$0</td>
+          <td class="num">$105,000</td>
+        </tr>
+        <tr>
+          <td><strong>6. Legacy Decommissioning &amp; Certified Media Sanitization</strong><br>Short-term parallel run overlap and NIST SP 800-88 physical destruction/certification of retired SAN drives.</td>
+          <td class="num">$35,000</td>
+          <td class="num">$0</td>
+          <td class="num">$35,000</td>
+        </tr>
+        <tr>
+          <td><strong>Subtotal (Base Project Estimate)</strong></td>
+          <td class="num"><strong>$800,000</strong></td>
+          <td class="num"><strong>$508,000</strong></td>
+          <td class="num"><strong>$1,308,000</strong></td>
+        </tr>
+        <tr>
+          <td><strong>7. Contingency Reserve (10% of One-Time Implementation)</strong><br>Executive-controlled reserve for unforeseen interface remediation or extended hypercare requirements.</td>
+          <td class="num">$80,000</td>
+          <td class="num">$0</td>
+          <td class="num">$80,000</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>TOTAL YEAR-1 PROJECT BUDGET</td>
+          <td class="num">$880,000</td>
+          <td class="num">$508,000</td>
+          <td class="num">$1,388,000</td>
+        </tr>
+      </tfoot>
+    </table>
+    <p><strong>5-Year Financial Return Summary:</strong> Projected cloud TCO over five years is <strong>$3,420,000</strong> ($1,388,000 in Year 1 plus $508,000/year in Years 2&ndash;5, incorporating 3-year reserved instance commitments and automated storage tiering). Compared to the status-quo on-premises 5-year TCO of <strong>$4,500,000</strong> ($1,150,000 immediate SAN/server refresh CapEx plus $670,000/year in colocation, hardware maintenance, DR replication, and storage growth), cloud migration delivers <strong>$1,080,000 (24.0%) in cumulative 5-year savings</strong>.</p>
+  </section>  <section id="team" class="proposal-section">
+    <h2>6. Governance &amp; Team Roles</h2>
+    <p>Successful healthcare cloud migration requires joint clinical and technical leadership. A Steering Committee meeting biweekly will oversee budget, clinical safety gates, and Go/No-Go readiness across the core delivery team:</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 24%;">Role</th>
+          <th style="width: 16%;">Allocation</th>
+          <th style="width: 60%;">Core Responsibilities</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Executive Co-Sponsors</strong><br><em>CIO &amp; Chief Medical Information Officer (CMIO)</em></td>
+          <td>15% FTE each</td>
+          <td>Chair Steering Committee, authorize contingency funds, align medical department chairs, and co-sign final clinical Go/No-Go cutover approval.</td>
+        </tr>
+        <tr>
+          <td><strong>Healthcare IT Program Manager</strong><br><em>PMP / CPHIMS Certified</em></td>
+          <td>100% FTE</td>
+          <td>Own master 36-week schedule, vendor coordination, budget tracking, weekly risk burn-down reporting, and cutover command center execution.</td>
+        </tr>
+        <tr>
+          <td><strong>Lead Cloud Solutions Architect</strong><br><em>Cloud Partner + Internal Lead</em></td>
+          <td>100% FTE</td>
+          <td>Design multi-AZ HIPAA Landing Zone, Infrastructure-as-Code modules, 10 Gbps network resiliency, automated DR failover, and FinOps cost guardrails.</td>
+        </tr>
+        <tr>
+          <td><strong>EHR Data &amp; Integration Lead</strong><br><em>Clinical Database &amp; HL7 Specialist</em></td>
+          <td>100% FTE</td>
+          <td>Lead 85 TB database/PACS migration, cryptographic record reconciliation, and testing of all 42 HL7 v2, DICOM, and FHIR R4 clinical interfaces.</td>
+        </tr>
+        <tr>
+          <td><strong>CISO &amp; HIPAA Privacy/Compliance Lead</strong><br><em>Information Security &amp; Legal</em></td>
+          <td>50% FTE</td>
+          <td>Validate BAA terms, KMS customer-managed encryption, IAM least-privilege policies, SIEM audit trails, penetration test remediation, and SRA sign-off.</td>
+        </tr>
+        <tr>
+          <td><strong>Clinical Informatics &amp; Training Lead</strong><br><em>Nursing Informatics Director</em></td>
+          <td>75% FTE</td>
+          <td>Coordinate 65 departmental super-users (ED, ICU, Surgery, Outpatient, Pharmacy), lead clinical UAT scripts, and direct floor-side Go-Live support.</td>
+        </tr>
+        <tr>
+          <td><strong>Cloud Site Reliability Engineers (2)</strong><br><em>Hospital Infrastructure Team</em></td>
+          <td>100% FTE each</td>
+          <td>Co-build cloud infrastructure alongside migration partner to ensure seamless knowledge transfer, observability runbooks, and Day-2 operational ownership.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>  <section id="risks" class="proposal-section">
+    <h2>7. Risk Register &amp; Mitigations</h2>
+    <p>Proactive clinical and cybersecurity risk management ensures patient safety remains uncompromised before, during, and after cutover:</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">Risk Event</th>
+          <th style="width: 12%;">Severity</th>
+          <th style="width: 24%;">Potential Impact</th>
+          <th style="width: 42%;">Mitigation &amp; Contingency Plan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Extended Cutover Downtime</strong></td>
+          <td><span class="pill pill-high">High</span></td>
+          <td>Disruption to Emergency Department triage, inpatient medication administration, and lab order turnaround.</td>
+          <td>Pre-seed 98% of data continuously; run two timed weekend Mock Cutovers (&lt;90 min target); maintain local read-only clinical snapshot appliances on every unit; retain instant DNS rollback to legacy system if delta sync exceeds 120 minutes.</td>
+        </tr>
+        <tr>
+          <td><strong>PHI Exposure or Misconfiguration During Transfer</strong></td>
+          <td><span class="pill pill-high">High</span></td>
+          <td>HIPAA reportable breach, regulatory fines, and loss of patient trust.</td>
+          <td>Transfer data exclusively over private TLS 1.3 encrypted 10 Gbps circuits (zero public internet exposure); enforce automated Policy-as-Code blocking public storage buckets; validate with independent penetration test prior to loading live PHI if needed, and enforce FIPS 140-3 CMEK at rest.</td>
+        </tr>
+        <tr>
+          <td><strong>Legacy Clinical Interface Incompatibility</strong></td>
+          <td><span class="pill pill-med">Medium</span></td>
+          <td>Delayed diagnostic lab results, radiology reports, or pharmacy dispense messages.</td>
+          <td>Complete comprehensive 42-interface audit in Phase 1; deploy protocol-translating cloud integration engine supporting legacy MLLP/VPN tunnels; require joint vendor end-to-end attestation in Phase 4 UAT.</td>
+        </tr>
+        <tr>
+          <td><strong>WAN / Hospital-to-Cloud Circuit Outage</strong></td>
+          <td><span class="pill pill-med">Medium</span></td>
+          <td>Loss of hospital campus connectivity to cloud-hosted EHR applications.</td>
+          <td>Provision dual physically diverse 10 Gbps carrier circuits entering separate hospital MPOEs with sub-second BGP failover, backed by an encrypted 1 Gbps SD-WAN cellular/broadband tertiary link.</td>
+        </tr>
+        <tr>
+          <td><strong>Cloud Storage &amp; Egress Cost Spikes</strong></td>
+          <td><span class="pill pill-med">Medium</span></td>
+          <td>Annual cloud OpEx exceeding the $508,000 operational forecast due to PACS imaging growth.</td>
+          <td>Configure automated S3/Blob lifecycle policies moving DICOM studies &gt;24 months old to low-cost archive storage; negotiate cloud provider medical imaging egress waivers under enterprise agreement; enforce monthly FinOps budget alerts at 80% threshold.</td>
+        </tr>
+        <tr>
+          <td><strong>Clinician Workflow Friction at Go-Live</strong></td>
+          <td><span class="pill pill-low">Low</span></td>
+          <td>Slower charting throughput or increased help-desk ticket volume during Week 1.</td>
+          <td>Preserve core clinician UI workflows (infrastructure + minor version upgrade rather than EHR replacement); deploy 65 trained floor super-users ("at-the-elbow" support) across day and night shifts for 14 days post-cutover.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>  <section id="cta" class="proposal-section">
+    <h2>8. Call to Action &amp; Approval</h2>
+    <div class="cta-box">
+      <h3>Recommended Decision &amp; Immediate Next Steps</h3>
+      <p>To retire our aging on-premises storage arrays well ahead of their Q4 2027 end-of-support deadline&mdash;and avoid $1,150,000 in non-strategic hardware refresh capital&mdash;the Enterprise Health IT Office requests formal Board and Executive authorization of <strong>$1,388,000 in Year-1 project funding</strong> by <strong>December 11, 2026</strong>.</p>
+      <p>Upon sign-off, the project team will immediately execute the following 30-day mobilization actions:</p>
+      <ol>
+        <li><strong>By December 18, 2026:</strong> Countersign the Cloud Service Provider Enterprise Agreement, HIPAA Business Associate Agreement (BAA), and Migration Partner Statement of Work.</li>
+        <li><strong>By December 23, 2026:</strong> Place carrier orders for dual diverse 10 Gbps hospital-to-cloud private circuits (accounting for 45-day telecom lead times).</li>
+        <li><strong>By January 6, 2027:</strong> Convene the inaugural Clinical &amp; Executive Steering Committee and onboard departmental physician/nursing super-user leads.</li>
+        <li><strong>January 11, 2027:</strong> Launch Phase 1 Discovery &amp; HIPAA Security Risk Analysis Kickoff.</li>
+      </ol>
+
+      <div class="sig-grid">
+        <div class="sig-line">
+          <strong>Chief Executive Officer / Board Chair</strong><br>
+          Signature &amp; Date
+        </div>
+        <div class="sig-line">
+          <strong>Chief Financial Officer</strong><br>
+          Budget Authorization ($1,388,000) &amp; Date
+        </div>
+        <div class="sig-line">
+          <strong>Chief Information Officer (Co-Sponsor)</strong><br>
+          Signature &amp; Date
+        </div>
+        <div class="sig-line">
+          <strong>Chief Medical Information Officer (Co-Sponsor)</strong><br>
+          Clinical Safety Endorsement &amp; Date
+        </div>
+      </div>
+    </div>
+  </section></body>
+</html>

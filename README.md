@@ -7,7 +7,7 @@ An MCP server that enables LLMs to create and edit HTML documents with embedded 
 - Create HTML documents with unique, human-readable IDs
 - Update existing documents
 - Add images and videos (automatically copied to document folder)
-- Export to HTML, PDF, or DOCX (requires Pandoc)
+- Export to HTML, PDF (headless Chrome), or DOCX (built in, through [htmltodocx](https://github.com/gomcpgo/htmltodocx))
 - List and retrieve documents
 - Terminal mode for testing
 
@@ -151,34 +151,38 @@ Export a document to HTML, PDF, or DOCX.
 **Parameters:**
 - `document_id` (string, required): Document ID
 - `format` (string, required): "html", "pdf", or "docx"
+- `output_path` (string, optional): where to write the file; defaults to the document's folder
+- `page_size` (string, optional): "a4", "letter" or "legal", for PDF and DOCX. Defaults to the
+  size for the user's locale: Letter in the regions that use it (US, Canada, Mexico and a few
+  others), A4 elsewhere. The locale comes from `LC_ALL`, `LC_PAPER` or `LANG`, and from the system
+  setting when those name no region (macOS `AppleLocale`, the Windows user locale).
 
 **Returns:**
 ```json
 {
   "status": "succeeded",
   "document_id": "my-report-a3f9",
-  "format": "pdf",
-  "output_path": "/path/to/my-report-a3f9/my-report-a3f9.pdf"
+  "format": "docx",
+  "output_path": "/path/to/my-report-a3f9/my-report-a3f9.docx",
+  "page_size": "a4",
+  "warnings": [
+    {"code": "image", "message": "image media/chart.png was replaced by its alt text: cannot open file"}
+  ]
 }
 ```
 
+`page_size` is present for PDF and DOCX. `warnings` is present only when a DOCX export had to
+approximate or leave something out; the file is still written. The caller decides whether to show
+them.
+
 ## Export Requirements
 
-For PDF and DOCX export, install Pandoc:
-
-**macOS:**
-```bash
-brew install pandoc
-brew install basictex  # For PDF support
-```
-
-**Linux:**
-```bash
-sudo apt-get install pandoc texlive-xetex
-```
-
-**Windows:**
-Download from https://pandoc.org/installing.html
+- DOCX needs nothing installed. The HTML is converted in-process; images and stylesheets are read
+  from the document's own folder only, so remote URLs and paths outside the folder are skipped with
+  a warning. The file is written under a temporary name and renamed into place, so a failed export
+  leaves no partial file.
+- PDF uses Chrome or Chromium (rod downloads Chromium if none is installed). Pandoc with XeLaTeX
+  is still tried as a fallback when Chrome fails.
 
 ## Testing
 

@@ -1,6 +1,7 @@
 package export
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"fmt"
@@ -16,6 +17,7 @@ import (
 	"github.com/go-rod/rod/lib/launcher"
 	"github.com/go-rod/rod/lib/proto"
 	"github.com/go-rod/rod/lib/utils"
+	"github.com/gomcpgo/htmltodocx"
 	"github.com/ysmood/gson"
 )
 
@@ -23,22 +25,66 @@ import (
 type Exporter struct {
 	pandocTimeout time.Duration
 	chromeTimeout time.Duration
+	docxTimeout   time.Duration
+	// defaultPageSize gives the page size when the caller names none.
+	defaultPageSize func() string
 }
 
 // NewExporter creates a new exporter instance
 func NewExporter() *Exporter {
 	return &Exporter{
-		pandocTimeout: 30 * time.Second,
-		chromeTimeout: 30 * time.Second,
+		pandocTimeout:   30 * time.Second,
+		chromeTimeout:   30 * time.Second,
+		docxTimeout:     30 * time.Second,
+		defaultPageSize: DefaultPageSize,
 	}
 }
 
+// Options are the caller's choices for an export.
+type Options struct {
+	// PageSize is one of PageSizes for DOCX and PDF; empty means the size
+	// for the user's locale. HTML export ignores it.
+	PageSize string
+}
+
+// Result describes a finished export.
+type Result struct {
+	Path string
+	// PageSize is the page size used, for DOCX and PDF.
+	PageSize string
+	// Warnings report what a DOCX export could not carry over exactly, such
+	// as an image that could not be loaded. The file was still written.
+	Warnings []Warning
+}
+
+// Warning is one thing the export approximated or left out.
+type Warning struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// maxWarnings bounds the warnings returned for one export; the document's
+// HTML is model-written and could produce any number of distinct ones.
+const maxWarnings = 50
+
 // ExportDocument exports a document to the specified format
-func (e *Exporter) ExportDocument(documentID, format, outputPath string, docSvc *document.Service) (string, error) {
+func (e *Exporter) ExportDocument(ctx context.Context, documentID, format, outputPath string, opts Options, docSvc *document.Service) (*Result, error) {
+	var ps pageSize
+	if format == "pdf" || format == "docx" {
+		name := opts.PageSize
+		if name == "" {
+			name = e.defaultPageSize()
+		}
+		var err error
+		if ps, err = parsePageSize(name); err != nil {
+			return nil, err
+		}
+	}
+
 	// Get the document
 	doc, err := docSvc.GetDocument(documentID)
 	if err != nil {
-		return "", fmt.Errorf("failed to get document: %w", err)
+		return nil, fmt.Errorf("failed to get document: %w", err)
 	}
 
 	// Use provided output path or generate default
@@ -48,19 +94,31 @@ func (e *Exporter) ExportDocument(documentID, format, outputPath string, docSvc 
 		// Ensure parent directory exists
 		dir := filepath.Dir(outputPath)
 		if err := os.MkdirAll(dir, 0755); err != nil {
-			return "", fmt.Errorf("failed to create output directory: %w", err)
+			return nil, fmt.Errorf("failed to create output directory: %w", err)
 		}
 	}
 
 	switch format {
 	case "html":
-		return e.exportHTML(doc, outputPath)
+		path, err := e.exportHTML(doc, outputPath)
+		if err != nil {
+			return nil, err
+		}
+		return &Result{Path: path}, nil
 	case "pdf":
-		return e.exportPDF(doc, outputPath, docSvc)
+		path, err := e.exportPDF(ctx, doc, outputPath, ps, docSvc)
+		if err != nil {
+			return nil, err
+		}
+		return &Result{Path: path, PageSize: ps.name}, nil
 	case "docx":
-		return e.exportDOCX(doc, outputPath, docSvc)
+		warnings, err := e.exportDOCX(ctx, doc, outputPath, ps, docSvc)
+		if err != nil {
+			return nil, err
+		}
+		return &Result{Path: outputPath, PageSize: ps.name, Warnings: warnings}, nil
 	default:
-		return "", fmt.Errorf("unsupported format: %s", format)
+		return nil, fmt.Errorf("unsupported format: %s", format)
 	}
 }
 
@@ -99,9 +157,9 @@ func (e *Exporter) exportHTML(doc *document.Document, outputPath string) (string
 }
 
 // exportPDF exports the document as PDF, trying Chrome first, then falling back to Pandoc
-func (e *Exporter) exportPDF(doc *document.Document, outputPath string, docSvc *document.Service) (string, error) {
+func (e *Exporter) exportPDF(ctx context.Context, doc *document.Document, outputPath string, ps pageSize, docSvc *document.Service) (string, error) {
 	// Try Chrome/Chromium first (best CSS preservation)
-	chromeErr := e.exportPDFWithChrome(doc, outputPath, docSvc)
+	chromeErr := e.exportPDFWithChrome(ctx, doc, outputPath, ps, docSvc)
 	if chromeErr == nil {
 		return outputPath, nil
 	}
@@ -117,7 +175,7 @@ func (e *Exporter) exportPDF(doc *document.Document, outputPath string, docSvc *
 }
 
 // exportPDFWithChrome exports the document as PDF using headless Chrome
-func (e *Exporter) exportPDFWithChrome(doc *document.Document, outputPath string, docSvc *document.Service) error {
+func (e *Exporter) exportPDFWithChrome(ctx context.Context, doc *document.Document, outputPath string, ps pageSize, docSvc *document.Service) error {
 	// Inject default print styles as fallback (conservative approach)
 	// These will be overridden by any @media print rules the LLM includes
 	htmlWithPrintStyles := InjectDefaultPrintStyles(doc.HTMLContent)
@@ -130,7 +188,7 @@ func (e *Exporter) exportPDFWithChrome(doc *document.Document, outputPath string
 	defer cleanup()
 
 	// Create context with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), e.chromeTimeout)
+	ctx, cancel := context.WithTimeout(ctx, e.chromeTimeout)
 	defer cancel()
 
 	// Try to find existing Chrome/Chromium installation first
@@ -168,11 +226,13 @@ func (e *Exporter) exportPDFWithChrome(doc *document.Document, outputPath string
 	// Generate PDF with custom settings
 	pdfStream, err := page.PDF(&proto.PagePrintToPDF{
 		PrintBackground:   true, // Include background colors and images
+		PaperWidth:        gson.Num(ps.widthIn),
+		PaperHeight:       gson.Num(ps.heightIn),
 		MarginTop:         gson.Num(0.4),
 		MarginBottom:      gson.Num(0.4),
 		MarginLeft:        gson.Num(0.4),
 		MarginRight:       gson.Num(0.4),
-		PreferCSSPageSize: true, // Use CSS @page size if specified
+		PreferCSSPageSize: true, // A CSS @page size wins over PaperWidth/PaperHeight
 	})
 	if err != nil {
 		return fmt.Errorf("failed to generate PDF: %w", err)
@@ -214,31 +274,69 @@ func (e *Exporter) exportPDFWithPandoc(doc *document.Document, outputPath string
 	return outputPath, nil
 }
 
-// exportDOCX exports the document as DOCX using Pandoc
-func (e *Exporter) exportDOCX(doc *document.Document, outputPath string, docSvc *document.Service) (string, error) {
-	if err := e.checkPandoc(); err != nil {
-		return "", err
-	}
+// exportDOCX converts the document with htmltodocx. Images and stylesheets
+// are read from the document's own folder and nowhere else. The file is
+// written under a temporary name and renamed into place, so a failed export
+// leaves no partial file and does not replace an earlier one.
+func (e *Exporter) exportDOCX(ctx context.Context, doc *document.Document, outputPath string, ps pageSize, docSvc *document.Service) ([]Warning, error) {
+	ctx, cancel := context.WithTimeout(ctx, e.docxTimeout)
+	defer cancel()
 
-	// Create a temporary HTML file for Pandoc
-	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), doc.HTMLContent)
+	var warnings []Warning
+	dropped := 0
+	opts := &htmltodocx.Options{
+		Page:      htmltodocx.Page{Size: ps.docx},
+		Resources: htmltodocx.DirLoader(docSvc.GetDocumentPath(doc.ID)),
+		Warn: func(w htmltodocx.Warning) {
+			if len(warnings) < maxWarnings {
+				warnings = append(warnings, Warning{Code: w.Code, Message: w.Message})
+			} else {
+				dropped++
+			}
+		},
+	}
+	err := writeFileAtomic(outputPath, func(w io.Writer) error {
+		return htmltodocx.Convert(ctx, strings.NewReader(doc.HTMLContent), w, opts)
+	})
 	if err != nil {
-		return "", err
+		return nil, fmt.Errorf("DOCX conversion failed: %w", err)
 	}
-	defer cleanup()
-
-	// Run Pandoc conversion
-	args := []string{
-		"-f", "html",
-		"-o", outputPath,
-		tmpHTMLPath,
+	if dropped > 0 {
+		warnings = append(warnings, Warning{Code: "more", Message: fmt.Sprintf("%d more warnings not shown", dropped)})
 	}
+	return warnings, nil
+}
 
-	if err := e.runPandoc(args, docSvc.GetDocumentPath(doc.ID)); err != nil {
-		return "", fmt.Errorf("DOCX conversion failed: %w", err)
+// writeFileAtomic writes a file through write and moves it to path only if
+// write succeeds.
+func writeFileAtomic(path string, write func(io.Writer) error) (err error) {
+	f, err := os.CreateTemp(filepath.Dir(path), "."+filepath.Base(path)+"-*.tmp")
+	if err != nil {
+		return fmt.Errorf("failed to create output file: %w", err)
 	}
-
-	return outputPath, nil
+	defer func() {
+		if err != nil {
+			f.Close()
+			os.Remove(f.Name())
+		}
+	}()
+	bw := bufio.NewWriter(f)
+	if err := write(bw); err != nil {
+		return err
+	}
+	if err := bw.Flush(); err != nil {
+		return fmt.Errorf("failed to write output file: %w", err)
+	}
+	if err := f.Chmod(0644); err != nil {
+		return fmt.Errorf("failed to write output file: %w", err)
+	}
+	if err := f.Close(); err != nil {
+		return fmt.Errorf("failed to write output file: %w", err)
+	}
+	if err := os.Rename(f.Name(), path); err != nil {
+		return fmt.Errorf("failed to write output file: %w", err)
+	}
+	return nil
 }
 
 // checkPandoc checks if Pandoc is installed

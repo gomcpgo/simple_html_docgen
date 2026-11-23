@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel Phrasebook</title>
+<style>
+  :root {
+    --ink: #1c2b33;
+    --muted: #5c6b73;
+    --line: #e4ebe6;
+    --paper: #f7f4ee;
+    --card: #ffffff;
+    --accent: #0f6e56;
+    --accent-soft: #e7f3ee;
+    --gold: #c4a35a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 2.5rem 1.25rem 4rem;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", "Noto Sans", "Noto Sans JP", "Noto Sans Devanagari", "Noto Naskh Arabic", "Hiragino Sans", "Yu Gothic", Arial, sans-serif;
+    line-height: 1.45;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  h1 {
+    font-size: 2.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.35rem;
+  }
+  .subtitle {
+    color: var(--muted);
+    margin: 0 0 1.75rem;
+    font-size: 1.05rem;
+  }
+  h2 {
+    font-size: 1.25rem;
+    margin: 2rem 0 0.75rem;
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent-soft);
+    padding-bottom: 0.35rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+  th, td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #fbfcfb; }
+  td.en { font-weight: 600; width: 20%; }
+  .script { display: block; font-size: 1.05rem; }
+  .roman { display: block; color: var(--muted); font-size: 0.78rem; margin-top: 0.15rem; }
+  td.ar, td.ar .script {
+    direction: rtl;
+    text-align: right;
+    unicode-bidi: isolate;
+    font-family: "Noto Naskh Arabic", "Traditional Arabic", "Segoe UI", "Noto Sans Arabic", serif;
+  }
+  td.ar .roman {
+    direction: ltr;
+    text-align: right;
+    unicode-bidi: isolate;
+  }
+  .tips {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold);
+    border-radius: 10px;
+    padding: 1rem 1.15rem 0.4rem;
+  }
+  .tips li { margin-bottom: 0.55rem; }
+  .note { color: var(--muted); font-size: 0.9rem; margin-top: 1.5rem; }
+  @media print {
+    body { background: white !important; padding: 0.5rem; }
+    .wrap { max-width: none; }
+    table, .tips { box-shadow: none !important; }
+    th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Travel Phrasebook</h1>
+  <p class="subtitle">Twenty useful phrases in English, Spanish, Japanese, Hindi, and Arabic.</p>
+</div>
+<h2>Greetings &amp; basics</h2>
+<table>
+  <thead>
+    <tr>
+      <th>English</th>
+      <th>Spanish</th>
+      <th>Japanese</th>
+      <th>Hindi</th>
+      <th>Arabic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="en">Hello</td>
+      <td><span class="script">Hola</span><span class="roman">OH-lah</span></td>
+      <td><span class="script">こんにちは</span><span class="roman">konnichiwa</span></td>
+      <td><span class="script">नमस्ते</span><span class="roman">namaste</span></td>
+      <td class="ar"><span class="script">مرحبا</span><span class="roman">marhaban</span></td>
+    </tr>
+    <tr>
+      <td class="en">Goodbye</td>
+      <td><span class="script">Adiós</span><span class="roman">ah-DYOHS</span></td>
+      <td><span class="script">さようなら</span><span class="roman">sayōnara</span></td>
+      <td><span class="script">अलविदा</span><span class="roman">alvida</span></td>
+      <td class="ar"><span class="script">مع السلامة</span><span class="roman">maʿa as-salāma</span></td>
+    </tr>
+    <tr>
+      <td class="en">Please</td>
+      <td><span class="script">Por favor</span><span class="roman">por fah-VOR</span></td>
+      <td><span class="script">お願いします</span><span class="roman">onegaishimasu</span></td>
+      <td><span class="script">कृपया</span><span class="roman">kripaya</span></td>
+      <td class="ar"><span class="script">من فضلك</span><span class="roman">min faḍlik</span></td>
+    </tr>
+    <tr>
+      <td class="en">Thank you</td>
+      <td><span class="script">Gracias</span><span class="roman">GRAH-syahs</span></td>
+      <td><span class="script">ありがとうございます</span><span class="roman">arigatō gozaimasu</span></td>
+      <td><span class="script">धन्यवाद</span><span class="roman">dhanyavaad</span></td>
+      <td class="ar"><span class="script">شكراً</span><span class="roman">shukran</span></td>
+    </tr>
+    <tr>
+      <td class="en">Yes / No</td>
+      <td><span class="script">Sí / No</span><span class="roman">see / noh</span></td>
+      <td><span class="script">はい / いいえ</span><span class="roman">hai / iie</span></td>
+      <td><span class="script">हाँ / नहीं</span><span class="roman">haan / nahin</span></td>
+      <td class="ar"><span class="script">نعم / لا</span><span class="roman">naʿam / lā</span></td>
+    </tr>
+  </tbody>
+</table><h2>Getting around</h2>
+<table>
+  <thead>
+    <tr>
+      <th>English</th>
+      <th>Spanish</th>
+      <th>Japanese</th>
+      <th>Hindi</th>
+      <th>Arabic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="en">Where is the station?</td>
+      <td><span class="script">¿Dónde está la estación?</span><span class="roman">DON-deh es-TAH lah es-tah-SYOHN</span></td>
+      <td><span class="script">駅はどこですか</span><span class="roman">eki wa doko desu ka</span></td>
+      <td><span class="script">स्टेशन कहाँ है?</span><span class="roman">steshan kahan hai?</span></td>
+      <td class="ar"><span class="script">أين المحطة؟</span><span class="roman">ayna al-maḥaṭṭa?</span></td>
+    </tr>
+    <tr>
+      <td class="en">How much is a ticket?</td>
+      <td><span class="script">¿Cuánto cuesta un billete?</span><span class="roman">KWAN-toh KWES-tah oon bee-YEH-teh</span></td>
+      <td><span class="script">切符はいくらですか</span><span class="roman">kippu wa ikura desu ka</span></td>
+      <td><span class="script">टिकट कितने का है?</span><span class="roman">ticket kitne ka hai?</span></td>
+      <td class="ar"><span class="script">بكم التذكرة؟</span><span class="roman">bi-kam at-tadhkira?</span></td>
+    </tr>
+    <tr>
+      <td class="en">I need a taxi</td>
+      <td><span class="script">Necesito un taxi</span><span class="roman">neh-seh-SEE-toh oon TAK-see</span></td>
+      <td><span class="script">タクシーをお願いします</span><span class="roman">takushī o onegaishimasu</span></td>
+      <td><span class="script">मुझे टैक्सी चाहिए</span><span class="roman">mujhe taxi chahiye</span></td>
+      <td class="ar"><span class="script">أحتاج إلى سيارة أجرة</span><span class="roman">aḥtāju ilā sayyārat ujra</span></td>
+    </tr>
+    <tr>
+      <td class="en">Left / Right / Straight</td>
+      <td><span class="script">Izquierda / Derecha / Recto</span><span class="roman">ees-KYEHR-dah / deh-REH-chah / REK-toh</span></td>
+      <td><span class="script">左 / 右 / まっすぐ</span><span class="roman">hidari / migi / massugu</span></td>
+      <td><span class="script">बाएँ / दाएँ / सीधे</span><span class="roman">baayen / daayen / seedhe</span></td>
+      <td class="ar"><span class="script">يسار / يمين / مستقيم</span><span class="roman">yasār / yamīn / mustaqīm</span></td>
+    </tr>
+    <tr>
+      <td class="en">Stop here, please</td>
+      <td><span class="script">Pare aquí, por favor</span><span class="roman">PAH-reh ah-KEE, por fah-VOR</span></td>
+      <td><span class="script">ここで止めてください</span><span class="roman">koko de tomete kudasai</span></td>
+      <td><span class="script">यहीं रुकिए, कृपया</span><span class="roman">yahin rukiye, kripaya</span></td>
+      <td class="ar"><span class="script">قف هنا، من فضلك</span><span class="roman">qif hunā, min faḍlik</span></td>
+    </tr>
+  </tbody>
+</table><h2>Food &amp; dining</h2>
+<table>
+  <thead>
+    <tr>
+      <th>English</th>
+      <th>Spanish</th>
+      <th>Japanese</th>
+      <th>Hindi</th>
+      <th>Arabic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="en">A table for two, please</td>
+      <td><span class="script">Una mesa para dos, por favor</span><span class="roman">OO-nah MEH-sah PAH-rah dohs</span></td>
+      <td><span class="script">二人席をお願いします</span><span class="roman">futari-seki o onegaishimasu</span></td>
+      <td><span class="script">दो लोगों के लिए मेज़</span><span class="roman">do logon ke liye mez</span></td>
+      <td class="ar"><span class="script">طاولة لشخصين، من فضلك</span><span class="roman">ṭāwila li-shakhṣayn, min faḍlik</span></td>
+    </tr>
+    <tr>
+      <td class="en">The menu, please</td>
+      <td><span class="script">La carta, por favor</span><span class="roman">lah KAR-tah, por fah-VOR</span></td>
+      <td><span class="script">メニューをください</span><span class="roman">menyū o kudasai</span></td>
+      <td><span class="script">मेन्यू दीजिए</span><span class="roman">menu dijiye</span></td>
+      <td class="ar"><span class="script">القائمة، من فضلك</span><span class="roman">al-qāʾima, min faḍlik</span></td>
+    </tr>
+    <tr>
+      <td class="en">Water, please</td>
+      <td><span class="script">Agua, por favor</span><span class="roman">AH-gwah, por fah-VOR</span></td>
+      <td><span class="script">水をください</span><span class="roman">mizu o kudasai</span></td>
+      <td><span class="script">पानी दीजिए</span><span class="roman">paani dijiye</span></td>
+      <td class="ar"><span class="script">ماء، من فضلك</span><span class="roman">māʾ, min faḍlik</span></td>
+    </tr>
+    <tr>
+      <td class="en">I am vegetarian</td>
+      <td><span class="script">Soy vegetariano</span><span class="roman">soy veh-heh-tah-RYAH-noh</span></td>
+      <td><span class="script">ベジタリアンです</span><span class="roman">bejitarian desu</span></td>
+      <td><span class="script">मैं शाकाहारी हूँ</span><span class="roman">main shakahari hoon</span></td>
+      <td class="ar"><span class="script">أنا نباتي</span><span class="roman">anā nabātī</span></td>
+    </tr>
+    <tr>
+      <td class="en">The bill, please</td>
+      <td><span class="script">La cuenta, por favor</span><span class="roman">lah KWEN-tah, por fah-VOR</span></td>
+      <td><span class="script">お会計お願いします</span><span class="roman">okaikei onegaishimasu</span></td>
+      <td><span class="script">बिल दीजिए</span><span class="roman">bill dijiye</span></td>
+      <td class="ar"><span class="script">الحساب، من فضلك</span><span class="roman">al-ḥisāb, min faḍlik</span></td>
+    </tr>
+  </tbody>
+</table><h2>Help &amp; practical</h2>
+<table>
+  <thead>
+    <tr>
+      <th>English</th>
+      <th>Spanish</th>
+      <th>Japanese</th>
+      <th>Hindi</th>
+      <th>Arabic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="en">Do you speak English?</td>
+      <td><span class="script">¿Habla inglés?</span><span class="roman">AH-blah een-GLEHS</span></td>
+      <td><span class="script">英語を話せますか</span><span class="roman">eigo o hanasemasu ka</span></td>
+      <td><span class="script">क्या आप अंग्रेज़ी बोलते हैं?</span><span class="roman">kya aap angrezi bolte hain?</span></td>
+      <td class="ar"><span class="script">هل تتكلم الإنجليزية؟</span><span class="roman">hal tatakallamu al-injilīziyya?</span></td>
+    </tr>
+    <tr>
+      <td class="en">I don’t understand</td>
+      <td><span class="script">No entiendo</span><span class="roman">noh en-TYEN-doh</span></td>
+      <td><span class="script">わかりません</span><span class="roman">wakarimasen</span></td>
+      <td><span class="script">मैं नहीं समझा</span><span class="roman">main nahin samjha</span></td>
+      <td class="ar"><span class="script">لا أفهم</span><span class="roman">lā afham</span></td>
+    </tr>
+    <tr>
+      <td class="en">Where is the bathroom?</td>
+      <td><span class="script">¿Dónde está el baño?</span><span class="roman">DON-deh es-TAH el BAH-nyoh</span></td>
+      <td><span class="script">トイレはどこですか</span><span class="roman">toire wa doko desu ka</span></td>
+      <td><span class="script">शौचालय कहाँ है?</span><span class="roman">shauchalay kahan hai?</span></td>
+      <td class="ar"><span class="script">أين الحمام؟</span><span class="roman">ayna al-ḥammām?</span></td>
+    </tr>
+    <tr>
+      <td class="en">I need a doctor</td>
+      <td><span class="script">Necesito un médico</span><span class="roman">neh-seh-SEE-toh oon MEH-dee-koh</span></td>
+      <td><span class="script">医者が必要です</span><span class="roman">isha ga hitsuyō desu</span></td>
+      <td><span class="script">मुझे डॉक्टर चाहिए</span><span class="roman">mujhe doctor chahiye</span></td>
+      <td class="ar"><span class="script">أحتاج إلى طبيب</span><span class="roman">aḥtāju ilā ṭabīb</span></td>
+    </tr>
+    <tr>
+      <td class="en">Help!</td>
+      <td><span class="script">¡Ayuda!</span><span class="roman">ah-YOO-dah</span></td>
+      <td><span class="script">助けて！</span><span class="roman">tasukete!</span></td>
+      <td><span class="script">मदद कीजिए!</span><span class="roman">madad kijiye!</span></td>
+      <td class="ar"><span class="script">النجدة!</span><span class="roman">an-najda!</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Tips for using this phrasebook</h2>
+<div class="tips">
+  <ul>
+    <li>Say the English first if you are unsure, then point to the line. A smile and a slow pace do more than perfect grammar.</li>
+    <li>The small line under each phrase is a rough pronunciation guide, not a precise phonetic transcription. Stress the capitalized syllables in Spanish.</li>
+    <li>Arabic is written right to left. The Arabic column is set with RTL direction so the script reads correctly; the romanization under it stays left to right.</li>
+    <li>Japanese forms here are polite everyday speech. Adding お願いします (onegaishimasu) or ください (kudasai) keeps requests soft.</li>
+    <li>Hindi and Arabic greetings and “please” vary by region and formality. These are widely understood travel forms, not the only correct ones.</li>
+    <li>For medical or safety phrases, show the written line as well as speaking it. Numbers, allergies, and place names are safer written down.</li>
+  </ul>
+</div>
+<p class="note">Twenty phrases across four groups. Spellings follow common travel usage; local accents will differ.</p></body>
+</html>

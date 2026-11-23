@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Effects of Intermittent Fasting: A Research Brief</title>
+  <style>
+    :root {
+      --primary: #1b365d;
+      --accent: #2b6cb0;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --border: #d1d5db;
+      --bg-subtle: #f8fafc;
+      --quote-bg: #f1f5f9;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      color: var(--text);
+      background-color: #ffffff;
+      line-height: 1.68;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 44px;
+    }
+    header.brief-header {
+      border-bottom: 3px solid var(--primary);
+      padding-bottom: 22px;
+      margin-bottom: 28px;
+    }
+    .doc-label {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 2rem;
+      line-height: 1.25;
+      color: var(--primary);
+      margin: 0 0 12px 0;
+    }
+    .meta-line {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    nav.section-index {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px 22px;
+      margin-bottom: 32px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.88rem;
+    }
+    nav.section-index strong {
+      display: block;
+      color: var(--primary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+    }
+    nav.section-index ol {
+      margin: 0;
+      padding-left: 20px;
+      columns: 2;
+      column-gap: 28px;
+    }
+    nav.section-index li {
+      margin-bottom: 4px;
+    }
+    nav.section-index a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    section {
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 1.32rem;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin-top: 0;
+      margin-bottom: 14px;
+    }
+    h3 {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 1.05rem;
+      color: #2c4a70;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+    p {
+      margin: 0 0 14px 0;
+      text-align: justify;
+    }
+    .abstract-box {
+      background: var(--bg-subtle);
+      border-left: 4px solid var(--primary);
+      padding: 18px 22px;
+      border-radius: 0 6px 6px 0;
+    }
+    .abstract-box p:last-child {
+      margin-bottom: 0;
+    }
+    blockquote {
+      margin: 18px 0;
+      padding: 16px 22px;
+      background: var(--quote-bg);
+      border-left: 4px solid var(--accent);
+      font-style: italic;
+      color: #1e293b;
+    }
+    blockquote cite {
+      display: block;
+      margin-top: 8px;
+      font-style: normal;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    sup.cite {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 20px 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    tr:nth-child(even) td {
+      background-color: #f9fafb;
+    }
+    ul.styled-list, ol.references-list {
+      padding-left: 22px;
+      margin-top: 8px;
+    }
+    ul.styled-list li, ol.references-list li {
+      margin-bottom: 10px;
+    }
+    ol.references-list {
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    @media print {
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      nav.section-index, .abstract-box, blockquote, tr:nth-child(even) td {
+        background: #ffffff !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+      th {
+        background: #ffffff !important;
+        color: var(--primary) !important;
+        border-bottom: 2px solid var(--primary) !important;
+      }
+      section, table, blockquote {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="brief-header">
+    <div class="doc-label">Clinical &amp; Nutritional Evidence Synthesis</div>
+    <h1>Health Effects of Intermittent Fasting: Cardiometabolic, Weight, and Longevity Outcomes</h1>
+    <div class="meta-line">Research Brief &bull; Date: November 2026 &bull; Scope: Human Randomized Controlled Trials &amp; Mechanistic Reviews</div>
+  </header>
+
+  <nav class="section-index" aria-label="Brief Contents">
+    <strong>Brief Sections</strong>
+    <ol>
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#methods">Methods Summary</a></li>
+      <li><a href="#findings">Key Findings</a></li>
+      <li><a href="#study-table">Summary of Five Landmark Studies</a></li>
+      <li><a href="#key-statements">Key Clinical Statements</a></li>
+      <li><a href="#limitations">Methodological &amp; Clinical Limitations</a></li>
+      <li><a href="#references">References</a></li>
+    </ol>
+  </nav>
+  <section id="abstract">
+    <h2>1. Abstract</h2>
+    <div class="abstract-box">
+      <p><strong>Background:</strong> Intermittent fasting (IF)—an umbrella term encompassing time-restricted eating (TRE), alternate-day fasting (ADF), and periodic fasting (such as the 5:2 diet)—has emerged as a widely adopted nutritional strategy for weight management and cardiometabolic risk reduction.</p>
+      <p><strong>Objective &amp; Approach:</strong> This research brief synthesizes evidence from peer-reviewed human randomized controlled trials (RCTs), controlled feeding studies, and translational reviews evaluating the physiological, anthropometric, and cardiometabolic effects of IF protocols compared with continuous daily caloric restriction (CR) and habitual <em>ad libitum</em> intake.</p>
+      <p><strong>Core Findings:</strong> Across trials lasting 5 weeks to 12 months, IF consistently produces clinically meaningful weight reductions of 3% to 8% from baseline, primarily via spontaneous reductions in daily energy intake of 200–550 kcal/day. When energy intake is matched, IF and continuous CR yield largely equivalent reductions in body weight, visceral adiposity, fasting insulin, and blood pressure. However, circadian-aligned protocols—specifically early time-restricted eating (eTRE)—demonstrate independent improvements in glycemic regulation, beta-cell responsiveness, and blood pressure even in the absence of weight loss. Potential drawbacks include lean mass attrition during late-day eating windows, variable long-term adherence in Alternate-Day Fasting regimens, and contraindications in vulnerable clinical populations.</p>
+    </div>
+  </section>
+  <section id="introduction">
+    <h2>2. Introduction</h2>
+    <p>Chronic energy surplus and erratic, prolonged daily eating intervals—often exceeding 14 to 15 hours per 24-hour cycle—are strongly implicated in the global rise of obesity, insulin resistance, type 2 diabetes mellitus, and cardiovascular disease.<sup class="cite">[1,8]</sup> Conventional dietary management has relied primarily on continuous daily caloric restriction (CR), which requires meticulous portion tracking and frequently suffers from diminishing adherence over 6 to 12 months.<sup class="cite">[3,7]</sup></p>
+    <p>Intermittent fasting (IF) shifts the primary behavioral target from nutrient or calorie counting toward temporal regulation of energy intake. Three principal clinical regimens dominate the research literature:<sup class="cite">[1,8]</sup></p>
+    <ul class="styled-list">
+      <li><strong>Time-Restricted Eating (TRE):</strong> Restricts daily caloric intake to a consistent 4- to 10-hour window (most commonly 8 hours, e.g., 16:8), subdivided into <em>early</em> TRE (eTRE, finishing intake by mid-afternoon) and <em>late</em> TRE (lTRE, skipping breakfast and eating midday through evening).<sup class="cite">[2,4,6]</sup></li>
+      <li><strong>Alternate-Day Fasting (ADF):</strong> Alternates "fast days" (0% to 25% of baseline energy requirements, roughly 500 kcal) with <em>ad libitum</em> "feast days."<sup class="cite">[3,8]</sup></li>
+      <li><strong>5:2 Periodic Fasting:</strong> Prescribes severe energy restriction (500–600 kcal/day) on two non-consecutive days per week alongside five days of habitual intake.<sup class="cite">[1,8]</sup></li>
+    </ul>
+    <p>Mechanistically, extending the fasting interval beyond 12 to 16 hours depletes hepatic glycogen stores and triggers a coordinated "metabolic switch" toward adipose lipolysis and hepatic ketogenesis.<sup class="cite">[1]</sup> Circulating ketone bodies—particularly &beta;-hydroxybutyrate—act not merely as alternative fuel substrates for brain and muscle tissue, but also as signaling molecules that downregulate mammalian target of rapamycin (mTOR) pathways, stimulate cellular autophagy, suppress pro-inflammatory inflammasome activity, and align peripheral tissue clocks with central suprachiasmatic circadian rhythms.<sup class="cite">[1,2]</sup></p>
+  </section>
+  <section id="methods">
+    <h2>3. Methods Summary</h2>
+    <p>This brief synthesizes findings from peer-reviewed human clinical evidence published in major biomedical journals, prioritizing parallel-group and crossover randomized controlled trials (RCTs) alongside authoritative translational reviews.<sup class="cite">[1–8]</sup></p>
+    <ul class="styled-list">
+      <li><strong>Inclusion Scope:</strong> Adult cohorts (ages 18–75 years) across normal weight, overweight/obesity, and prediabetes/metabolic syndrome phenotypes; interventions testing TRE (4–10 h eating windows), modified ADF, or 5:2 protocols with follow-up durations ranging from tightly supervised 5-week isocaloric metabolic ward trials to 12-month free-living behavioral RCTs.</li>
+      <li><strong>Comparator Arms:</strong> Continuous daily caloric restriction (typically 25% energy deficit or 1,200–1,800 kcal/day) to isolate fasting-timing effects from caloric deficit, as well as habitual <em>ad libitum</em> control schedules (&ge;12 hours daily intake) to assess pragmatic real-world efficacy.</li>
+      <li><strong>Outcome Domains Assessed:</strong> Anthropometrics and body composition via dual-energy X-ray absorptiometry (DXA) (total weight, fat mass, visceral adipose tissue, appendicular lean mass); glycemic regulation (fasting glucose, fasting insulin, HOMA-IR, HbA1c, oral glucose tolerance); cardiovascular risk markers (systolic/diastolic blood pressure, LDL-C, HDL-C, triglycerides); and protocol adherence/attrition rates.</li>
+    </ul>
+  </section>
+  <section id="findings">
+    <h2>4. Key Findings</h2>
+
+    <h3>4.1 Body Weight and Body Composition</h3>
+    <p>Across pragmatic <em>ad libitum</em> trials, TRE and ADF regimens consistently produce modest-to-moderate weight loss of 3% to 8% over 8 to 52 weeks by inducing an unprompted caloric deficit of approximately 200 to 550 kcal/day.<sup class="cite">[3,7,8]</sup> However, when total caloric intake is strictly matched between groups, IF does not confer superior weight loss over continuous daily CR. In a 12-month RCT of 139 adults with obesity, Liu et al. reported mean weight loss of &minus;8.0 kg with 8-hour TRE plus caloric restriction versus &minus;6.3 kg with caloric restriction alone—a non-significant between-group difference (<em>P</em> = 0.11).<sup class="cite">[5]</sup> Similarly, Trepanowski et al. found nearly identical 12-month weight loss between modified ADF (&minus;6.0%) and daily CR (&minus;5.3%).<sup class="cite">[3]</sup></p>
+    <p>Timing of the eating window meaningfully influences weight-loss efficacy and lean tissue preservation. In the 12-week TREAT trial testing late TRE (12:00 PM to 8:00 PM) without dietary counseling, Lowe et al. observed minimal total weight difference versus three-meal controls (&minus;0.94 kg vs. &minus;0.68 kg; <em>P</em> = 0.63), alongside a statistically significant loss of appendicular lean mass in the late-TRE group.<sup class="cite">[4]</sup> Conversely, Jamshed et al. demonstrated that combining early TRE (7:00 AM to 3:00 PM) with energy counseling produced an additional &minus;2.3 kg weight loss over 14 weeks compared with eating across &ge;12 hours (<em>P</em> = 0.002).<sup class="cite">[6]</sup></p>
+
+    <h3>4.2 Glycemic Control and Circadian Insulin Sensitivity</h3>
+    <p>Human glucose tolerance and pancreatic &beta;-cell responsiveness peak in the morning and decline toward evening. Controlled isocaloric feeding trials confirm that aligning fasting with circadian biology improves glucoregulation independently of weight change. In a 5-week randomized crossover study of men with prediabetes maintained at constant body weight, Sutton et al. showed that a 6-hour early TRE schedule (finishing dinner before 3:00 PM) markedly reduced fasting insulin, lowered postprandial insulin excursions, and enhanced &beta;-cell responsiveness compared with a 12-hour feeding schedule.<sup class="cite">[2]</sup> Over longer durations (12 months), non-calorie-counted 8-hour TRE performed comparably to structured 25% daily CR in maintaining normoglycemia and reducing waist circumference in racially diverse cohorts.<sup class="cite">[7]</sup></p>
+
+    <h3>4.3 Blood Pressure, Lipid Profiles, and Oxidative Stress</h3>
+    <p>Intermittent fasting reliably lowers systolic and diastolic blood pressure in individuals with prehypertension or obesity. Sutton et al. recorded reductions of ~11 mm Hg systolic and ~10 mm Hg diastolic blood pressure during weight-stable eTRE—an effect magnitude comparable to first-line antihypertensive pharmacotherapy.<sup class="cite">[2]</sup> Jamshed et al. similarly observed significant reductions in diastolic blood pressure (&minus;4 mm Hg) alongside improved mood scores with eTRE.<sup class="cite">[6]</sup> Effects on plasma lipids are generally neutral-to-favorable (modest reductions in triglycerides and VLDL cholesterol), though Trepanowski et al. noted a transient, modest elevation in LDL cholesterol (+11.5 mg/dL relative to daily CR) at 12 months in the ADF arm.<sup class="cite">[3,8]</sup> Biomarkers of lipid peroxidation (such as 8-isoprostane) decrease significantly across both short-term eTRE and 8-week ADF interventions.<sup class="cite">[2,8]</sup></p>
+
+    <h3>4.4 Cellular Stress Resistance and Behavioral Adherence</h3>
+    <p>Preclinical and translational evidence summarized by de Cabo and Mattson indicates that periodic metabolic switching upregulates DNA repair enzymes, chaperones, antioxidant defenses (via Nrf2 activation), and mitochondrial biogenesis, offering neuroprotective and anti-inflammatory potential.<sup class="cite">[1]</sup> Behaviorally, adherence diverges sharply by regimen: TRE windows of 8 to 10 hours achieve high real-world compliance (&gt;80% of days over 6–12 months),<sup class="cite">[5,7]</sup> whereas strict modified ADF shows higher dropout rates (up to 38% at 1 year vs. 29% for daily CR) due to hunger and social disruption on fast days.<sup class="cite">[3]</sup></p>
+  </section>
+  <section id="study-table">
+    <h2>5. Summary of Five Landmark Clinical Studies</h2>
+    <p>Table 1 summarizes five pivotal randomized controlled trials spanning alternate-day fasting, early time-restricted eating, late time-restricted eating, and calorie-restricted TRE across short- and long-term follow-up horizons.</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 18%;">Study &amp; Citation</th>
+          <th style="width: 16%;">Design &amp; Duration</th>
+          <th style="width: 17%;">Population (<em>N</em>)</th>
+          <th style="width: 22%;">Intervention vs. Comparator</th>
+          <th style="width: 27%;">Primary &amp; Secondary Outcomes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Sutton et al. (2018)</strong><sup class="cite">[2]</sup><br><em>Cell Metabolism</em></td>
+          <td>Supervised, weight-stable randomized crossover trial; 5 weeks per arm</td>
+          <td><em>N</em> = 8 men with overweight and prediabetes</td>
+          <td><strong>eTRE:</strong> 6-h window (dinner before 3:00 PM), eucaloric<br><strong>Control:</strong> 12-h feeding window, eucaloric</td>
+          <td>Improved insulin sensitivity, increased &beta;-cell responsiveness, lowered fasting/postprandial insulin, reduced BP (&minus;11/&minus;10 mm Hg), and decreased 8-isoprostane without weight loss.</td>
+        </tr>
+        <tr>
+          <td><strong>Trepanowski et al. (2017)</strong><sup class="cite">[3]</sup><br><em>JAMA Intern Med</em></td>
+          <td>3-arm parallel RCT; 12 months (6 mo weight loss + 6 mo maintenance)</td>
+          <td><em>N</em> = 100 metabolically healthy adults with obesity</td>
+          <td><strong>ADF:</strong> 25% energy fast days / 125% feast days<br><strong>CR:</strong> 75% daily energy<br><strong>Control:</strong> Habitual intake</td>
+          <td>12-mo weight loss similar in ADF (&minus;6.0%) and CR (&minus;5.3%). Higher attrition in ADF (38% vs. 29% CR); no superior cardioprotection; slight LDL-C increase in ADF (+11.5 mg/dL vs. CR).</td>
+        </tr>
+        <tr>
+          <td><strong>Lowe et al. (2020) — TREAT</strong><sup class="cite">[4]</sup><br><em>JAMA Intern Med</em></td>
+          <td>2-arm pragmatic parallel RCT; 12 weeks</td>
+          <td><em>N</em> = 116 adults with overweight or obesity (BMI 27–43)</td>
+          <td><strong>lTRE:</strong> 8-h window (12:00 PM–8:00 PM), <em>ad libitum</em><br><strong>Control:</strong> 3 structured meals/day + snacks</td>
+          <td>Minimal weight loss in lTRE (&minus;0.94 kg) vs. control (&minus;0.68 kg; <em>P</em> = 0.63). No significant differences in fat mass, fasting insulin, lipids, or HbA1c; greater appendicular lean mass loss in lTRE.</td>
+        </tr>
+        <tr>
+          <td><strong>Liu et al. (2022)</strong><sup class="cite">[5]</sup><br><em>N Engl J Med</em></td>
+          <td>2-arm parallel RCT; 12 months</td>
+          <td><em>N</em> = 139 adults with obesity (BMI 28–45)</td>
+          <td><strong>TRE + CR:</strong> 8-h window (8:00 AM–4:00 PM) + 1,200–1,800 kcal/d<br><strong>CR Alone:</strong> Habitual timing + identical kcal target</td>
+          <td>Substantial 12-mo weight loss in both TRE+CR (&minus;8.0 kg) and CR alone (&minus;6.3 kg), with no statistically significant difference between arms (net difference &minus;1.8 kg; <em>P</em> = 0.11). Similar improvements in waist, BP, lipids, and glucose.</td>
+        </tr>
+        <tr>
+          <td><strong>Lin et al. (2023)</strong><sup class="cite">[7]</sup><br><em>Ann Intern Med</em></td>
+          <td>3-arm parallel RCT; 12 months (6 mo loss + 6 mo maintenance)</td>
+          <td><em>N</em> = 90 racially diverse adults with obesity</td>
+          <td><strong>TRE:</strong> 8-h window (12:00 PM–8:00 PM), no calorie counting<br><strong>CR:</strong> 25% daily energy restriction<br><strong>Control:</strong> &ge;10-h habitual window</td>
+          <td>At 12 mo, TRE reduced body weight by &minus;4.61 kg vs. control (<em>P</em> &le; 0.01), statistically indistinguishable from daily CR (&minus;5.42 kg vs. control; between-diet difference 0.81 kg, <em>P</em> = 0.63).</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section id="key-statements">
+    <h2>6. Key Clinical &amp; Mechanistic Statements</h2>
+    <p>The following synthesis statements distill core consensus insights from clinical trials and translational reviews regarding intermittent fasting mechanisms, equivalence with caloric restriction, and circadian timing:</p>
+
+    <blockquote>
+      "Periodic flipping of the metabolic switch not only provides the ketones that are necessary to fuel cells during the fasting period but also elicits highly orchestrated systemic and cellular responses that carry over into the fed state to bolster mental and physical performance, as well as disease resistance."
+      <cite>— Mechanistic Synthesis on Metabolic Switching, de Cabo &amp; Mattson, New England Journal of Medicine (2019) [1]</cite>
+    </blockquote>
+
+    <blockquote>
+      "Among patients with obesity, a regimen of time-restricted eating was not more beneficial with regard to reduction in body weight, body fat, or metabolic risk factors than daily calorie restriction—establishing that energy deficit remains the primary driver of long-term adiposity loss when caloric intake is controlled."
+      <cite>— Clinical Trial Synthesis, Liu et al., New England Journal of Medicine (2022) [5]</cite>
+    </blockquote>
+
+    <blockquote>
+      "Early time-restricted feeding—aligning food intake with endogenous morning peaks in insulin sensitivity and beta-cell function—improves cardiometabolic health, lowers blood pressure, and reduces oxidative stress independently of weight loss, whereas late-day eating windows risk blunting metabolic benefits and accelerating appendicular lean mass loss."
+      <cite>— Evidence Synthesis from Circadian Feeding Trials, Sutton et al. (2018) &amp; Lowe et al. (2020) [2,4,6]</cite>
+    </blockquote>
+  </section>
+  <section id="limitations">
+    <h2>7. Methodological &amp; Clinical Limitations</h2>
+    <p>Interpreting the clinical evidence on intermittent fasting requires attention to both trial-design constraints and patient-safety considerations:<sup class="cite">[3,4,8]</sup></p>
+    <ul class="styled-list">
+      <li><strong>Absence of Hard Cardiovascular &amp; Longevity Endpoints:</strong> Human trials are predominantly 8 weeks to 12 months in duration and rely on surrogate cardiometabolic biomarkers (weight, HOMA-IR, blood pressure, lipids). Unlike preclinical rodent studies demonstrating lifespan extension, no large-scale prospective randomized outcomes trials have established effects of IF on major adverse cardiovascular events (MACE), incident type 2 diabetes, or all-cause mortality in humans.<sup class="cite">[1,8]</sup></li>
+      <li><strong>Protocol Heterogeneity &amp; Confounding by Energy Deficit:</strong> Definitions of IF vary substantially across studies (4-h vs. 8-h vs. 10-h TRE; early vs. late windows; zero-calorie vs. 500-kcal fast days). Free-living trials frequently rely on self-reported food logs or smartphone timestamps rather than continuous metabolic chamber monitoring or doubly labeled water, complicating separation of fasting duration from unmeasured caloric restriction.<sup class="cite">[4,5,7]</sup></li>
+      <li><strong>Lean Mass Attrition &amp; Sarcopenia Risk:</strong> Without adequate daily protein intake (1.2–1.6 g/kg/day) and resistance exercise, compressed eating windows—especially late TRE—can disproportionately reduce fat-free skeletal muscle mass (up to 65% of weight lost in Lowe et al.), posing elevated risk for older adults.<sup class="cite">[4,8]</sup></li>
+      <li><strong>Clinical Contraindications &amp; Vulnerable Populations:</strong> Intermittent fasting is contraindicated in individuals with active or prior eating disorders (anorexia nervosa, bulimia nervosa, binge-eating disorder), pregnant or lactating individuals, children and adolescents, frail or underweight older adults, and patients with type 1 or insulin-/sulfonylurea-treated type 2 diabetes without close medical supervision due to hypoglycemia risk.<sup class="cite">[1,8]</sup></li>
+    </ul>
+  </section>
+  <section id="references">
+    <h2>8. References</h2>
+    <ol class="references-list">
+      <li>de Cabo R, Mattson MP. Effects of Intermittent Fasting on Health, Aging, and Disease. <em>New England Journal of Medicine</em>. 2019;381(26):2541–2551. doi:10.1056/NEJMra1905136</li>
+      <li>Sutton EF, Beyl R, Early KS, Cefalu WT, Ravussin E, Peterson CM. Early Time-Restricted Feeding Improves Insulin Sensitivity, Blood Pressure, and Oxidative Stress Even without Weight Loss in Men with Prediabetes. <em>Cell Metabolism</em>. 2018;27(6):1212–1221.e3. doi:10.1016/j.cmet.2018.04.010</li>
+      <li>Trepanowski JF, Kroeger CM, Barnosky A, et al. Effect of Alternate-Day Fasting on Weight Loss, Weight Maintenance, and Cardioprotection Among Metabolically Healthy Obese Adults: A Randomized Clinical Trial. <em>JAMA Internal Medicine</em>. 2017;177(7):930–938. doi:10.1001/jamainternmed.2017.0936</li>
+      <li>Lowe DA, Wu N, Rohdin-Bibby L, et al. Effects of Time-Restricted Eating on Weight Loss and Other Metabolic Parameters in Women and Men With Overweight and Obesity: The TREAT Randomized Clinical Trial. <em>JAMA Internal Medicine</em>. 2020;180(11):1491–1499. doi:10.1001/jamainternmed.2020.4153</li>
+      <li>Liu D, Huang Y, Huang C, et al. Calorie Restriction with or without Time-Restricted Eating in Weight Loss. <em>New England Journal of Medicine</em>. 2022;386(16):1495–1504. doi:10.1056/NEJMoa2114833</li>
+      <li>Jamshed H, Steger FL, Bryan DR, et al. Effectiveness of Early Time-Restricted Eating for Weight Loss, Fat Loss, and Cardiometabolic Health in Adults With Obesity: A Randomized Clinical Trial. <em>JAMA Internal Medicine</em>. 2022;182(9):953–962. doi:10.1001/jamainternmed.2022.3050</li>
+      <li>Lin S, Cienfuegos S, Ezpeleta M, et al. Time-Restricted Eating Without Calorie Counting for Weight Loss in a Racially Diverse Population: A Randomized Controlled Trial. <em>Annals of Internal Medicine</em>. 2023;176(7):885–895. doi:10.7326/M23-0052</li>
+      <li>Varady KA, Cienfuegos S, Ezpeleta M, Gabel K. Clinical application of intermittent fasting for weight loss: progress and future directions. <em>Nature Reviews Endocrinology</em>. 2022;18(5):309–321. doi:10.1038/s41574-022-00638-x</li>
+    </ol>
+  </section>
+</body>
+</html>

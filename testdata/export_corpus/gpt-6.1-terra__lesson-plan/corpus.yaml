@@ -1,0 +1,8 @@
+model: gpt-6.1-terra
+doc: lesson-plan
+images: false
+conversation: 3MUZc4uMlAluApqM4F5MS7CJiDW
+prompt: |
+  Create a Grade 7 science lesson plan on photosynthesis: learning objectives, materials, a timed activity schedule as a table, teacher notes, differentiation tips, an exit-ticket quiz with five multiple-choice questions, and an answer key.
+  
+  Create it as an HTML document with the document tools. Do not export it.

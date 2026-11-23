@@ -29,6 +29,7 @@ func main() {
 		getDoc       string
 		exportDoc    string
 		exportFormat string
+		pageSize     string
 		addMedia     string
 		mediaPath    string
 		mediaType    string
@@ -41,6 +42,7 @@ func main() {
 	flag.StringVar(&getDoc, "get", "", "Get document by ID")
 	flag.StringVar(&exportDoc, "export", "", "Export document by ID")
 	flag.StringVar(&exportFormat, "format", "html", "Export format (html, pdf, docx)")
+	flag.StringVar(&pageSize, "page-size", "", "Page size for pdf/docx export (a4, letter, legal); default from the system locale")
 	flag.StringVar(&addMedia, "add-media", "", "Add media to document (specify document ID)")
 	flag.StringVar(&mediaPath, "media-path", "", "Path to media file")
 	flag.StringVar(&mediaType, "media-type", "image", "Media type (image, video)")
@@ -96,6 +98,7 @@ func main() {
 		runTerminalCommand(ctx, h, "export_document", map[string]interface{}{
 			"document_id": exportDoc,
 			"format":      exportFormat,
+			"page_size":   pageSize,
 		})
 		return
 	}

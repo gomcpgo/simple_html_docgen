@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"simple_html_docgen/pkg/export"
 
 	"github.com/gomcpgo/mcp/pkg/protocol"
 )
@@ -137,7 +138,7 @@ func (h *Handler) GetTools() []protocol.Tool {
 		},
 		{
 			Name:        "export_document",
-			Description: "Export an HTML document to a specified format (html, pdf, or docx). Returns the path to the exported file.",
+			Description: "Export an HTML document to a specified format (html, pdf, or docx). Returns the path to the exported file. A docx export may also return warnings listing what could not be carried over exactly (for example an image that could not be loaded); the file is still written.",
 			InputSchema: json.RawMessage(`{
 				"type": "object",
 				"properties": {
@@ -153,10 +154,21 @@ func (h *Handler) GetTools() []protocol.Tool {
 					"output_path": {
 						"type": "string",
 						"description": "Optional output file path. If not provided, exports to the document's directory."
+					},
+					"page_size": {
+						"type": "string",
+						"enum": ` + pageSizeEnum() + `,
+						"description": "Optional paper size for pdf and docx. If not provided, uses the size for the user's locale (letter in the US and Canada, a4 in most other places). A CSS @page size in the document still wins for pdf."
 					}
 				},
 				"required": ["document_id", "format"]
 			}`),
 		},
 	}
+}
+
+// pageSizeEnum is the JSON list of page sizes export_document accepts.
+func pageSizeEnum() string {
+	b, _ := json.Marshal(export.PageSizes)
+	return string(b)
 }

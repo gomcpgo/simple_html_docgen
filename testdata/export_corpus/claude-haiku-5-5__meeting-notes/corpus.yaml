@@ -1,0 +1,8 @@
+model: claude-haiku-5-5
+doc: meeting-notes
+images: false
+conversation: 3MUZ2GhlVcCuJJXUf4LIZkyBYDD
+prompt: |
+  Write meeting notes for a product team's sprint planning meeting: attendees, agenda, discussion per agenda item, decisions, a table of action items with owners and due dates, and a checklist of open questions.
+  
+  Create it as an HTML document with the document tools. Do not export it.

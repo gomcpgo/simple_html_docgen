@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Payments API Developer Integration Guide</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #1f2937; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 40px 24px; background: #ffffff; }
+  header { border-bottom: 3px solid #4f46e5; padding-bottom: 16px; margin-bottom: 24px; }
+  header h1 { margin: 0 0 4px; font-size: 2.1em; color: #111827; }
+  header p { margin: 0; color: #6b7280; }
+  h2 { margin-top: 2.4em; padding-bottom: 6px; border-bottom: 1px solid #e5e7eb; color: #111827; }
+  h3 { margin-top: 1.6em; color: #374151; }
+  nav.toc { background: #f3f4f6; border-radius: 8px; padding: 12px 24px; }
+  nav.toc ol { margin: 6px 0; padding-left: 20px; columns: 2; }
+  nav.toc a { color: #4f46e5; text-decoration: none; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.92em; }
+  th, td { border: 1px solid #e5e7eb; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #f9fafb; }
+  code { font-family: SFMono-Regular, Consolas, Menlo, monospace; font-size: 0.9em; background: #f3f4f6; padding: 1px 5px; border-radius: 4px; }
+  pre { background: #111827; color: #e5e7eb; padding: 14px 16px; border-radius: 8px; overflow-x: auto; font-size: 0.85em; line-height: 1.5; }
+  pre code { background: none; padding: 0; color: inherit; }
+  .label { display: inline-block; font-size: 0.75em; font-weight: 700; padding: 1px 8px; border-radius: 4px; color: #fff; }
+  .get { background: #059669; } .post { background: #4f46e5; } .del { background: #dc2626; }
+  .note { border-left: 4px solid #4f46e5; background: #eef2ff; padding: 10px 14px; border-radius: 4px; margin: 16px 0; }
+  .warn { border-left: 4px solid #d97706; background: #fffbeb; padding: 10px 14px; border-radius: 4px; margin: 16px 0; }
+  @media print {
+    body { background: white !important; max-width: none; padding: 0; }
+    nav.toc { background: white !important; border: 1px solid #d1d5db; }
+    pre { background: white !important; color: #111827 !important; border: 1px solid #9ca3af; white-space: pre-wrap; box-shadow: none !important; }
+    code { background: white !important; }
+    .note, .warn { background: white !important; }
+    .label { color: #111827 !important; background: white !important; border: 1px solid #111827; }
+    h2, h3 { page-break-after: avoid; }
+    pre, table { page-break-inside: avoid; }
+    * { box-shadow: none !important; text-shadow: none !important; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Payments API Developer Integration Guide</h1>
+  <p>Version 1.0 &middot; REST over HTTPS &middot; JSON request and response bodies</p>
+</header>
+
+<nav class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#overview">Overview &amp; Base URL</a></li>
+    <li><a href="#authentication">Authentication</a></li>
+    <li><a href="#endpoints">Endpoints</a></li>
+    <li><a href="#examples">Request &amp; Response Examples</a></li>
+    <li><a href="#curl">curl Examples</a></li>
+    <li><a href="#errors">Error Codes</a></li>
+    <li><a href="#webhooks">Webhooks</a></li>
+    <li><a href="#rate-limits">Rate Limits</a></li>
+  </ol>
+</nav>
+<section id="overview">
+<h2>1. Overview &amp; Base URL</h2>
+<p>The Payments API lets you accept payments, manage customers and saved payment methods, issue refunds, and receive real-time event notifications. It is organized around REST: resources have predictable URLs, requests and responses use JSON, and standard HTTP verbs and status codes are used throughout.</p>
+
+<h3>Base URLs</h3>
+<table>
+  <tr><th>Environment</th><th>Base URL</th><th>Key prefix</th></tr>
+  <tr><td>Sandbox (testing, no real money)</td><td><code>https://api.sandbox.example-pay.com/v1</code></td><td><code>sk_test_</code></td></tr>
+  <tr><td>Production</td><td><code>https://api.example-pay.com/v1</code></td><td><code>sk_live_</code></td></tr>
+</table>
+
+<h3>Conventions</h3>
+<ul>
+  <li>All requests must use <strong>HTTPS</strong>. Plain HTTP requests are rejected.</li>
+  <li>Send <code>Content-Type: application/json</code> on requests with a body.</li>
+  <li>Amounts are integers in the <strong>smallest currency unit</strong> (e.g. <code>2500</code> = $25.00 USD).</li>
+  <li>Currencies use lowercase ISO 4217 codes (<code>usd</code>, <code>eur</code>, <code>gbp</code>).</li>
+  <li>Timestamps are ISO 8601 in UTC (e.g. <code>2026-11-23T10:15:00Z</code>).</li>
+  <li>Object IDs are prefixed strings, such as <code>pay_</code>, <code>cus_</code>, <code>pm_</code>, <code>ref_</code>.</li>
+  <li>List endpoints use cursor pagination via <code>limit</code> (1&ndash;100, default 20) and <code>starting_after</code>.</li>
+</ul>
+
+<h3>Idempotency</h3>
+<p>For any <code>POST</code> request, send an <code>Idempotency-Key</code> header (a unique string such as a UUID) to safely retry without creating duplicate charges. Keys are retained for 24 hours. Reusing a key with different parameters returns a <code>409</code> error.</p>
+</section>
+
+<section id="authentication">
+<h2>2. Authentication</h2>
+<p>The API uses secret API keys sent as a Bearer token in the <code>Authorization</code> header.</p>
+<pre><code>Authorization: Bearer sk_test_YOUR_SECRET_KEY</code></pre>
+
+<table>
+  <tr><th>Key type</th><th>Prefix</th><th>Use</th></tr>
+  <tr><td>Secret key (sandbox)</td><td><code>sk_test_</code></td><td>Server-side calls against the sandbox</td></tr>
+  <tr><td>Secret key (production)</td><td><code>sk_live_</code></td><td>Server-side calls against production</td></tr>
+  <tr><td>Publishable key</td><td><code>pk_test_</code> / <code>pk_live_</code></td><td>Client-side tokenization of card details only</td></tr>
+  <tr><td>Webhook signing secret</td><td><code>whsec_</code></td><td>Verifying webhook signatures</td></tr>
+</table>
+
+<div class="warn"><strong>Keep secret keys secret.</strong> Never embed <code>sk_</code> keys in mobile apps, browser code, or public repositories. Load them from environment variables or a secrets manager, and rotate them immediately if exposed.</div>
+
+<h3>Getting and rotating keys</h3>
+<ol>
+  <li>Sign in to the Dashboard and open <em>Developers &rarr; API Keys</em>.</li>
+  <li>Create a key for the desired environment and store it securely; the full value is shown only once.</li>
+  <li>To rotate, create a new key, deploy it, then revoke the old key.</li>
+</ol>
+<p>Requests with a missing, malformed, or revoked key return <code>401 authentication_failed</code>. A valid key without permission for the resource returns <code>403 permission_denied</code>.</p>
+</section><section id="endpoints">
+<h2>3. Endpoints</h2>
+<p>All paths are relative to the base URL.</p>
+<table>
+  <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+  <tr><td><span class="label post">POST</span></td><td><code>/payments</code></td><td>Create a payment</td></tr>
+  <tr><td><span class="label get">GET</span></td><td><code>/payments</code></td><td>List payments (supports <code>status</code>, <code>customer_id</code>, <code>created_gte</code> filters)</td></tr>
+  <tr><td><span class="label get">GET</span></td><td><code>/payments/{id}</code></td><td>Retrieve a payment</td></tr>
+  <tr><td><span class="label post">POST</span></td><td><code>/payments/{id}/capture</code></td><td>Capture an authorized payment (full or partial)</td></tr>
+  <tr><td><span class="label post">POST</span></td><td><code>/payments/{id}/cancel</code></td><td>Cancel an uncaptured payment</td></tr>
+  <tr><td><span class="label post">POST</span></td><td><code>/refunds</code></td><td>Refund a captured payment (full or partial)</td></tr>
+  <tr><td><span class="label get">GET</span></td><td><code>/refunds/{id}</code></td><td>Retrieve a refund</td></tr>
+  <tr><td><span class="label post">POST</span></td><td><code>/customers</code></td><td>Create a customer</td></tr>
+  <tr><td><span class="label get">GET</span></td><td><code>/customers/{id}</code></td><td>Retrieve a customer</td></tr>
+  <tr><td><span class="label post">POST</span></td><td><code>/customers/{id}/payment_methods</code></td><td>Attach a tokenized payment method to a customer</td></tr>
+  <tr><td><span class="label del">DELETE</span></td><td><code>/payment_methods/{id}</code></td><td>Detach and delete a saved payment method</td></tr>
+  <tr><td><span class="label post">POST</span></td><td><code>/webhook_endpoints</code></td><td>Register a webhook endpoint</td></tr>
+  <tr><td><span class="label get">GET</span></td><td><code>/webhook_endpoints</code></td><td>List webhook endpoints</td></tr>
+  <tr><td><span class="label del">DELETE</span></td><td><code>/webhook_endpoints/{id}</code></td><td>Delete a webhook endpoint</td></tr>
+</table>
+
+<h3>Payment object</h3>
+<table>
+  <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+  <tr><td><code>id</code></td><td>string</td><td>Unique identifier, prefixed <code>pay_</code></td></tr>
+  <tr><td><code>object</code></td><td>string</td><td>Always <code>"payment"</code></td></tr>
+  <tr><td><code>amount</code></td><td>integer</td><td>Amount in the smallest currency unit</td></tr>
+  <tr><td><code>currency</code></td><td>string</td><td>Three-letter ISO currency code, lowercase</td></tr>
+  <tr><td><code>status</code></td><td>string</td><td><code>requires_action</code>, <code>authorized</code>, <code>succeeded</code>, <code>failed</code>, <code>canceled</code></td></tr>
+  <tr><td><code>customer_id</code></td><td>string | null</td><td>Associated customer</td></tr>
+  <tr><td><code>payment_method_id</code></td><td>string</td><td>Payment method used</td></tr>
+  <tr><td><code>capture_method</code></td><td>string</td><td><code>automatic</code> or <code>manual</code></td></tr>
+  <tr><td><code>amount_refunded</code></td><td>integer</td><td>Total refunded so far</td></tr>
+  <tr><td><code>metadata</code></td><td>object</td><td>Up to 20 key/value string pairs</td></tr>
+  <tr><td><code>created_at</code></td><td>string</td><td>ISO 8601 creation time</td></tr>
+</table>
+</section>
+
+<section id="examples">
+<h2>4. Request &amp; Response Examples</h2>
+
+<h3>4.1 Create a payment</h3>
+<p><code>POST /payments</code></p>
+<p><strong>Request body</strong></p>
+<pre><code>{
+  "amount": 2500,
+  "currency": "usd",
+  "payment_method_id": "pm_1Nq8XyAb12Cd34",
+  "customer_id": "cus_9Lk2PzQw77",
+  "capture_method": "automatic",
+  "description": "Order #10482",
+  "metadata": {
+    "order_id": "10482"
+  }
+}</code></pre>
+<p><strong>Response &mdash; <code>201 Created</code></strong></p>
+<pre><code>{
+  "id": "pay_3MtwBw2eZvKY",
+  "object": "payment",
+  "amount": 2500,
+  "currency": "usd",
+  "status": "succeeded",
+  "customer_id": "cus_9Lk2PzQw77",
+  "payment_method_id": "pm_1Nq8XyAb12Cd34",
+  "capture_method": "automatic",
+  "amount_refunded": 0,
+  "description": "Order #10482",
+  "metadata": {
+    "order_id": "10482"
+  },
+  "created_at": "2026-11-23T10:15:00Z"
+}</code></pre>
+
+<h3>4.2 Create a refund</h3>
+<p><code>POST /refunds</code></p>
+<p><strong>Request body</strong></p>
+<pre><code>{
+  "payment_id": "pay_3MtwBw2eZvKY",
+  "amount": 1000,
+  "reason": "requested_by_customer"
+}</code></pre>
+<p><strong>Response &mdash; <code>201 Created</code></strong></p>
+<pre><code>{
+  "id": "ref_5Hd8Tn0cPq",
+  "object": "refund",
+  "payment_id": "pay_3MtwBw2eZvKY",
+  "amount": 1000,
+  "currency": "usd",
+  "status": "pending",
+  "reason": "requested_by_customer",
+  "created_at": "2026-11-23T11:02:41Z"
+}</code></pre>
+
+<h3>4.3 List payments</h3>
+<p><code>GET /payments?limit=2&amp;status=succeeded</code></p>
+<pre><code>{
+  "object": "list",
+  "data": [
+    { "id": "pay_3MtwBw2eZvKY", "object": "payment", "amount": 2500, "currency": "usd", "status": "succeeded" },
+    { "id": "pay_3MtvAa9dYuJX", "object": "payment", "amount": 4200, "currency": "usd", "status": "succeeded" }
+  ],
+  "has_more": true,
+  "next_cursor": "pay_3MtvAa9dYuJX"
+}</code></pre>
+
+<h3>4.4 Error response</h3>
+<pre><code>{
+  "error": {
+    "type": "invalid_request_error",
+    "code": "parameter_invalid",
+    "message": "amount must be a positive integer.",
+    "param": "amount",
+    "request_id": "req_8fA2kLm0Qz"
+  }
+}</code></pre>
+<p>Always log the <code>request_id</code>; support uses it to trace requests.</p>
+</section><section id="curl">
+<h2>5. curl Examples</h2>
+<p>Set your key once as an environment variable:</p>
+<pre><code>export API_KEY="sk_test_YOUR_SECRET_KEY"
+export BASE_URL="https://api.sandbox.example-pay.com/v1"</code></pre>
+
+<h3>Create a customer</h3>
+<pre><code>curl -X POST "$BASE_URL/customers" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 6f1c2a9e-3b7d-4e55-9a0c-1d2e3f4a5b6c" \
+  -d '{
+    "email": "jane.doe@example.com",
+    "name": "Jane Doe"
+  }'</code></pre>
+
+<h3>Create a payment</h3>
+<pre><code>curl -X POST "$BASE_URL/payments" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 0b8e7c3a-52d1-4f6e-8a9b-7c6d5e4f3a2b" \
+  -d '{
+    "amount": 2500,
+    "currency": "usd",
+    "payment_method_id": "pm_1Nq8XyAb12Cd34",
+    "customer_id": "cus_9Lk2PzQw77",
+    "description": "Order #10482"
+  }'</code></pre>
+
+<h3>Retrieve a payment</h3>
+<pre><code>curl "$BASE_URL/payments/pay_3MtwBw2eZvKY" \
+  -H "Authorization: Bearer $API_KEY"</code></pre>
+
+<h3>Capture an authorized payment (partial)</h3>
+<pre><code>curl -X POST "$BASE_URL/payments/pay_3MtwBw2eZvKY/capture" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "amount_to_capture": 1800 }'</code></pre>
+
+<h3>Issue a refund</h3>
+<pre><code>curl -X POST "$BASE_URL/refunds" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: c4d5e6f7-1a2b-4c3d-8e9f-0a1b2c3d4e5f" \
+  -d '{ "payment_id": "pay_3MtwBw2eZvKY", "amount": 1000 }'</code></pre>
+
+<h3>List payments with filters</h3>
+<pre><code>curl -G "$BASE_URL/payments" \
+  -H "Authorization: Bearer $API_KEY" \
+  --data-urlencode "status=succeeded" \
+  --data-urlencode "limit=10" \
+  --data-urlencode "created_gte=2026-11-01T00:00:00Z"</code></pre>
+
+<h3>Register a webhook endpoint</h3>
+<pre><code>curl -X POST "$BASE_URL/webhook_endpoints" \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://merchant.example.com/webhooks/payments",
+    "events": ["payment.succeeded", "payment.failed", "refund.updated"]
+  }'</code></pre>
+</section>
+
+<section id="errors">
+<h2>6. Error Codes</h2>
+<p>The API uses conventional HTTP status codes: <code>2xx</code> indicates success, <code>4xx</code> indicates a problem with the request, and <code>5xx</code> indicates a problem on our side.</p>
+<table>
+  <tr><th>HTTP</th><th>Error code</th><th>Meaning</th><th>Recommended action</th></tr>
+  <tr><td>400</td><td><code>parameter_invalid</code></td><td>A parameter is missing, malformed, or out of range</td><td>Fix the request; check <code>param</code></td></tr>
+  <tr><td>401</td><td><code>authentication_failed</code></td><td>API key missing, invalid, or revoked</td><td>Verify the key and environment</td></tr>
+  <tr><td>402</td><td><code>card_declined</code></td><td>Issuer declined the payment</td><td>Ask the customer for another payment method</td></tr>
+  <tr><td>402</td><td><code>insufficient_funds</code></td><td>The account has insufficient funds</td><td>Ask the customer for another payment method</td></tr>
+  <tr><td>402</td><td><code>expired_card</code></td><td>The card has expired</td><td>Request updated card details</td></tr>
+  <tr><td>403</td><td><code>permission_denied</code></td><td>Key lacks access to this resource or action</td><td>Use a key with the right permissions</td></tr>
+  <tr><td>404</td><td><code>resource_not_found</code></td><td>The object ID does not exist</td><td>Check the ID and environment</td></tr>
+  <tr><td>409</td><td><code>idempotency_conflict</code></td><td>Idempotency key reused with different parameters</td><td>Use a new key for a new request</td></tr>
+  <tr><td>409</td><td><code>invalid_state</code></td><td>Operation not allowed in the object's current state (e.g. refunding an uncaptured payment)</td><td>Retrieve the object and check its <code>status</code></td></tr>
+  <tr><td>422</td><td><code>amount_exceeds_limit</code></td><td>Amount exceeds the permitted maximum or refundable balance</td><td>Reduce the amount</td></tr>
+  <tr><td>429</td><td><code>rate_limited</code></td><td>Too many requests</td><td>Back off and retry after <code>Retry-After</code></td></tr>
+  <tr><td>500</td><td><code>internal_error</code></td><td>Unexpected server error</td><td>Retry with the same idempotency key; contact support if persistent</td></tr>
+  <tr><td>503</td><td><code>service_unavailable</code></td><td>Temporary outage or maintenance</td><td>Retry with exponential backoff</td></tr>
+</table>
+<div class="note"><strong>Retry guidance:</strong> Retry only <code>429</code>, <code>500</code>, and <code>503</code> responses, plus network timeouts, and always with the same <code>Idempotency-Key</code>. Do not retry other <code>4xx</code> errors without changing the request.</div>
+</section><section id="webhooks">
+<h2>7. Webhooks</h2>
+<p>Webhooks notify your server when events occur, such as a payment succeeding or a refund changing status. Use them rather than polling, since some outcomes (3-D Secure completion, delayed refunds, disputes) happen asynchronously.</p>
+
+<h3>Setup</h3>
+<ol>
+  <li>Expose an HTTPS endpoint that accepts <code>POST</code> requests with a JSON body.</li>
+  <li>Register it in the Dashboard or via <code>POST /webhook_endpoints</code>. The response includes a <code>whsec_</code> signing secret.</li>
+  <li>Return a <code>2xx</code> status within <strong>10 seconds</strong>. Do heavy processing asynchronously after acknowledging.</li>
+</ol>
+
+<h3>Event types</h3>
+<table>
+  <tr><th>Event</th><th>Triggered when</th></tr>
+  <tr><td><code>payment.authorized</code></td><td>A manual-capture payment is authorized</td></tr>
+  <tr><td><code>payment.succeeded</code></td><td>A payment is captured successfully</td></tr>
+  <tr><td><code>payment.failed</code></td><td>A payment attempt fails</td></tr>
+  <tr><td><code>payment.canceled</code></td><td>A payment is canceled</td></tr>
+  <tr><td><code>refund.created</code></td><td>A refund is created</td></tr>
+  <tr><td><code>refund.updated</code></td><td>A refund changes status (<code>succeeded</code> or <code>failed</code>)</td></tr>
+  <tr><td><code>dispute.created</code></td><td>A customer disputes a charge</td></tr>
+</table>
+
+<h3>Event payload</h3>
+<pre><code>{
+  "id": "evt_1QzR7s0Lm9",
+  "object": "event",
+  "type": "payment.succeeded",
+  "created_at": "2026-11-23T10:15:02Z",
+  "data": {
+    "object": {
+      "id": "pay_3MtwBw2eZvKY",
+      "object": "payment",
+      "amount": 2500,
+      "currency": "usd",
+      "status": "succeeded"
+    }
+  }
+}</code></pre>
+
+<h3>Verifying signatures</h3>
+<p>Every webhook includes a <code>Payments-Signature</code> header:</p>
+<pre><code>Payments-Signature: t=1795428900,v1=5257a869e7ecebeda32affa62cdca3fa51cad7e77a0e56ff536d0ce8e108d8bd</code></pre>
+<p>To verify:</p>
+<ol>
+  <li>Split the header to extract the timestamp <code>t</code> and signature <code>v1</code>.</li>
+  <li>Build the signed payload: <code>t</code> + <code>"."</code> + the <strong>raw</strong> request body.</li>
+  <li>Compute an HMAC-SHA256 of that string using your <code>whsec_</code> secret.</li>
+  <li>Compare with <code>v1</code> using a constant-time comparison, and reject timestamps older than 5 minutes to prevent replay attacks.</li>
+</ol>
+<pre><code>// Node.js (Express) example
+const crypto = require("crypto");
+
+app.post("/webhooks/payments", express.raw({ type: "application/json" }), (req, res) =&gt; {
+  const header = req.get("Payments-Signature") || "";
+  const parts = Object.fromEntries(header.split(",").map(p =&gt; p.split("=")));
+  const signedPayload = `${parts.t}.${req.body.toString("utf8")}`;
+
+  const expected = crypto
+    .createHmac("sha256", process.env.WEBHOOK_SECRET)
+    .update(signedPayload)
+    .digest("hex");
+
+  const valid =
+    parts.v1 &amp;&amp;
+    parts.v1.length === expected.length &amp;&amp;
+    crypto.timingSafeEqual(Buffer.from(parts.v1), Buffer.from(expected));
+  const fresh = Math.abs(Date.now() / 1000 - Number(parts.t)) &lt; 300;
+
+  if (!valid || !fresh) return res.status(400).send("Invalid signature");
+
+  const event = JSON.parse(req.body);
+  // Enqueue event for async processing, then acknowledge
+  res.sendStatus(200);
+});</code></pre>
+
+<h3>Delivery and retries</h3>
+<ul>
+  <li>Non-<code>2xx</code> responses and timeouts are retried with exponential backoff for up to <strong>3 days</strong> (about 8 attempts: 1 min, 5 min, 30 min, 2 h, 5 h, 10 h, then every 12 h).</li>
+  <li>Delivery is <strong>at least once</strong>, and ordering is not guaranteed. De-duplicate using the event <code>id</code> and make handlers idempotent.</li>
+  <li>Endpoints that fail continuously for 7 days are automatically disabled, and you will be notified by email.</li>
+</ul>
+</section>
+
+<section id="rate-limits">
+<h2>8. Rate Limits</h2>
+<p>Limits are applied per API key to protect platform stability. Exceeding a limit returns <code>429 rate_limited</code>.</p>
+<table>
+  <tr><th>Environment</th><th>Scope</th><th>Limit</th></tr>
+  <tr><td>Production</td><td>All endpoints (per key)</td><td>100 requests / second</td></tr>
+  <tr><td>Production</td><td><code>POST /payments</code></td><td>50 requests / second</td></tr>
+  <tr><td>Production</td><td>List endpoints (<code>GET</code> collections)</td><td>20 requests / second</td></tr>
+  <tr><td>Sandbox</td><td>All endpoints (per key)</td><td>25 requests / second</td></tr>
+</table>
+<p>Higher limits are available for high-volume merchants; contact support to request an increase.</p>
+
+<h3>Rate limit headers</h3>
+<table>
+  <tr><th>Header</th><th>Description</th></tr>
+  <tr><td><code>X-RateLimit-Limit</code></td><td>Maximum requests allowed in the current window</td></tr>
+  <tr><td><code>X-RateLimit-Remaining</code></td><td>Requests remaining in the current window</td></tr>
+  <tr><td><code>X-RateLimit-Reset</code></td><td>Unix timestamp when the window resets</td></tr>
+  <tr><td><code>Retry-After</code></td><td>Seconds to wait before retrying (only on <code>429</code>)</td></tr>
+</table>
+
+<h3>Example 429 response</h3>
+<pre><code>HTTP/1.1 429 Too Many Requests
+Retry-After: 2
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1795428902
+
+{
+  "error": {
+    "type": "rate_limit_error",
+    "code": "rate_limited",
+    "message": "Too many requests. Retry after 2 seconds.",
+    "request_id": "req_2Xb9PqLd01"
+  }
+}</code></pre>
+
+<h3>Best practices</h3>
+<ul>
+  <li>Honor <code>Retry-After</code> and use exponential backoff with jitter.</li>
+  <li>Prefer webhooks over polling to reduce request volume.</li>
+  <li>Use cursor pagination with the maximum <code>limit</code> of 100 rather than many small requests.</li>
+  <li>Smooth out batch jobs with a client-side queue or token bucket.</li>
+</ul>
+
+<div class="note"><strong>Go-live checklist:</strong> switch to <code>sk_live_</code> keys and the production base URL; verify webhook signatures; send idempotency keys on every <code>POST</code>; handle <code>402</code> declines gracefully; and log every <code>request_id</code>.</div>
+</section></body>
+</html>

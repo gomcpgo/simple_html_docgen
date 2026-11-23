@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Northwind Analytics – Q3 2026 Business Report</title>
+<style>
+  :root { --navy:#12284c; --blue:#2563eb; --teal:#0f9d94; --grey:#64748b; --light:#f1f5f9; --border:#e2e8f0; --green:#15803d; --red:#b91c1c; --amber:#b45309; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Helvetica, Arial, sans-serif; color:#1e293b; background:#e9eef5; margin:0; padding:32px 0; line-height:1.55; font-size:14px; }
+  .page { max-width:900px; margin:0 auto; background:#fff; box-shadow:0 8px 30px rgba(18,40,76,.15); }
+  header.cover { background:linear-gradient(135deg,#12284c 0%,#1d4ed8 100%); color:#fff; padding:56px 56px 44px; }
+  header.cover .brand { letter-spacing:3px; text-transform:uppercase; font-size:12px; opacity:.8; }
+  header.cover h1 { margin:14px 0 6px; font-size:36px; font-weight:700; line-height:1.15; }
+  header.cover .sub { font-size:16px; opacity:.9; }
+  header.cover .meta { margin-top:28px; font-size:12px; opacity:.8; border-top:1px solid rgba(255,255,255,.3); padding-top:12px; display:flex; justify-content:space-between; }
+  .content { padding:12px 56px 48px; }
+  section { margin-top:36px; }
+  h2 { color:var(--navy); font-size:21px; margin:0 0 14px; padding-bottom:8px; border-bottom:3px solid var(--blue); display:flex; align-items:center; gap:10px; }
+  h2 .num { background:var(--blue); color:#fff; font-size:13px; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+  h3 { color:var(--navy); font-size:15px; margin:0 0 4px; }
+  p { margin:0 0 12px; }
+  table { width:100%; border-collapse:collapse; margin:10px 0; font-size:13.5px; }
+  th { background:var(--navy); color:#fff; text-align:left; padding:10px 12px; font-weight:600; }
+  td { padding:10px 12px; border-bottom:1px solid var(--border); }
+  tbody tr:nth-child(even) td { background:var(--light); }
+  td.num, th.num-h { text-align:right; font-variant-numeric:tabular-nums; }
+  .up { color:var(--green); font-weight:600; }
+  .down { color:var(--red); font-weight:600; }
+  .callout { background:var(--light); border-left:4px solid var(--teal); padding:14px 18px; border-radius:0 6px 6px 0; margin:14px 0; }
+  .highlights { display:flex; gap:14px; margin:18px 0; }
+  .card { flex:1; background:var(--light); border-top:4px solid var(--blue); border-radius:6px; padding:14px 16px; }
+  .card .v { font-size:26px; font-weight:700; color:var(--navy); }
+  .card .l { font-size:12px; color:var(--grey); text-transform:uppercase; letter-spacing:.5px; }
+  .card .d { font-size:12.5px; color:var(--green); font-weight:600; }
+  .badge { display:inline-block; padding:2px 10px; border-radius:999px; font-size:11.5px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:.4px; }
+  .sev-high { background:var(--red); } .sev-med { background:#d97706; } .sev-low { background:#16a34a; }
+  .bar { background:var(--border); border-radius:4px; height:10px; width:100%; }
+  .bar span { display:block; height:10px; border-radius:4px; background:var(--blue); }
+  .win { display:flex; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); }
+  .win .ic { flex:0 0 34px; height:34px; border-radius:8px; background:var(--teal); color:#fff; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .note { font-size:11.5px; color:var(--grey); margin-top:8px; }
+  footer { background:var(--light); color:var(--grey); font-size:11.5px; padding:16px 56px; text-align:center; border-top:1px solid var(--border); }
+  @media print {
+    body { background:#fff !important; padding:0; }
+    .page { box-shadow:none !important; max-width:none; }
+    header.cover { background:#fff !important; color:var(--navy) !important; border-bottom:4px solid var(--navy); padding:24px 0; }
+    header.cover .meta { border-top:1px solid var(--border); }
+    .content { padding:12px 0 24px; } footer { background:#fff !important; }
+    th { background:#fff !important; color:var(--navy) !important; border-bottom:2px solid var(--navy); }
+    tbody tr:nth-child(even) td, .card, .callout { background:#fff !important; }
+    .card { border:1px solid var(--border); }
+    section, tr, .win { page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="cover">
+    <div class="brand">Northwind Analytics</div>
+    <h1>Q3 2026 Business Report</h1>
+    <div class="sub">Quarter ended September 30, 2026</div>
+    <div class="meta"><span>Prepared for: Executive Leadership Team &amp; Board of Directors</span><span>Issued: November 2026</span></div>
+  </header>
+  <div class="content">
+
+    <section id="summary"><h2><span class="num">1</span>Executive Summary</h2>
+  <p>Northwind Analytics delivered a strong third quarter, with growth, retention and profitability all improving over Q2. Quarterly revenue rose <strong>9.3%</strong> to <strong>$22.3M</strong>, and annual recurring revenue (ARR) reached <strong>$91.6M</strong>, up 8.8% from the prior quarter. Growth was broad-based. The launch of <em>Northwind Insights AI</em> lifted enterprise deal sizes, and our customer success investments cut churn to its lowest level in six quarters.</p>
+  <div class="highlights">
+    <div class="card"><div class="l">ARR</div><div class="v">$91.6M</div><div class="d">▲ 8.8% QoQ</div></div>
+    <div class="card"><div class="l">Quarterly Revenue</div><div class="v">$22.3M</div><div class="d">▲ 9.3% QoQ</div></div>
+    <div class="card"><div class="l">Net Revenue Retention</div><div class="v">111%</div><div class="d">▲ 3 pts QoQ</div></div>
+    <div class="card"><div class="l">Operating Margin</div><div class="v">11.2%</div><div class="d">▲ 2.2 pts QoQ</div></div>
+  </div>
+  <div class="callout"><strong>Bottom line:</strong> Q3 shows that the business can grow at a rate near 9% per quarter while expanding margins. The main watch items for Q4 are rising mid-market pricing pressure, weak LATAM results, and sales capacity in the enterprise segment.</div>
+</section>
+
+    <section id="kpis"><h2><span class="num">2</span>Key Performance Indicators: Q2 vs. Q3</h2>
+  <table>
+    <thead><tr><th>Metric</th><th class="num-h">Q2 2026</th><th class="num-h">Q3 2026</th><th class="num-h">Change</th></tr></thead>
+    <tbody>
+      <tr><td>Annual Recurring Revenue (ARR)</td><td class="num">$84.2M</td><td class="num">$91.6M</td><td class="num up">▲ 8.8%</td></tr>
+      <tr><td>Quarterly Revenue</td><td class="num">$20.4M</td><td class="num">$22.3M</td><td class="num up">▲ 9.3%</td></tr>
+      <tr><td>Gross Margin</td><td class="num">76.5%</td><td class="num">77.8%</td><td class="num up">▲ 1.3 pts</td></tr>
+      <tr><td>Operating Margin</td><td class="num">9.0%</td><td class="num">11.2%</td><td class="num up">▲ 2.2 pts</td></tr>
+      <tr><td>Paying Customers</td><td class="num">1,840</td><td class="num">1,962</td><td class="num up">▲ 6.6%</td></tr>
+      <tr><td>Average Contract Value (ACV)</td><td class="num">$45.8K</td><td class="num">$46.7K</td><td class="num up">▲ 2.0%</td></tr>
+      <tr><td>Net Revenue Retention (NRR)</td><td class="num">108%</td><td class="num">111%</td><td class="num up">▲ 3 pts</td></tr>
+      <tr><td>Quarterly Logo Churn</td><td class="num">2.4%</td><td class="num">1.9%</td><td class="num up">▼ 0.5 pts (improved)</td></tr>
+      <tr><td>CAC Payback Period</td><td class="num">17 months</td><td class="num">15 months</td><td class="num up">▼ 2 months (improved)</td></tr>
+      <tr><td>Net Promoter Score (NPS)</td><td class="num">41</td><td class="num">46</td><td class="num up">▲ 5 pts</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Green indicates a favorable movement. For churn and CAC payback, a decrease is favorable. ARR = annualized value of active subscription contracts at quarter end.</p>
+</section>
+
+    <section id="regions"><h2><span class="num">3</span>Revenue by Region</h2>
+  <table>
+    <thead><tr><th>Region</th><th class="num-h">Q2 2026</th><th class="num-h">Q3 2026</th><th class="num-h">QoQ Growth</th><th style="width:22%">Share of Q3 Revenue</th></tr></thead>
+    <tbody>
+      <tr><td><strong>North America</strong></td><td class="num">$11.2M</td><td class="num">$12.1M</td><td class="num up">▲ 8.0%</td><td><div class="bar"><span style="width:54.3%"></span></div><small>54.3%</small></td></tr>
+      <tr><td><strong>EMEA</strong></td><td class="num">$5.6M</td><td class="num">$6.2M</td><td class="num up">▲ 10.7%</td><td><div class="bar"><span style="width:27.8%"></span></div><small>27.8%</small></td></tr>
+      <tr><td><strong>APAC</strong></td><td class="num">$2.8M</td><td class="num">$3.3M</td><td class="num up">▲ 17.9%</td><td><div class="bar"><span style="width:14.8%"></span></div><small>14.8%</small></td></tr>
+      <tr><td><strong>LATAM</strong></td><td class="num">$0.8M</td><td class="num">$0.7M</td><td class="num down">▼ 12.5%</td><td><div class="bar"><span style="width:3.1%"></span></div><small>3.1%</small></td></tr>
+      <tr style="font-weight:700"><td>Total</td><td class="num">$20.4M</td><td class="num">$22.3M</td><td class="num up">▲ 9.3%</td><td>100%</td></tr>
+    </tbody>
+  </table>
+  <p><strong>North America</strong> remains the core of the business, with growth driven by enterprise expansions. <strong>EMEA</strong> benefited from new data-residency capabilities in Frankfurt. <strong>APAC</strong> was the fastest-growing region, led by Australia and Singapore. <strong>LATAM</strong> declined after two delayed renewals and a partner transition, and it is the focus of a Q4 recovery plan.</p>
+</section>
+
+    <section id="wins"><h2><span class="num">4</span>Key Wins</h2>
+  <div class="win"><div class="ic">1</div><div><h3>Northwind Insights AI launched to general availability</h3><p>The AI-assisted analytics module reached 240 customers within six weeks of launch. Customers who adopted it showed an average 18% uplift in contract value.</p></div></div>
+  <div class="win"><div class="ic">2</div><div><h3>Three enterprise logos won, each above $1M ARR</h3><p>New contracts in financial services, healthcare and retail added a combined $3.6M in ARR and validated our move up-market.</p></div></div>
+  <div class="win"><div class="ic">3</div><div><h3>Churn at a six-quarter low</h3><p>Proactive health scoring and a dedicated onboarding team cut logo churn to 1.9% and lifted NRR to 111%.</p></div></div>
+  <div class="win"><div class="ic">4</div><div><h3>EU data residency and SOC 2 Type II renewal</h3><p>The Frankfurt region went live and our SOC 2 Type II audit passed without exceptions, removing a key blocker in regulated EMEA deals.</p></div></div>
+  <div class="win"><div class="ic">5</div><div><h3>Efficiency gains across go-to-market</h3><p>CAC payback improved to 15 months, and operating margin expanded by 2.2 points through improved sales productivity and cloud cost optimization.</p></div></div>
+</section>
+
+    <section id="risks"><h2><span class="num">5</span>Risks &amp; Severity</h2>
+  <table>
+    <thead><tr><th style="width:26%">Risk</th><th style="width:12%">Severity</th><th>Description</th><th style="width:30%">Mitigation</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Enterprise sales capacity</strong></td><td><span class="badge sev-high">High</span></td><td>Pipeline growth is outpacing the number of ramped enterprise reps. Q4 closings could slip.</td><td>Accelerate hiring of 6 account executives and add sales engineering support.</td></tr>
+      <tr><td><strong>Mid-market pricing pressure</strong></td><td><span class="badge sev-high">High</span></td><td>Competitors are discounting aggressively, and win rates in deals under $30K fell in September.</td><td>Introduce packaging tiers and a targeted retention offer for at-risk accounts.</td></tr>
+      <tr><td><strong>LATAM underperformance</strong></td><td><span class="badge sev-med">Medium</span></td><td>Regional revenue fell 12.5% after delayed renewals and a channel partner transition.</td><td>Appoint a regional lead and finalize a replacement partner by mid-Q4.</td></tr>
+      <tr><td><strong>AI infrastructure costs</strong></td><td><span class="badge sev-med">Medium</span></td><td>Inference usage is growing quickly and could reduce gross margin if left unmanaged.</td><td>Negotiate committed-use discounts and introduce usage-based pricing limits.</td></tr>
+      <tr><td><strong>Key-talent attrition in engineering</strong></td><td><span class="badge sev-low">Low</span></td><td>Voluntary attrition ticked up slightly in the data platform team.</td><td>Refresh retention grants and run career-pathing reviews.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+    <section id="priorities"><h2><span class="num">6</span>Q4 2026 Priorities</h2>
+  <table>
+    <thead><tr><th style="width:5%">#</th><th style="width:30%">Priority</th><th>Key Actions</th><th style="width:22%">Q4 Target</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Scale enterprise sales</strong></td><td>Hire and onboard 6 account executives, and launch a partner-sourced pipeline program.</td><td>$9M net new ARR</td></tr>
+      <tr><td>2</td><td><strong>Defend the mid-market</strong></td><td>Roll out new packaging tiers and a proactive renewal program for at-risk accounts.</td><td>Win rate back above Q2 level</td></tr>
+      <tr><td>3</td><td><strong>Grow Insights AI adoption</strong></td><td>Run in-app upsell campaigns, publish customer case studies, and ship v1.1 with the top five customer requests.</td><td>500 customers on AI module</td></tr>
+      <tr><td>4</td><td><strong>Recover LATAM</strong></td><td>Name a regional lead, sign a replacement channel partner, and close the delayed renewals.</td><td>Return to $0.9M revenue</td></tr>
+      <tr><td>5</td><td><strong>Protect margin</strong></td><td>Lock in cloud and AI inference discounts, and set usage guardrails.</td><td>Operating margin ≥ 12%</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Looking ahead:</strong> With momentum in retention and product adoption, Northwind is well positioned to end 2026 with ARR near <strong>$100M</strong>. Success depends on building enterprise sales capacity quickly and holding pricing discipline in the mid-market.</div>
+  <p class="note">Note: Figures in this report are illustrative and rounded; they should be reconciled with finalized financial statements before external distribution.</p>
+</section>
+
+  </div>
+  <footer>Northwind Analytics · Q3 2026 Business Report · Confidential: for internal use only</footer>
+</div>
+</body>
+</html>

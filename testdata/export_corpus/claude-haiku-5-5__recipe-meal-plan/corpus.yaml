@@ -1,0 +1,8 @@
+model: claude-haiku-5-5
+doc: recipe-meal-plan
+images: false
+conversation: 3MUjDYdSnr0AeAV2Gr9DzyUUbmW
+prompt: |
+  Create a one-week vegetarian meal plan as a table (days by meals), followed by three full recipes with ingredient lists, numbered steps, nutrition facts tables and cooking tips.
+  
+  Create it as an HTML document with the document tools. Do not export it.

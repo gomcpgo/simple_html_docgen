@@ -16,3 +16,7 @@ coverage.txt
 # OS
 .DS_Store
 Thumbs.db
+
+# Local workspace for developing htmltodocx alongside this server
+go.work
+go.work.sum

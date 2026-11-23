@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Proposal: Migrating Patient Records to the Cloud</title>
+<style>
+  :root {
+    --ink: #1a2332;
+    --muted: #5c6b7a;
+    --line: #e2e8ef;
+    --accent: #0b6e6b;
+    --accent-soft: #e7f4f3;
+    --warn: #8a4b08;
+    --warn-soft: #fdf4e7;
+    --paper: #ffffff;
+    --bg: #f4f7f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", Calibri, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  .page {
+    max-width: 920px;
+    margin: 32px auto;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    box-shadow: 0 8px 28px rgba(26, 35, 50, 0.06);
+  }
+  header.cover {
+    background: linear-gradient(135deg, #0b6e6b 0%, #145a7a 100%);
+    color: #fff;
+    padding: 48px 56px 40px;
+  }
+  header.cover .kicker {
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 12px;
+    opacity: 0.85;
+    margin: 0 0 12px;
+  }
+  header.cover h1 {
+    margin: 0 0 12px;
+    font-size: 32px;
+    line-height: 1.2;
+    font-weight: 650;
+  }
+  header.cover .subtitle {
+    margin: 0;
+    font-size: 17px;
+    opacity: 0.92;
+    max-width: 640px;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 32px;
+    margin-top: 28px;
+    font-size: 13px;
+  }
+  .meta span { display: block; opacity: 0.75; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .meta strong { display: block; font-weight: 600; font-size: 14px; opacity: 1; margin-top: 2px; }
+  main { padding: 8px 56px 56px; }
+  h2 {
+    font-size: 22px;
+    margin: 36px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--accent);
+    color: #123;
+  }
+  h3 { font-size: 17px; margin: 22px 0 8px; color: #163; }
+  p { margin: 0 0 12px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin: 4px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px;
+    font-size: 14.5px;
+  }
+  th, td {
+    text-align: left;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th {
+    background: var(--accent-soft);
+    color: #0b4d4b;
+    font-weight: 650;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+  tr.total td {
+    font-weight: 700;
+    border-top: 2px solid var(--accent);
+    background: #f7fbfb;
+  }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .callout {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 16px 18px;
+    margin: 16px 0;
+  }
+  .callout p:last-child { margin-bottom: 0; }
+  .cta {
+    background: #123c4a;
+    color: #fff;
+    padding: 28px 28px 24px;
+    margin-top: 28px;
+    border-radius: 4px;
+  }
+  .cta h2 { color: #fff; border-bottom-color: rgba(255,255,255,0.3); }
+  .cta p { color: #e8f1f3; }
+  .cta ol { color: #fff; }
+  footer {
+    padding: 18px 56px 28px;
+    color: var(--muted);
+    font-size: 12.5px;
+    border-top: 1px solid var(--line);
+  }
+  @media print {
+    body { background: white !important; }
+    .page { margin: 0; border: none; box-shadow: none !important; max-width: none; }
+    header.cover { background: #0b6e6b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .cta { background: #123c4a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    th { background: #e7f4f3 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<header class="cover">
+  <p class="kicker">Project Proposal</p>
+  <h1>Migrating the Hospital Patient Records System to the Cloud</h1>
+  <p class="subtitle">A phased, security-first program to move the electronic health record and associated clinical systems to a HIPAA-aligned cloud platform, improving resilience, access, and operational cost control.</p>
+  <div class="meta">
+    <div><span>Prepared for</span><strong>Hospital Executive Committee &amp; Board of Trustees</strong></div>
+    <div><span>Prepared by</span><strong>Health Information Systems Program Office</strong></div>
+    <div><span>Document date</span><strong>November 23, 2026</strong></div>
+    <div><span>Classification</span><strong>Internal — Confidential</strong></div>
+  </div>
+</header>
+<main>
+<h2>1. Background</h2>
+<p>The hospital’s patient records environment is a mix of an on-premises electronic health record (EHR), departmental clinical systems, and a data center that is approaching the end of its supported hardware life. Clinicians depend on this environment for orders, results, medication administration, and the legal medical record. The current architecture no longer matches how care is delivered: multi-site clinics, remote specialist review, and 24-hour operations all require reliable access that a single campus data center cannot guarantee.</p>
+<p>Three pressures make a cloud migration the right next investment rather than another hardware refresh:</p>
+<ul>
+  <li><strong>Resilience.</strong> Recovery time and recovery point objectives for the EHR are not consistently met in annual disaster-recovery tests. A regional outage, extended power event, or ransomware incident would interrupt care and force paper downtime procedures that are slow and error-prone.</li>
+  <li><strong>Security and compliance.</strong> Patch windows are constrained by clinical uptime. Identity, audit logging, and encryption controls are uneven across interfaces. Maintaining a HIPAA-aligned control environment on aging infrastructure consumes security staff time that should go to monitoring and response.</li>
+  <li><strong>Cost and capacity.</strong> The next hardware cycle would require a capital outlay for servers, storage, and network gear, plus continued facilities cost for power, cooling, and floor space. Clinical data volume — imaging references, notes, and device feeds — continues to grow faster than the current storage plan.</li>
+</ul>
+<p>This proposal asks the Executive Committee to authorize a phased migration of the patient records system to a healthcare-capable public cloud, under a business associate agreement, with clinical safety as the gating criterion for every cutover. The program does not replace the EHR vendor. It moves the platform the EHR runs on, modernizes integration and identity around it, and establishes an operating model the hospital can sustain.</p>
+<h2>2. Objectives</h2>
+<p>The program succeeds only if clinical operations are safer and more available at the end than they are today. Objectives are written so each can be measured at phase gates.</p>
+<ol>
+  <li><strong>Protect continuity of care.</strong> Complete the migration with no unplanned interruption of order entry, results review, or medication administration longer than the agreed downtime window for each cutover. Target: zero Priority-1 clinical incidents attributable to the migration in the 30 days after final cutover.</li>
+  <li><strong>Meet recovery objectives.</strong> Demonstrate, in a witnessed test, a recovery time objective (RTO) of 4 hours and a recovery point objective (RPO) of 15 minutes for the core EHR, and document the same for each in-scope interface.</li>
+  <li><strong>Strengthen the compliance posture.</strong> Operate the patient-records environment under a signed business associate agreement, with encryption in transit and at rest, centralized audit logging, role-based access tied to the hospital identity provider, and a completed HIPAA Security Rule risk analysis before go-live.</li>
+  <li><strong>Improve clinician access.</strong> Provide consistent EHR performance for on-campus, clinic, and approved remote users, with single sign-on and multi-factor authentication, without adding steps to common clinical workflows.</li>
+  <li><strong>Shift cost from capital cycles to a managed run rate.</strong> Avoid the planned on-premises hardware refresh, and establish a three-year cloud run-rate that is at or below the combined cost of that refresh plus current data-center operating cost, excluding one-time migration labor.</li>
+  <li><strong>Leave a sustainable operating model.</strong> Train internal teams, document runbooks, and exit the program with clear ownership for cloud operations, vendor management, security monitoring, and clinical application support.</li>
+</ol>
+<p>Objectives that are explicitly out of this program — a full EHR replacement, a patient-portal redesign, and an enterprise data-warehouse rebuild — are listed in Scope so they are not absorbed by default.</p>
+<h2>3. Scope</h2>
+<h3>In scope</h3>
+<ul>
+  <li>Core EHR application servers, database, and associated file storage for the legal medical record.</li>
+  <li>Clinical interfaces required for safe operations: laboratory, pharmacy, radiology results, admission-discharge-transfer, and the primary health-information exchange connection.</li>
+  <li>Identity integration: single sign-on and multi-factor authentication against the hospital directory, with privileged-access controls for administrators.</li>
+  <li>Network path redesign: private connectivity from campus and clinics to the cloud environment, including failover.</li>
+  <li>Backup, point-in-time recovery, and a documented disaster-recovery pattern with a witnessed test before final cutover.</li>
+  <li>Security baseline: encryption, logging, vulnerability management, and a pre-go-live HIPAA Security Rule risk analysis with tracked remediation.</li>
+  <li>Data migration, reconciliation, and a parallel-run period long enough for clinical and health-information-management sign-off.</li>
+  <li>Training and runbooks for clinical informatics, IT operations, security, and the hospital command center.</li>
+  <li>Decommission of migrated on-premises servers and storage after the hypercare period, including certified media handling where required.</li>
+</ul>
+<h3>Out of scope</h3>
+<ul>
+  <li>Selection or replacement of the EHR vendor, and any major clinical-workflow redesign not required by the platform move.</li>
+  <li>Picture archiving (PACS) image storage, unless a dependency assessment shows a specific interface must move with the EHR. Imaging storage will be scoped as a follow-on program.</li>
+  <li>Revenue-cycle applications other than the interfaces the EHR requires to admit, order, and document care.</li>
+  <li>Patient portal, mobile app, or public website changes.</li>
+  <li>Enterprise analytics warehouse and research data extracts, beyond preserving current feeds.</li>
+  <li>Migration of non-clinical business systems (email, finance, HR).</li>
+</ul>
+<h3>Assumptions and constraints</h3>
+<ul>
+  <li>The EHR vendor supports the target cloud platform and will participate under the existing maintenance agreement plus a defined professional-services statement of work.</li>
+  <li>Clinical leadership will designate super-users and will approve each downtime window before it is scheduled.</li>
+  <li>Cutover windows will be planned for lower-census periods and will not overlap with other enterprise changes that affect the EHR, pharmacy, or laboratory.</li>
+  <li>Protected health information will remain in a U.S. region designated in the business associate agreement. No production PHI will be used in non-production environments without de-identification or an approved limited data set.</li>
+  <li>The program will stop and re-plan if a phase-gate review finds an unresolved patient-safety risk. Schedule pressure will not override that gate.</li>
+</ul>
+<h2>4. Phased Timeline</h2>
+<p>The program runs 18 months from authorization to the close of hypercare, followed by decommission. Dates below assume Executive Committee approval in December 2026 and a start in January 2027. Each phase ends at a gate. The next phase does not start on calendar alone; the gate owner must accept the exit criteria.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Phase</th>
+      <th>Window</th>
+      <th>Primary work</th>
+      <th>Exit criteria</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>0. Authorize &amp; mobilize</strong></td>
+      <td>Dec 2026<br>4 weeks</td>
+      <td>Decision, budget release, program charter, vendor short-list confirmation, clinical sponsor named, command-center notification plan drafted.</td>
+      <td>Signed charter, approved budget, named core team, and a confirmed downtime policy from clinical leadership.</td>
+    </tr>
+    <tr>
+      <td><strong>1. Discover &amp; design</strong></td>
+      <td>Jan–Mar 2027<br>12 weeks</td>
+      <td>Application and interface inventory, data-volume baseline, identity and network design, HIPAA risk-analysis plan, target architecture, RTO/RPO design, cutover strategy.</td>
+      <td>Architecture approved by CIO, CISO, and CMIO. Business associate agreement executed. Migration runbook outline accepted.</td>
+    </tr>
+    <tr>
+      <td><strong>2. Build the landing zone</strong></td>
+      <td>Apr–Jun 2027<br>12 weeks</td>
+      <td>Cloud accounts, network connectivity, encryption, logging, backup, identity integration, non-production EHR build, security baseline review.</td>
+      <td>Non-production environment passes security baseline and a clinician usability check. Connectivity failover tested once.</td>
+    </tr>
+    <tr>
+      <td><strong>3. Migrate &amp; reconcile</strong></td>
+      <td>Jul–Oct 2027<br>16 weeks</td>
+      <td>Historical data migration, interface rebuild in non-production, reconciliation reports with Health Information Management, performance test, downtime rehearsal with clinical super-users.</td>
+      <td>Reconciliation signed by HIM. Performance within agreed thresholds. Downtime rehearsal completed with no open patient-safety defects.</td>
+    </tr>
+    <tr>
+      <td><strong>4. Parallel run &amp; cutover</strong></td>
+      <td>Nov 2027–Jan 2028<br>12 weeks</td>
+      <td>Parallel validation on a frozen clinical sample, final delta migration, scheduled cutover, command-center coverage, immediate rollback criteria in force.</td>
+      <td>Cutover completed inside the approved window, or a clean rollback. Clinical leadership accepts go-live. No open Priority-1 defects.</td>
+    </tr>
+    <tr>
+      <td><strong>5. Hypercare &amp; decommission</strong></td>
+      <td>Feb–Jun 2028<br>20 weeks</td>
+      <td>Heightened support for 8 weeks, then steady-state handover, witnessed disaster-recovery test, decommission of migrated hardware, lessons-learned, benefits review.</td>
+      <td>RTO/RPO test passed. Support transition accepted by operations. Hardware decommission certificate filed. Benefits review presented to the Executive Committee.</td>
+    </tr>
+  </tbody>
+</table>
+<div class="callout">
+  <p><strong>Decision points the Board should expect.</strong> Gate reviews are scheduled at the end of Phases 1, 3, and 4. Phase 4 is the only window that requires a planned clinical downtime. If the Phase 3 rehearsal does not clear patient-safety defects, cutover moves — it is not compressed.</p>
+</div>
+<h2>5. Budget</h2>
+<p>Figures are planning estimates in U.S. dollars for authorization, not a vendor quote. They cover the 18-month program plus the first 12 months of production cloud run-cost that fall inside FY2027–FY2028. Internal labor is shown at fully loaded cost so the Executive Committee can see the true draw on staff, even where no new headcount is requested. A 12 percent contingency is held by the program sponsor and released only through the change-control board.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Cost category</th>
+      <th>What it covers</th>
+      <th class="num">One-time</th>
+      <th class="num">Run-rate (12 mo.)</th>
+      <th class="num">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Cloud platform</td>
+      <td>Compute, database, storage, backup, private network, logging, and support plan for non-production and production.</td>
+      <td class="num">$180,000</td>
+      <td class="num">$620,000</td>
+      <td class="num">$800,000</td>
+    </tr>
+    <tr>
+      <td>EHR vendor services</td>
+      <td>Cloud reference architecture, migration tooling, cutover support, and a post-go-live warranty window.</td>
+      <td class="num">$540,000</td>
+      <td class="num">$60,000</td>
+      <td class="num">$600,000</td>
+    </tr>
+    <tr>
+      <td>Integration &amp; identity</td>
+      <td>Interface rebuild, single sign-on, multi-factor authentication, and privileged-access tooling.</td>
+      <td class="num">$260,000</td>
+      <td class="num">$40,000</td>
+      <td class="num">$300,000</td>
+    </tr>
+    <tr>
+      <td>Security &amp; compliance</td>
+      <td>HIPAA risk analysis, penetration test of the landing zone, logging retention, and control evidence pack.</td>
+      <td class="num">$145,000</td>
+      <td class="num">$35,000</td>
+      <td class="num">$180,000</td>
+    </tr>
+    <tr>
+      <td>External delivery team</td>
+      <td>Program manager, cloud architect, data-migration lead, and clinical-cutover specialist for the build and cutover phases.</td>
+      <td class="num">$720,000</td>
+      <td class="num">$0</td>
+      <td class="num">$720,000</td>
+    </tr>
+    <tr>
+      <td>Internal labor</td>
+      <td>Backfill and dedicated time for IT, clinical informatics, HIM, security, and super-users. No new permanent FTEs.</td>
+      <td class="num">$410,000</td>
+      <td class="num">$70,000</td>
+      <td class="num">$480,000</td>
+    </tr>
+    <tr>
+      <td>Training &amp; change</td>
+      <td>Super-user preparation, command-center drills, downtime communication, and operations runbooks.</td>
+      <td class="num">$85,000</td>
+      <td class="num">$0</td>
+      <td class="num">$85,000</td>
+    </tr>
+    <tr>
+      <td>Decommission</td>
+      <td>Hardware removal, certified media handling, and facilities close-out of the retired racks.</td>
+      <td class="num">$55,000</td>
+      <td class="num">$0</td>
+      <td class="num">$55,000</td>
+    </tr>
+    <tr>
+      <td>Contingency (12%)</td>
+      <td>Held for interface surprises, an extra rehearsal, or an extended hypercare. Not available for scope additions.</td>
+      <td class="num">$287,400</td>
+      <td class="num">$99,000</td>
+      <td class="num">$386,400</td>
+    </tr>
+    <tr class="total">
+      <td>Program total</td>
+      <td>Authorization request</td>
+      <td class="num">$2,682,400</td>
+      <td class="num">$924,000</td>
+      <td class="num">$3,606,400</td>
+    </tr>
+  </tbody>
+</table>
+<p>The avoided on-premises hardware refresh, estimated at $1.4 million in capital plus about $280,000 a year in data-center operating cost, is not deducted above. It is the comparison case. On that comparison, the migration premium is concentrated in year one; from the second production year the cloud run-rate replaces both the hardware cycle and most of the data-center operating cost. Finance will re-baseline the run-rate at the Phase 1 gate, before the larger vendor commitments are signed.</p>
+<div class="callout">
+  <p><strong>Funding request.</strong> Authorize $3,606,400 for the program, of which $2,682,400 is one-time and $924,000 is the first-year production and non-production run-rate. Release of funds after Phase 1 is contingent on the architecture and business-associate-agreement gate.</p>
+</div>
+<h2>6. Team Roles</h2>
+<p>Accountability sits with hospital leaders, not with the vendor. External specialists fill gaps for the duration of the build and cutover. They do not own clinical go-live decisions.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>Home</th>
+      <th>Responsibility</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Executive sponsor</strong></td>
+      <td>Chief Operating Officer</td>
+      <td>Holds the charter, chairs the phase gates, and is the escalation point when schedule and patient safety conflict. Safety wins.</td>
+    </tr>
+    <tr>
+      <td><strong>Clinical sponsor</strong></td>
+      <td>Chief Medical Information Officer</td>
+      <td>Approves downtime windows, owns clinician communication, and signs clinical acceptance at cutover. Names super-users from inpatient, emergency, ambulatory, and pharmacy.</td>
+    </tr>
+    <tr>
+      <td><strong>Program manager</strong></td>
+      <td>Health Information Systems (external delivery lead through Phase 4)</td>
+      <td>Integrated plan, RAID log, budget tracking, vendor coordination, and the weekly steering pack. Does not override a clinical stop.</td>
+    </tr>
+    <tr>
+      <td><strong>Cloud architect</strong></td>
+      <td>IT infrastructure, with vendor architect</td>
+      <td>Landing-zone design, network, resilience pattern, and the cost model that Finance re-baselines at Phase 1.</td>
+    </tr>
+    <tr>
+      <td><strong>EHR application lead</strong></td>
+      <td>Clinical informatics</td>
+      <td>Environment build, configuration parity, performance acceptance, and the cutover checklist with the EHR vendor.</td>
+    </tr>
+    <tr>
+      <td><strong>Data-migration lead</strong></td>
+      <td>IT, paired with Health Information Management</td>
+      <td>Migration waves, reconciliation reports, and the HIM sign-off that historical records match before cutover.</td>
+    </tr>
+    <tr>
+      <td><strong>Integration lead</strong></td>
+      <td>Interface team</td>
+      <td>Laboratory, pharmacy, radiology, ADT, and HIE connections. Owns the interface fail-over test.</td>
+    </tr>
+    <tr>
+      <td><strong>Security &amp; privacy officer</strong></td>
+      <td>Information Security / Privacy</td>
+      <td>Business associate agreement, HIPAA risk analysis, access model, logging, and the go/no-go security opinion at each gate.</td>
+    </tr>
+    <tr>
+      <td><strong>Clinical cutover lead</strong></td>
+      <td>Nursing informatics</td>
+      <td>Downtime procedures, super-user roster, command-center script, and the rollback recommendation if exit criteria are missed during the window.</td>
+    </tr>
+    <tr>
+      <td><strong>Operations owner</strong></td>
+      <td>IT service management</td>
+      <td>Receives the runbooks at the end of hypercare and owns the steady-state service, including the cloud vendor relationship.</td>
+    </tr>
+  </tbody>
+</table>
+<p>Steering meets every two weeks from Phase 1, and daily during the cutover week. A smaller clinical safety huddle — CMIO, nursing informatics, pharmacy, and the EHR application lead — can halt work without waiting for the full steering group.</p>
+<h2>7. Risks and Mitigations</h2>
+<p>The risks below are the ones that can harm patients, breach trust, or invalidate the business case. Likelihood and impact are rated before mitigation. Residual risk is what remains if the mitigation is actually done — not if it is only written down.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Risk</th>
+      <th>L / I</th>
+      <th>Mitigation</th>
+      <th>Owner</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Cutover overruns the downtime window</strong> and forces extended paper operations.</td>
+      <td>Med / High</td>
+      <td>Full rehearsal in Phase 3 with the same sequence as production. Hard stop and pre-authorized rollback if the checkpoint is missed. No other enterprise changes in the cutover week.</td>
+      <td>Clinical cutover lead</td>
+    </tr>
+    <tr>
+      <td><strong>Records do not reconcile</strong> — missing notes, orders, or results after migration.</td>
+      <td>Med / High</td>
+      <td>Wave-based migration with HIM reconciliation reports. Cutover blocked until HIM signs. Parallel validation on a frozen sample in Phase 4.</td>
+      <td>Data-migration lead</td>
+    </tr>
+    <tr>
+      <td><strong>Interface failure</strong> to laboratory, pharmacy, or radiology during or after cutover.</td>
+      <td>Med / High</td>
+      <td>Interfaces rebuilt and soaked in non-production. Independent failover test. Pharmacy and lab leads in the command center with a manual-order fallback already drilled.</td>
+      <td>Integration lead</td>
+    </tr>
+    <tr>
+      <td><strong>Privacy or security gap</strong> — misconfigured access, logging shortfall, or PHI leaving the agreed region.</td>
+      <td>Low / High</td>
+      <td>Business associate agreement before any PHI moves. Region lock, encryption, and least-privilege access in the landing zone. Security go/no-go at every gate. Penetration test before Phase 4.</td>
+      <td>Security &amp; privacy officer</td>
+    </tr>
+    <tr>
+      <td><strong>Vendor or cloud dependency</strong> delays the reference architecture or a required EHR patch.</td>
+      <td>Med / Med</td>
+      <td>Statement of work with dated deliverables signed in Phase 1. Dual-vendor review of the landing zone. Schedule buffer sits in Phase 3, not in the cutover week.</td>
+      <td>Program manager</td>
+    </tr>
+    <tr>
+      <td><strong>Clinician adoption and access friction</strong> — slower logon, unfamiliar downtime steps, or remote-access failures.</td>
+      <td>Med / Med</td>
+      <td>Single sign-on tested with real workflows. Super-users on every unit for two weeks. Performance thresholds are a Phase 3 exit criterion, not a post-go-live fix.</td>
+      <td>Clinical sponsor</td>
+    </tr>
+    <tr>
+      <td><strong>Run-cost exceeds the business case</strong> after production sizing is known.</td>
+      <td>Med / Med</td>
+      <td>Finance re-baselines at the Phase 1 gate, before the larger commitments. Reserved capacity and storage lifecycle rules are design requirements, not optimizations for later.</td>
+      <td>Cloud architect</td>
+    </tr>
+    <tr>
+      <td><strong>Key-person dependency</strong> on a small informatics and interface team.</td>
+      <td>Med / Med</td>
+      <td>Named deputies, external specialists through Phase 4, and runbooks written as work is done — not in the last month. Backfill budget is already in the internal-labor line.</td>
+      <td>Executive sponsor</td>
+    </tr>
+  </tbody>
+</table>
+<div class="callout">
+  <p><strong>Stop rule.</strong> Any open patient-safety defect, any unresolved PHI exposure, or a missed reconciliation sign-off stops the next phase. The program manager cannot waive that rule. Only the executive sponsor can accept a documented exception, and only with the clinical sponsor’s written concurrence.</p>
+</div>
+<h2>8. Call to Action</h2>
+<p>The patient records system will be migrated either by a planned program or by an incident. The hardware cycle, the recovery-test gaps, and the clinical dependence on a single campus data center will not wait for a quieter year. This proposal is the planned path: 18 months, gated on clinical safety, with a defined rollback and a cost the Board can compare to the refresh it replaces.</p>
+<div class="cta">
+  <h2>Decision requested</h2>
+  <p>The Health Information Systems Program Office asks the Executive Committee to take four actions at its December 2026 meeting:</p>
+  <ol>
+    <li><strong>Approve the program</strong> as scoped in this proposal, including the out-of-scope boundaries, so imaging storage, portal work, and an EHR replacement are not absorbed by default.</li>
+    <li><strong>Authorize $3,606,400</strong>, released in two tranches: mobilization and Phase 1 now, and Phases 2 through 5 only after the architecture, business associate agreement, and re-baselined run-rate are accepted.</li>
+    <li><strong>Name the sponsors</strong> — the Chief Operating Officer as executive sponsor and the Chief Medical Information Officer as clinical sponsor — and direct department leaders to release the core team and super-users for the windows in the timeline.</li>
+    <li><strong>Commission the Phase 1 gate review</strong> for March 2027, with a go/no-go recommendation back to this committee before any production protected health information is moved.</li>
+  </ol>
+  <p>A decision in December 2026 keeps the single planned downtime inside a lower-census window in winter 2027–28. A deferral does not remove the risk. It pushes the same migration later, closer to hardware end-of-support, with less room to rehearse.</p>
+  <p>Please direct questions before the meeting to the Health Information Systems Program Office. The program manager will attend with the clinical sponsor and the security officer to walk through the cutover stop rule and the budget tranche.</p>
+</div>
+</main>
+<footer>
+  Health Information Systems Program Office · Patient Records Cloud Migration · Proposal v1.0 · November 23, 2026 · Not for external distribution.
+</footer>
+</div>
+</body>
+</html>

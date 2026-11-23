@@ -1,0 +1,8 @@
+model: grok-4.7
+doc: phrasebook
+images: false
+conversation: 3MUfaiTx2VLkn2D8yTjGsrTlNQO
+prompt: |
+  Create a travel phrasebook table with 20 useful phrases, each in English, Spanish, Japanese, Hindi and Arabic, grouped into categories, plus a short tips section. Make sure the Arabic reads right to left.
+  
+  Create it as an HTML document with the document tools. Do not export it.

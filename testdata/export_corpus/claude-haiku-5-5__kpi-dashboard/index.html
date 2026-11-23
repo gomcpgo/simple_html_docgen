@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>October Marketing Performance Summary</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Helvetica Neue", Arial, sans-serif; color: #1f2937; background: #f4f6fb; margin: 0; padding: 20px; font-size: 11px; line-height: 1.4; }
+  .page { max-width: 780px; margin: 0 auto; background: #ffffff; border-radius: 12px; padding: 22px 24px; border: 1px solid #e5e7eb; }
+  .header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid #4f46e5; padding-bottom: 10px; margin-bottom: 14px; }
+  .header h1 { margin: 0; font-size: 20px; color: #111827; }
+  .header .sub { color: #6b7280; font-size: 11px; margin-top: 2px; }
+  .badge { background: #eef2ff; color: #4338ca; font-weight: 700; padding: 4px 10px; border-radius: 999px; font-size: 11px; }
+  .notice { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; padding: 6px 10px; border-radius: 8px; font-size: 10px; margin-bottom: 14px; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #4338ca; margin: 16px 0 8px; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .card { border-radius: 10px; padding: 12px; color: #ffffff; }
+  .card.c1 { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+  .card.c2 { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+  .card.c3 { background: linear-gradient(135deg, #10b981, #059669); }
+  .card.c4 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+  .card .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.9; }
+  .card .value { font-size: 24px; font-weight: 800; margin: 4px 0 2px; }
+  .card .delta { font-size: 10.5px; font-weight: 700; background: rgba(255,255,255,0.22); display: inline-block; padding: 2px 7px; border-radius: 999px; }
+  .card .prev { font-size: 9.5px; opacity: 0.85; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+  th { text-align: left; background: #f9fafb; color: #6b7280; font-weight: 600; text-transform: uppercase; font-size: 9.5px; letter-spacing: 0.04em; padding: 7px 8px; border-bottom: 1px solid #e5e7eb; }
+  td { padding: 7px 8px; border-bottom: 1px solid #f1f5f9; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; padding: 2px 7px; border-radius: 999px; font-weight: 700; font-size: 10px; }
+  .up { background: #d1fae5; color: #047857; }
+  .down { background: #fee2e2; color: #b91c1c; }
+  .flat { background: #f3f4f6; color: #4b5563; }
+  .bar { height: 6px; background: #e5e7eb; border-radius: 999px; overflow: hidden; min-width: 80px; }
+  .bar span { display: block; height: 100%; background: linear-gradient(90deg, #6366f1, #0ea5e9); border-radius: 999px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  ul { margin: 0; padding-left: 16px; }
+  li { margin-bottom: 5px; }
+  .box { border: 1px solid #e5e7eb; border-radius: 10px; padding: 10px 12px; }
+  .box.good { border-left: 4px solid #10b981; }
+  .box.warn { border-left: 4px solid #f59e0b; }
+  .box.act { border-left: 4px solid #4f46e5; }
+  .box h3 { margin: 0 0 6px; font-size: 11.5px; }
+  .footer { margin-top: 14px; color: #9ca3af; font-size: 9.5px; border-top: 1px solid #e5e7eb; padding-top: 6px; display: flex; justify-content: space-between; }
+  @media print {
+    body { background: white !important; padding: 0; }
+    .page { border: none; border-radius: 0; box-shadow: none !important; padding: 0; max-width: none; }
+    .card { background: #4f46e5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .card.c2 { background: #0284c7 !important; }
+    .card.c3 { background: #059669 !important; }
+    .card.c4 { background: #d97706 !important; }
+    .bar span { background: #6366f1 !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div>
+      <h1>Marketing Performance Summary</h1>
+      <div class="sub">October 1 – 31, 2026 · Compared with September 2026</div>
+    </div>
+    <div class="badge">October 2026</div>
+  </div>
+  <div class="notice"><strong>Illustrative data.</strong> The figures below are placeholders built to show the layout. Replace them with actual October numbers before sharing.</div>
+<h2>Key metrics vs. September</h2>
+  <div class="kpis">
+    <div class="card c1">
+      <div class="label">Visits</div>
+      <div class="value">84.2K</div>
+      <span class="delta">▲ 9.5%</span>
+      <div class="prev">Sep: 76.9K</div>
+    </div>
+    <div class="card c2">
+      <div class="label">Leads</div>
+      <div class="value">2,946</div>
+      <span class="delta">▲ 12.8%</span>
+      <div class="prev">Sep: 2,612</div>
+    </div>
+    <div class="card c3">
+      <div class="label">Conversion rate</div>
+      <div class="value">3.50%</div>
+      <span class="delta">▲ 0.10 pts</span>
+      <div class="prev">Sep: 3.40%</div>
+    </div>
+    <div class="card c4">
+      <div class="label">Cost per lead</div>
+      <div class="value">$20.88</div>
+      <span class="delta">▼ 9.4%</span>
+      <div class="prev">Sep: $23.05 (lower is better)</div>
+    </div>
+  </div>
+
+</html>
+<h2>Channel breakdown</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Channel</th>
+        <th class="num">Visits</th>
+        <th class="num">Leads</th>
+        <th style="width:150px">Share of leads</th>
+        <th class="num">Conv. rate</th>
+        <th class="num">Spend</th>
+        <th class="num">Cost / lead</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Paid Search</strong></td>
+        <td class="num">27,400</td>
+        <td class="num">1,150</td>
+        <td><div class="bar"><span style="width:39%"></span></div></td>
+        <td class="num">4.20%</td>
+        <td class="num">$36,000</td>
+        <td class="num">$31.30</td>
+      </tr>
+      <tr>
+        <td><strong>Organic Search</strong></td>
+        <td class="num">22,900</td>
+        <td class="num">652</td>
+        <td><div class="bar"><span style="width:22%"></span></div></td>
+        <td class="num">2.85%</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+      </tr>
+      <tr>
+        <td><strong>Paid Social</strong></td>
+        <td class="num">14,300</td>
+        <td class="num">468</td>
+        <td><div class="bar"><span style="width:16%"></span></div></td>
+        <td class="num">3.27%</td>
+        <td class="num">$22,300</td>
+        <td class="num">$47.65</td>
+      </tr>
+      <tr>
+        <td><strong>Email</strong></td>
+        <td class="num">9,800</td>
+        <td class="num">402</td>
+        <td><div class="bar"><span style="width:14%"></span></div></td>
+        <td class="num">4.10%</td>
+        <td class="num">$1,200</td>
+        <td class="num">$2.99</td>
+      </tr>
+      <tr>
+        <td><strong>Direct &amp; Referral</strong></td>
+        <td class="num">5,600</td>
+        <td class="num">164</td>
+        <td><div class="bar"><span style="width:6%"></span></div></td>
+        <td class="num">2.93%</td>
+        <td class="num">—</td>
+        <td class="num">—</td>
+      </tr>
+      <tr>
+        <td><strong>Affiliate</strong></td>
+        <td class="num">4,200</td>
+        <td class="num">110</td>
+        <td><div class="bar"><span style="width:4%"></span></div></td>
+        <td class="num">2.62%</td>
+        <td class="num">$2,000</td>
+        <td class="num">$18.18</td>
+      </tr>
+      <tr style="background:#f9fafb;font-weight:700;">
+        <td>Total</td>
+        <td class="num">84,200</td>
+        <td class="num">2,946</td>
+        <td></td>
+        <td class="num">3.50%</td>
+        <td class="num">$61,500</td>
+        <td class="num">$20.88</td>
+      </tr>
+    </tbody>
+  </table>
+<h2>Highlights &amp; recommendations</h2>
+  <div class="two">
+    <div>
+      <div class="box good" style="margin-bottom:10px;">
+        <h3>🏆 Highlights</h3>
+        <ul>
+          <li><strong>Lead volume up 12.8%</strong> to 2,946, outpacing the 9.5% rise in visits.</li>
+          <li><strong>Email is the most efficient channel:</strong> 4.10% conversion and $2.99 per lead.</li>
+          <li><strong>Paid Search delivered 39% of all leads</strong> at a $31.30 cost per lead.</li>
+          <li><strong>Blended cost per lead fell 9.4%</strong> to $20.88.</li>
+        </ul>
+      </div>
+      <div class="box warn">
+        <h3>⚠️ Watch-outs</h3>
+        <ul>
+          <li>Paid Social cost per lead is $47.65, roughly 2.3× the blended average, on 36% of spend.</li>
+          <li>Affiliate converts at 2.62%, the lowest of the paid channels.</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="box act">
+        <h3>🎯 Recommendations for November</h3>
+        <ul>
+          <li><strong>Reallocate 15–20% of Paid Social budget</strong> to Paid Search, which has a lower cost per lead.</li>
+          <li><strong>Scale Email:</strong> expand list growth and nurture sequences, since it has the lowest cost per lead.</li>
+          <li><strong>Review Affiliate partners</strong> and cut those with conversion below 2.5%.</li>
+          <li><strong>Invest in SEO content</strong> for Organic Search, which drives 22% of leads with no media spend.</li>
+          <li><strong>Test a conversion-rate lift</strong> on landing pages for Direct and Referral traffic (2.93%).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Source: October 2026 channel reporting · Figures are illustrative placeholders</span>
+    <span>Prepared November 2026</span>
+  </div>
+</div>
+</body>
+</html>

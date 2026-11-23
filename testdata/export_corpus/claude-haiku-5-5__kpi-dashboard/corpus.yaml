@@ -1,0 +1,8 @@
+model: claude-haiku-5-5
+doc: kpi-dashboard
+images: false
+conversation: 3MUbkOVoZnu6icdnc9A0CD2IRwT
+prompt: |
+  Create a one-page marketing performance summary for October with a row of KPI cards (visits, leads, conversion rate, cost per lead) showing change versus last month, a channel breakdown table, highlights and recommendations. Make it visually rich like a dashboard.
+  
+  Create it as an HTML document with the document tools. Do not export it.
