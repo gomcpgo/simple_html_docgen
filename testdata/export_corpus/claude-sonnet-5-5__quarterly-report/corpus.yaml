@@ -1,0 +1,8 @@
+model: claude-sonnet-5-5
+doc: quarterly-report
+images: false
+conversation: 3MUX9qnvqJO0UTYYOt5hDHQ741o
+prompt: |
+  Write a Q3 2026 business report for Northwind Analytics, a mid-sized SaaS company: executive summary, a KPI table comparing Q2 and Q3, revenue by region, key wins, risks with severity, and next-quarter priorities. Make it look polished and professional.
+  
+  Create it as an HTML document with the document tools. Do not export it.

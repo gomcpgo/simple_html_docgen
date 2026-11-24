@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprint Planning Meeting Notes — Sprint 24</title>
+<style>
+  :root {
+    --ink: #1c2430;
+    --muted: #5c6778;
+    --line: #e4e8ee;
+    --accent: #1f4e79;
+    --accent-soft: #eef4fa;
+    --ok: #1b7a4e;
+    --warn: #9a6700;
+    --bg: #f6f7f9;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px 16px 64px;
+    font-family: "Segoe UI", Calibri, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.5;
+  }
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 40px 44px 48px;
+    box-shadow: 0 8px 28px rgba(28, 36, 48, 0.06);
+  }
+  header.mast {
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 18px;
+    margin-bottom: 28px;
+  }
+  .kicker {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  h1 {
+    font-size: 28px;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    font-weight: 700;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    color: var(--muted);
+    font-size: 14px;
+    margin: 0;
+  }
+  h2 {
+    font-size: 18px;
+    margin: 32px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+    color: var(--accent);
+  }
+  h3 {
+    font-size: 15px;
+    margin: 18px 0 6px;
+  }
+  p { margin: 0 0 10px; }
+  ul, ol { margin: 0 0 12px; padding-left: 22px; }
+  li { margin: 4px 0; }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+  .pill {
+    background: var(--accent-soft);
+    color: var(--accent);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 8px 0 4px;
+  }
+  th, td {
+    text-align: left;
+    vertical-align: top;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+  .tag-p1 { background: #fde8e8; color: #9b1c1c; }
+  .tag-p2 { background: #fff4d6; color: var(--warn); }
+  .tag-p3 { background: #e8f5ee; color: var(--ok); }
+  .checklist { list-style: none; padding-left: 0; }
+  .checklist li {
+    padding: 8px 0 8px 28px;
+    position: relative;
+    border-bottom: 1px solid var(--line);
+  }
+  .checklist li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #8a94a3;
+    border-radius: 3px;
+  }
+  .note {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    margin: 10px 0 0;
+    font-size: 14px;
+  }
+  footer.foot {
+    margin-top: 36px;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 12px;
+  }
+  @media print {
+    body { background: white !important; padding: 0; }
+    .page { box-shadow: none !important; border: none; border-radius: 0; max-width: none; padding: 0; }
+    .pill, th, .note { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+<header class="mast">
+  <p class="kicker">Product Team · Meeting Notes</p>
+  <h1>Sprint Planning — Sprint 24</h1>
+  <p class="meta">
+    <span>Monday, November 23, 2026</span>
+    <span>10:00–11:30 a.m. PT</span>
+    <span>Room Atlas / Zoom</span>
+    <span>Facilitator: Priya Nair</span>
+  </p>
+</header>
+
+<h2>1. Attendees</h2>
+<p>Nine of ten invited people attended. Engineering lead Jordan Hale joined the last 20 minutes for capacity confirmation.</p>
+<div class="pill-row">
+  <span class="pill">Priya Nair · PM, facilitator</span>
+  <span class="pill">Marcus Chen · Design</span>
+  <span class="pill">Aisha Rahman · Engineering</span>
+  <span class="pill">Leo Park · Engineering</span>
+  <span class="pill">Sam Okonkwo · QA</span>
+  <span class="pill">Elena Voss · Data</span>
+  <span class="pill">Chris Alvarez · Support</span>
+  <span class="pill">Jordan Hale · Eng lead (partial)</span>
+</div>
+<p>Absent: Nina Patel (on leave). Notes will be shared with her before standup tomorrow.</p>
+<h2>2. Agenda</h2>
+<ol>
+  <li>Sprint 23 review and carryover (10 min)</li>
+  <li>Sprint goal and success metrics (10 min)</li>
+  <li>Candidate backlog and sizing (35 min)</li>
+  <li>Capacity, risks, and dependencies (15 min)</li>
+  <li>Commitment, owners, and open questions (15 min)</li>
+</ol>
+<h2>3. Discussion</h2>
+
+<h3>3.1 Sprint 23 review and carryover</h3>
+<p>Sprint 23 closed at 28 of 34 committed points. The billing-export job and the saved-filters polish both slipped after a late dependency on the payments vendor sandbox. Support volume on the export path stayed elevated (about 40 tickets last week), so carryover is treated as customer-visible, not optional cleanup.</p>
+<ul>
+  <li>Carry into Sprint 24: CSV export reliability (BILL-412) and saved-filter persistence (SEARCH-188).</li>
+  <li>Drop from the candidate list: dark-mode token cleanup. Design confirmed it can wait until the design-system release in December.</li>
+  <li>Sam flagged two flaky end-to-end tests that masked a real export failure. QA will stabilize those before new export work merges.</li>
+</ul>
+
+<h3>3.2 Sprint goal and success metrics</h3>
+<p>Priya proposed a single goal: make recurring exports trustworthy enough that support tickets on that path fall by half, and ship the first version of team-shared saved views. The group accepted the goal with one change — shared views stay behind a feature flag until Elena confirms the analytics events are firing correctly.</p>
+<p>Success for the sprint is defined as:</p>
+<ul>
+  <li>Export job success rate at or above 99% in staging for three consecutive days.</li>
+  <li>Support tickets tagged “export failed” down at least 50% versus the Sprint 23 weekly average by the end of the sprint.</li>
+  <li>Shared saved views available to the internal beta cohort, flagged off in production.</li>
+</ul>
+
+<h3>3.3 Candidate backlog and sizing</h3>
+<p>The team walked the top of the backlog and sized only items that could fit the goal. Points are planning poker consensus, not individual estimates.</p>
+<ul>
+  <li><strong>BILL-412 — Retry and alert on failed exports (5 pts).</strong> Aisha owns the retry policy. Leo will add the failure webhook so Support sees a ticket reason instead of a silent miss. Chris asked that the customer-facing error name the file and the time, not a generic “try again.”</li>
+  <li><strong>SEARCH-188 — Persist saved filters across sessions (3 pts).</strong> Carryover. Marcus has the empty and error states ready. Small scope; do not expand into sharing.</li>
+  <li><strong>SEARCH-201 — Team-shared saved views, v1 (8 pts).</strong> Create, rename, and revoke only. No permissions matrix this sprint. Elena needs an event for view-created, view-applied, and view-revoked before the flag can open to the beta cohort.</li>
+  <li><strong>PLAT-77 — Fix flaky export e2e tests (2 pts).</strong> Sam. Prerequisite for BILL-412 merge.</li>
+  <li><strong>Not committed:</strong> mobile filter sheet redesign (SEARCH-210, 8 pts) and admin audit log (ADMIN-54, 5 pts). Both stay in the backlog. Audit log was close; Jordan said platform capacity is already spoken for by the vendor sandbox follow-up.</li>
+</ul>
+
+<h3>3.4 Capacity, risks, and dependencies</h3>
+<p>Available capacity is 22 points after accounting for a company holiday on Thursday, November 26, and Aisha’s half-day onboarding shadow on Friday. Committed scope is 18 points, leaving a small buffer.</p>
+<ul>
+  <li><strong>Vendor sandbox.</strong> Payments confirmed the sandbox reset lands Wednesday. BILL-412 cannot be verified end to end before that. Aisha will stub the failure path so development is not blocked.</li>
+  <li><strong>Holiday coverage.</strong> No deploys Thursday or Friday. Last production deploy window this sprint is Wednesday, December 2, pending the usual release checklist.</li>
+  <li><strong>Analytics.</strong> Shared views stay flagged off until Elena signs off on the three events. If instrumentation slips, the UI still ships internally; the flag does not open.</li>
+  <li><strong>Support load.</strong> Chris will keep a daily export-ticket count in the sprint channel so the 50% target is visible, not discovered at review.</li>
+</ul>
+
+<h3>3.5 Commitment</h3>
+<p>The team committed to BILL-412, SEARCH-188, SEARCH-201, and PLAT-77, totaling 18 points, against the goal above. Sprint 24 runs Monday, November 23 through Friday, December 4, with no deploy on the holiday or the day after. Review is scheduled for Thursday, December 3 at 2:00 p.m. PT.</p>
+<h2>4. Decisions</h2>
+<ol>
+  <li><strong>Sprint goal accepted.</strong> Recurring exports become reliable enough to cut related support tickets by about half, and team-shared saved views ship as an internal beta behind a feature flag.</li>
+  <li><strong>Commitment is 18 points:</strong> BILL-412 (5), SEARCH-188 (3), SEARCH-201 (8), PLAT-77 (2). Buffer is 4 points against 22 available.</li>
+  <li><strong>SEARCH-210 and ADMIN-54 are not in this sprint.</strong> They return to the backlog without a promised date.</li>
+  <li><strong>Shared views do not leave the flag</strong> until Elena confirms view-created, view-applied, and view-revoked events in staging.</li>
+  <li><strong>No production deploys</strong> on Thursday, November 26 or Friday, November 27. Next planned production window is Wednesday, December 2.</li>
+  <li><strong>Customer-facing export errors</strong> must name the file and the attempt time. Generic “try again” copy is out of scope for the fix.</li>
+  <li><strong>Sprint review</strong> is Thursday, December 3, 2:00–2:45 p.m. PT. Priya will send the invite today.</li>
+</ol>
+<h2>5. Action items</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Owner</th>
+      <th>Due</th>
+      <th>Priority</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Stabilize the two flaky export end-to-end tests (PLAT-77) so BILL-412 can merge cleanly</td>
+      <td>Sam Okonkwo</td>
+      <td>Wed, Nov 25</td>
+      <td><span class="tag tag-p1">P1</span></td>
+    </tr>
+    <tr>
+      <td>Implement export retry policy and failure webhook; include file name and attempt time in the customer error (BILL-412)</td>
+      <td>Aisha Rahman, with Leo Park on the webhook</td>
+      <td>Tue, Dec 1</td>
+      <td><span class="tag tag-p1">P1</span></td>
+    </tr>
+    <tr>
+      <td>Stub the payments failure path so BILL-412 development is not blocked on the Wednesday sandbox reset</td>
+      <td>Aisha Rahman</td>
+      <td>Tue, Nov 24</td>
+      <td><span class="tag tag-p1">P1</span></td>
+    </tr>
+    <tr>
+      <td>Ship saved-filter persistence and the ready empty/error states (SEARCH-188)</td>
+      <td>Leo Park, Marcus Chen</td>
+      <td>Fri, Nov 27</td>
+      <td><span class="tag tag-p2">P2</span></td>
+    </tr>
+    <tr>
+      <td>Build create, rename, and revoke for team-shared saved views behind the feature flag (SEARCH-201)</td>
+      <td>Leo Park, Marcus Chen</td>
+      <td>Wed, Dec 2</td>
+      <td><span class="tag tag-p1">P1</span></td>
+    </tr>
+    <tr>
+      <td>Instrument view-created, view-applied, and view-revoked; sign off before the flag can open to the beta cohort</td>
+      <td>Elena Voss</td>
+      <td>Mon, Dec 1</td>
+      <td><span class="tag tag-p1">P1</span></td>
+    </tr>
+    <tr>
+      <td>Post a daily count of “export failed” tickets in the sprint channel</td>
+      <td>Chris Alvarez</td>
+      <td>Daily, starting Nov 24</td>
+      <td><span class="tag tag-p2">P2</span></td>
+    </tr>
+    <tr>
+      <td>Confirm payments sandbox reset timing and relay any slip to the sprint channel</td>
+      <td>Jordan Hale</td>
+      <td>Wed, Nov 25</td>
+      <td><span class="tag tag-p2">P2</span></td>
+    </tr>
+    <tr>
+      <td>Send the December 3 sprint review invite and share these notes with Nina Patel</td>
+      <td>Priya Nair</td>
+      <td>Mon, Nov 23</td>
+      <td><span class="tag tag-p3">P3</span></td>
+    </tr>
+    <tr>
+      <td>Draft release-checklist notes for the December 2 production window, excluding holiday deploys</td>
+      <td>Priya Nair</td>
+      <td>Tue, Dec 1</td>
+      <td><span class="tag tag-p3">P3</span></td>
+    </tr>
+  </tbody>
+</table>
+<p class="note">Priority is relative to the sprint goal. P1 items block the goal or a merge. P3 items are coordination and should not displace build work.</p>
+<h2>6. Open questions</h2>
+<ul class="checklist">
+  <li>Will the payments sandbox reset actually land Wednesday, November 25, or should verification of BILL-412 slip to the week of December 1?</li>
+  <li>What is the exact internal beta cohort for shared views — the design partners list, or a smaller slice of the support team?</li>
+  <li>Does revoke on a shared view need to notify the people currently using it, or is a silent removal acceptable for v1?</li>
+  <li>Should the 50% ticket-reduction target be measured against all “export failed” tags, or only recurring scheduled exports?</li>
+  <li>Is Nina’s design review of SEARCH-201 required before the flag can open, or can Marcus sign off in her absence?</li>
+  <li>Do we need a customer-facing status page note if Wednesday’s sandbox work causes a brief staging-only outage, or is internal comms enough?</li>
+</ul>
+<p class="note">Open questions stay on this list until an owner answers them in the sprint channel. Unresolved items will be reviewed at standup on Tuesday, November 24.</p>
+
+<footer class="foot">Notes drafted by Priya Nair · Product · Sprint 24 planning · Confidential — internal use only</footer>
+</div>
+</body>
+</html>

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"simple_html_docgen/pkg/config"
 	"simple_html_docgen/pkg/document"
+	"simple_html_docgen/pkg/export"
 	"simple_html_docgen/pkg/storage"
 
 	"github.com/gomcpgo/mcp/pkg/protocol"
@@ -20,7 +21,7 @@ type Handler struct {
 
 // ExportService defines the interface for export functionality
 type ExportService interface {
-	ExportDocument(documentID, format, outputPath string, docSvc *document.Service) (string, error)
+	ExportDocument(ctx context.Context, documentID, format, outputPath string, opts export.Options, docSvc *document.Service) (*export.Result, error)
 }
 
 // NewHandler creates a new handler instance
@@ -292,7 +293,17 @@ func (h *Handler) handleExportDocument(ctx context.Context, args map[string]inte
 		outputPath = path
 	}
 
-	exportedPath, err := h.exportSvc.ExportDocument(documentID, format, outputPath, h.docSvc)
+	// Optional page_size; empty means the size for the user's locale.
+	var opts export.Options
+	if v, ok := args["page_size"]; ok && v != nil {
+		ps, ok := v.(string)
+		if !ok {
+			return nil, fmt.Errorf("page_size must be a string")
+		}
+		opts.PageSize = ps
+	}
+
+	res, err := h.exportSvc.ExportDocument(ctx, documentID, format, outputPath, opts, h.docSvc)
 	if err != nil {
 		return h.errorResponse(fmt.Sprintf("Failed to export document: %v", err)), nil
 	}
@@ -301,7 +312,16 @@ func (h *Handler) handleExportDocument(ctx context.Context, args map[string]inte
 		"status":      "succeeded",
 		"document_id": documentID,
 		"format":      format,
-		"output_path": exportedPath,
+		"output_path": res.Path,
+	}
+	if res.PageSize != "" {
+		result["page_size"] = res.PageSize
+	}
+	// Warnings say what the DOCX could not carry over exactly; the file was
+	// still written. The caller (the model or the export dialog) decides
+	// what to do with them.
+	if len(res.Warnings) > 0 {
+		result["warnings"] = res.Warnings
 	}
 
 	return h.successResponse(result), nil

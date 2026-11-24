@@ -1,0 +1,8 @@
+model: claude-sonnet-5-5
+doc: comparison-matrix
+images: false
+conversation: 3MUj5cixfl2TSqEsjMGtax0zuk6
+prompt: |
+  Create a detailed comparison of six project-management tools across ten criteria (price, users, integrations, reporting, etc.) as a wide table with grouped column headers spanning multiple columns, plus a recommendation section.
+  
+  Create it as an HTML document with the document tools. Do not export it.

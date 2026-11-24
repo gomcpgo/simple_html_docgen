@@ -1,0 +1,8 @@
+model: gpt-6.1-terra
+doc: newsletter
+images: false
+conversation: 3MUdI73grrTISR6u5eEesVlkzHQ
+prompt: |
+  Create a monthly company newsletter for a 200-person engineering firm: a header banner, a lead story, a two-column section of shorter news items, a highlighted callout box for upcoming events, employee spotlight, and a footer.
+  
+  Create it as an HTML document with the document tools. Do not export it.

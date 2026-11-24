@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Invoice INV-2026-0142</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: "Helvetica Neue", Arial, sans-serif; color: #222; background: #f2f4f7; max-width: 800px; margin: 24px auto; padding: 48px; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.12); font-size: 14px; line-height: 1.45; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 4px solid #ff7a1a; padding-bottom: 20px; margin-bottom: 28px; }
+  .logo { display: flex; align-items: center; gap: 14px; }
+  .logo-mark { width: 64px; height: 64px; border: 2px dashed #bbb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
+  .company-name { font-size: 20px; font-weight: 700; color: #111; }
+  .company-sub { font-size: 12px; color: #666; }
+  .invoice-title { text-align: right; }
+  .invoice-title h1 { margin: 0; font-size: 36px; letter-spacing: 4px; color: #ff7a1a; }
+  .meta { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+  .meta .box { flex: 1; background: #f7f7f9; border-left: 4px solid #ff7a1a; padding: 10px 14px; }
+  .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #777; margin-bottom: 2px; }
+  .value { font-weight: 600; font-size: 15px; }
+  .addresses { display: flex; gap: 24px; margin-bottom: 28px; }
+  .addresses .col { flex: 1; }
+  .addresses h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #ff7a1a; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  .addresses p { margin: 0; }
+  table.items { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  table.items th { background: #222; color: #fff; text-align: left; padding: 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+  table.items td { padding: 10px; border-bottom: 1px solid #e5e5e5; vertical-align: top; }
+  table.items .num { text-align: right; white-space: nowrap; }
+  table.items .desc small { color: #777; display: block; }
+  .totals-wrap { display: flex; justify-content: flex-end; margin-bottom: 32px; }
+  table.totals { width: 320px; border-collapse: collapse; }
+  table.totals td { padding: 7px 10px; }
+  table.totals td:last-child { text-align: right; }
+  table.totals tr.discount td:last-child { color: #c0392b; }
+  table.totals tr.total td { background: #ff7a1a; color: #fff; font-size: 17px; font-weight: 700; }
+  .info { display: flex; gap: 24px; margin-bottom: 24px; }
+  .info .col { flex: 1; }
+  .info h3 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #ff7a1a; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  .info table { border-collapse: collapse; width: 100%; }
+  .info td { padding: 3px 0; vertical-align: top; }
+  .info td:first-child { color: #777; width: 40%; }
+  .info ul { margin: 0; padding-left: 18px; }
+  .footer { text-align: center; border-top: 1px solid #ddd; padding-top: 14px; color: #777; font-size: 12px; }
+  @media print {
+    body { background: white !important; box-shadow: none !important; margin: 0; max-width: none; padding: 0; }
+    .meta .box { background: white !important; }
+    table.items th { background: #fff !important; color: #000 !important; border-bottom: 2px solid #000; }
+    table.totals tr.total td { background: #fff !important; color: #000 !important; border-top: 2px solid #000; }
+    .invoice-title h1 { color: #000 !important; }
+  }
+</style>
+</head>
+<body>
+<!-- Sections to follow: Header, Meta, Addresses, Line items, Totals, Payment terms & bank details, Footer -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">Your Logo Here</div>
+    <div>
+      <div class="company-name">Brightline Design Studio</div>
+      <div class="company-sub">128 Creative Avenue, Suite 4B<br>Portland, OR 97209, USA<br>hello@brightlinedesign.example · +1 (503) 555-0187</div>
+    </div>
+  </div>
+  <div class="invoice-title">
+    <h1>INVOICE</h1>
+    <div class="company-sub">Tax ID: 84-1234567</div>
+  </div>
+</div>
+
+<div class="meta">
+  <div class="box"><div class="label">Invoice No.</div><div class="value">INV-2026-0142</div></div>
+  <div class="box"><div class="label">Invoice Date</div><div class="value">November 23, 2026</div></div>
+  <div class="box"><div class="label">Due Date</div><div class="value">December 23, 2026</div></div>
+  <div class="box"><div class="label">PO Number</div><div class="value">PO-ACME-77813</div></div>
+</div>
+
+<div class="addresses">
+  <div class="col">
+    <h3>Bill To</h3>
+    <p><strong>Acme Corp</strong><br>Attn: Accounts Payable<br>500 Industrial Parkway<br>Springfield, IL 62704, USA<br>ap@acmecorp.example</p>
+  </div>
+  <div class="col">
+    <h3>Ship To</h3>
+    <p><strong>Acme Corp – Marketing Department</strong><br>Attn: Jordan Ellis<br>22 Commerce Street, Floor 3<br>Springfield, IL 62701, USA<br>+1 (217) 555-0134</p>
+  </div>
+</div>
+<table class="items">
+  <thead>
+    <tr><th style="width:5%">#</th><th>Description</th><th class="num" style="width:10%">Qty</th><th class="num" style="width:16%">Rate</th><th class="num" style="width:16%">Amount</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td class="desc">Brand identity package<small>Logo suite, color palette, typography and brand guidelines (flat fee)</small></td><td class="num">1</td><td class="num">$3,500.00</td><td class="num">$3,500.00</td></tr>
+    <tr><td>2</td><td class="desc">Website UI/UX design<small>Wireframes and high-fidelity mockups – hourly</small></td><td class="num">40 hrs</td><td class="num">$95.00</td><td class="num">$3,800.00</td></tr>
+    <tr><td>3</td><td class="desc">Marketing brochure design<small>Tri-fold brochure layouts with two revision rounds</small></td><td class="num">3</td><td class="num">$450.00</td><td class="num">$1,350.00</td></tr>
+    <tr><td>4</td><td class="desc">Social media template kit<small>Editable templates for Instagram, LinkedIn and Facebook</small></td><td class="num">12</td><td class="num">$60.00</td><td class="num">$720.00</td></tr>
+    <tr><td>5</td><td class="desc">Printed brand kits<small>Printed guidelines, stationery set and packaging; shipped to address above</small></td><td class="num">25</td><td class="num">$38.00</td><td class="num">$950.00</td></tr>
+  </tbody>
+</table>
+
+<div class="totals-wrap">
+  <table class="totals">
+    <tr><td>Subtotal</td><td>$10,320.00</td></tr>
+    <tr class="discount"><td>Discount (10% – loyalty)</td><td>−$1,032.00</td></tr>
+    <tr><td>Discounted subtotal</td><td>$9,288.00</td></tr>
+    <tr><td>Tax (8%)</td><td>$743.04</td></tr>
+    <tr class="total"><td>Total Due (USD)</td><td>$10,031.04</td></tr>
+  </table>
+</div>
+<div class="info">
+  <div class="col">
+    <h3>Payment Terms</h3>
+    <ul>
+      <li>Payment due within <strong>30 days</strong> of invoice date (Net 30).</li>
+      <li>Late payments incur interest of 1.5% per month on the outstanding balance.</li>
+      <li>Please quote the invoice number as the payment reference.</li>
+      <li>Early-payment: 2% off if paid within 10 days.</li>
+    </ul>
+  </div>
+  <div class="col">
+    <h3>Bank Details</h3>
+    <table>
+      <tr><td>Account Name</td><td>Brightline Design Studio LLC</td></tr>
+      <tr><td>Bank</td><td>First Cascade Bank</td></tr>
+      <tr><td>Account No.</td><td>0012 3456 7890</td></tr>
+      <tr><td>Routing (ABA)</td><td>123 000 456</td></tr>
+      <tr><td>SWIFT / BIC</td><td>FCSBUS66</td></tr>
+      <tr><td>Reference</td><td>INV-2026-0142</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  Thank you for your business! Questions about this invoice? Contact billing@brightlinedesign.example<br>
+  Brightline Design Studio · 128 Creative Avenue, Suite 4B, Portland, OR 97209
+</div>
+</body>
+</html>

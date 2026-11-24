@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Northwind Analytics — Q3 2026 Business Report</title>
+  <style>
+    :root {
+      --navy: #0f172a;
+      --slate-800: #1e293b;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-200: #e2e8f0;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --brand: #2563eb;
+      --brand-dark: #1d4ed8;
+      --brand-soft: #eff6ff;
+      --emerald: #059669;
+      --emerald-soft: #ecfdf5;
+      --amber: #d97706;
+      --amber-soft: #fffbeb;
+      --rose: #dc2626;
+      --rose-soft: #fef2f2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--slate-800);
+      background-color: #ffffff;
+      line-height: 1.6;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 40px 44px 64px;
+    }
+
+    .report-header {
+      background: linear-gradient(135deg, var(--navy) 0%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 36px 40px;
+      border-radius: 14px;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+    }
+
+    .header-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #93c5fd;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .report-header h1 {
+      font-size: 2.15rem;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.02em;
+    }
+
+    .report-subtitle {
+      margin: 0 0 22px 0;
+      color: #cbd5e1;
+      font-size: 1.02rem;
+    }
+
+    .toc-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .toc-pill {
+      font-size: 0.76rem;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+
+    .report-section {
+      margin-bottom: 34px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--slate-200);
+    }
+
+    .report-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .section-num {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--brand);
+      background: var(--brand-soft);
+      padding: 3px 9px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      color: var(--navy);
+      margin: 0;
+      letter-spacing: -0.015em;
+    }
+
+    p {
+      margin: 0 0 14px 0;
+      color: var(--slate-600);
+    }
+
+    .stat-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .stat-card {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .stat-label {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--slate-500);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+
+    .stat-delta {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 4px;
+      color: var(--emerald);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin-top: 10px;
+    }
+
+    th {
+      text-align: left;
+      padding: 11px 14px;
+      background: var(--slate-100);
+      color: var(--navy);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 2px solid var(--slate-200);
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--slate-200);
+      color: var(--slate-800);
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background-color: var(--slate-50);
+    }
+
+    .num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .badge-positive, .badge-low {
+      background: var(--emerald-soft);
+      color: var(--emerald);
+    }
+
+    .badge-medium {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .badge-high {
+      background: var(--rose-soft);
+      color: var(--rose);
+    }
+
+    .badge-neutral {
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+    }
+
+    .region-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .region-card {
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+      padding: 18px 20px;
+      background: #ffffff;
+    }
+
+    .region-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+
+    .region-name {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 1rem;
+    }
+
+    .region-rev {
+      font-weight: 700;
+      color: var(--brand-dark);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bar-track {
+      width: 100%;
+      height: 8px;
+      background: var(--slate-100);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 8px 0 10px;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--brand);
+      border-radius: 999px;
+    }
+
+    .region-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--slate-500);
+    }
+
+    .wins-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .win-card {
+      background: var(--slate-50);
+      border-left: 4px solid var(--brand);
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+
+    .win-title {
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 6px;
+      font-size: 0.98rem;
+    }
+
+    .win-desc {
+      font-size: 0.88rem;
+      color: var(--slate-600);
+      margin: 0;
+    }
+
+    .priority-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .priority-item {
+      display: grid;
+      grid-template-columns: 130px 1fr 150px;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 18px;
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+      background: #ffffff;
+    }
+
+    .priority-tag {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--brand-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .priority-body strong {
+      display: block;
+      color: var(--navy);
+      margin-bottom: 2px;
+      font-size: 0.96rem;
+    }
+
+    .priority-body span {
+      font-size: 0.86rem;
+      color: var(--slate-600);
+    }
+
+    .priority-owner {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--slate-500);
+      font-weight: 500;
+    }
+
+    .report-footer {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--slate-200);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--slate-500);
+    }
+
+    @media print {
+      body {
+        background: white !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .report-header {
+        background: white !important;
+        color: var(--navy) !important;
+        box-shadow: none !important;
+        border: 2px solid var(--navy) !important;
+        padding: 20px 24px !important;
+      }
+      .header-meta, .report-subtitle, .toc-pill {
+        color: var(--slate-600) !important;
+        background: transparent !important;
+      }
+      .toc-pills {
+        border-top-color: var(--slate-200) !important;
+      }
+      .stat-card, .win-card, th {
+        background: white !important;
+        box-shadow: none !important;
+      }
+      .report-section {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="report-header">
+    <div class="header-meta">
+      <span>Northwind Analytics, Inc. &bull; Board &amp; Leadership Briefing</span>
+      <span>Period Ending September 30, 2026</span>
+    </div>
+    <h1>Q3 2026 Quarterly Business Report</h1>
+    <p class="report-subtitle">Enterprise BI &amp; Real-Time Decision Intelligence SaaS &mdash; Operational &amp; Financial Performance</p>
+    <div class="toc-pills">
+      <span class="toc-pill">01 Executive Summary</span>
+      <span class="toc-pill">02 Q2 vs. Q3 KPI Comparison</span>
+      <span class="toc-pill">03 Revenue by Region</span>
+      <span class="toc-pill">04 Key Quarterly Wins</span>
+      <span class="toc-pill">05 Risk Register &amp; Severity</span>
+      <span class="toc-pill">06 Q4 2026 Strategic Priorities</span>
+    </div>
+  </header>
+  <section class="report-section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Executive Summary</h2>
+    </div>
+    <p>
+      Northwind Analytics delivered a standout third quarter in FY2026, accelerating top-line expansion while materially improving operating leverage. Ending Annual Recurring Revenue (ARR) reached <strong>$68.40M</strong>, representing <strong>8.9% quarter-over-quarter</strong> growth (28.4% YoY), driven by strong enterprise adoption of our AI-assisted semantic modeling suite, <em>Northwind Pulse</em>, and disciplined multi-year renewal execution.
+    </p>
+    <p>
+      Quarterly recognized revenue rose to <strong>$16.65M</strong> (up from $15.20M in Q2), outperforming the midpoint of guidance by $420K. Net Revenue Retention (NRR) climbed 280 basis points to <strong>115.2%</strong> on the strength of seat and compute-tier expansions within existing financial services and healthcare accounts, while Free Cash Flow margin expanded to <strong>11.4%</strong> ($1.90M), keeping Northwind firmly ahead of its Rule-of-40 target.
+    </p>
+    <div class="stat-strip">
+      <div class="stat-card">
+        <div class="stat-label">Ending ARR</div>
+        <div class="stat-value">$68.40M</div>
+        <div class="stat-delta">&#9650; +8.9% vs. Q2 ($62.80M)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Q3 Revenue</div>
+        <div class="stat-value">$16.65M</div>
+        <div class="stat-delta">&#9650; +9.5% vs. Q2 ($15.20M)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Net Retention (NRR)</div>
+        <div class="stat-value">115.2%</div>
+        <div class="stat-delta">&#9650; +280 bps QoQ</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">FCF Margin</div>
+        <div class="stat-value">11.4%</div>
+        <div class="stat-delta">&#9650; +320 bps ($1.90M)</div>
+      </div>
+    </div>
+  </section>
+  <section class="report-section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Key Performance Indicators: Q2 2026 vs. Q3 2026</h2>
+    </div>
+    <p>
+      Core financial, unit-economic, and customer health metrics improved across every tracked category in Q3, highlighted by faster enterprise sales velocity and cloud infrastructure optimization that lifted Non-GAAP gross margin by 80 bps.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>KPI Metric</th>
+          <th class="num">Q2 2026</th>
+          <th class="num">Q3 2026</th>
+          <th class="num">QoQ Variance</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ending ARR</strong></td>
+          <td class="num">$62.80M</td>
+          <td class="num"><strong>$68.40M</strong></td>
+          <td class="num">+$5.60M (+8.9%)</td>
+          <td><span class="badge badge-positive">Beat Plan</span></td>
+        </tr>
+        <tr>
+          <td><strong>Quarterly Recognized Revenue</strong></td>
+          <td class="num">$15.20M</td>
+          <td class="num"><strong>$16.65M</strong></td>
+          <td class="num">+$1.45M (+9.5%)</td>
+          <td><span class="badge badge-positive">Beat Plan</span></td>
+        </tr>
+        <tr>
+          <td><strong>Net Revenue Retention (NRR)</strong></td>
+          <td class="num">112.4%</td>
+          <td class="num"><strong>115.2%</strong></td>
+          <td class="num">+280 bps</td>
+          <td><span class="badge badge-positive">Expanding</span></td>
+        </tr>
+        <tr>
+          <td><strong>Non-GAAP Gross Margin</strong></td>
+          <td class="num">78.6%</td>
+          <td class="num"><strong>79.4%</strong></td>
+          <td class="num">+80 bps</td>
+          <td><span class="badge badge-positive">On Target</span></td>
+        </tr>
+        <tr>
+          <td><strong>Annualized Logo Churn</strong></td>
+          <td class="num">6.8%</td>
+          <td class="num"><strong>5.9%</strong></td>
+          <td class="num">&minus;90 bps</td>
+          <td><span class="badge badge-positive">Improved</span></td>
+        </tr>
+        <tr>
+          <td><strong>Enterprise Customers (&gt;$100K ACV)</strong></td>
+          <td class="num">142</td>
+          <td class="num"><strong>161</strong></td>
+          <td class="num">+19 (+13.4%)</td>
+          <td><span class="badge badge-positive">Record Quarter</span></td>
+        </tr>
+        <tr>
+          <td><strong>CAC Payback Period</strong></td>
+          <td class="num">16.4 mos</td>
+          <td class="num"><strong>14.8 mos</strong></td>
+          <td class="num">&minus;1.6 mos</td>
+          <td><span class="badge badge-positive">Improved</span></td>
+        </tr>
+        <tr>
+          <td><strong>Free Cash Flow (Margin)</strong></td>
+          <td class="num">$1.25M (8.2%)</td>
+          <td class="num"><strong>$1.90M (11.4%)</strong></td>
+          <td class="num">+$0.65M (+320 bps)</td>
+          <td><span class="badge badge-positive">Beat Plan</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="report-section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Revenue Performance by Region</h2>
+    </div>
+    <p>
+      North America remained Northwind&rsquo;s anchor market at 56.0% of total recognized revenue, while international territories outpaced domestic growth. EMEA (+11.1% QoQ) benefited from our Frankfurt sovereign-cloud deployment, and APAC (+13.7% QoQ) posted the fastest expansion following strategic SI partnerships in Singapore and Sydney.
+    </p>
+    <div class="region-grid">
+      <div class="region-card">
+        <div class="region-top">
+          <span class="region-name">North America (AMER)</span>
+          <span class="region-rev">$9.32M</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width: 56%;"></div></div>
+        <div class="region-meta">
+          <span>56.0% of Q3 Revenue</span>
+          <span><strong>+8.4% QoQ</strong> (Q2: $8.60M)</span>
+        </div>
+      </div>
+
+      <div class="region-card">
+        <div class="region-top">
+          <span class="region-name">EMEA</span>
+          <span class="region-rev">$4.50M</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width: 27%;"></div></div>
+        <div class="region-meta">
+          <span>27.0% of Q3 Revenue</span>
+          <span><strong>+11.1% QoQ</strong> (Q2: $4.05M)</span>
+        </div>
+      </div>
+
+      <div class="region-card">
+        <div class="region-top">
+          <span class="region-name">Asia-Pacific (APAC)</span>
+          <span class="region-rev">$1.99M</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width: 12%;"></div></div>
+        <div class="region-meta">
+          <span>12.0% of Q3 Revenue</span>
+          <span><strong>+13.7% QoQ</strong> (Q2: $1.75M)</span>
+        </div>
+      </div>
+
+      <div class="region-card">
+        <div class="region-top">
+          <span class="region-name">Latin America (LATAM)</span>
+          <span class="region-rev">$0.84M</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width: 5%;"></div></div>
+        <div class="region-meta">
+          <span>5.0% of Q3 Revenue</span>
+          <span><strong>+5.0% QoQ</strong> (Q2: $0.80M)</span>
+        </div>
+      </div>
+    </div>
+
+    <table style="margin-top: 18px;">
+      <thead>
+        <tr>
+          <th>Region</th>
+          <th class="num">Q2 2026 Rev</th>
+          <th class="num">Q3 2026 Rev</th>
+          <th class="num">QoQ Growth</th>
+          <th class="num">Revenue Mix</th>
+          <th>Primary Growth Driver</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>North America</strong></td>
+          <td class="num">$8.60M</td>
+          <td class="num"><strong>$9.32M</strong></td>
+          <td class="num">+8.4%</td>
+          <td class="num">56.0%</td>
+          <td>Enterprise Pulse AI attach &amp; FinServ expansions</td>
+        </tr>
+        <tr>
+          <td><strong>EMEA</strong></td>
+          <td class="num">$4.05M</td>
+          <td class="num"><strong>$4.50M</strong></td>
+          <td class="num">+11.1%</td>
+          <td class="num">27.0%</td>
+          <td>EU data-residency launch (DACH &amp; UK momentum)</td>
+        </tr>
+        <tr>
+          <td><strong>APAC</strong></td>
+          <td class="num">$1.75M</td>
+          <td class="num"><strong>$1.99M</strong></td>
+          <td class="num">+13.7%</td>
+          <td class="num">12.0%</td>
+          <td>Channel partner co-sell in ANZ &amp; ASEAN</td>
+        </tr>
+        <tr>
+          <td><strong>LATAM</strong></td>
+          <td class="num">$0.80M</td>
+          <td class="num"><strong>$0.84M</strong></td>
+          <td class="num">+5.0%</td>
+          <td class="num">5.0%</td>
+          <td>Fintech &amp; retail mid-market renewals in Brazil/Mexico</td>
+        </tr>
+        <tr style="background: var(--slate-50); font-weight: 700;">
+          <td>Total Global</td>
+          <td class="num">$15.20M</td>
+          <td class="num">$16.65M</td>
+          <td class="num">+9.5%</td>
+          <td class="num">100.0%</td>
+          <td>Balanced multi-region execution</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="report-section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Key Quarterly Wins</h2>
+    </div>
+    <p>
+      Commercial execution and product innovation combined in Q3 to unlock larger initial land deals, shorten enterprise security reviews, and expand Northwind&rsquo;s partner-sourced pipeline.
+    </p>
+    <div class="wins-grid">
+      <div class="win-card">
+        <div class="win-title">Landmark Enterprise Deals Closed</div>
+        <p class="win-desc">
+          Signed 19 net-new six-figure logos, led by a 3-year, <strong>$1.35M TCV</strong> agreement with Meridian Health Systems (4,200 seats) and a <strong>$480K ACV</strong> expansion with Vanguardia Financial.
+        </p>
+      </div>
+      <div class="win-card">
+        <div class="win-title">Northwind Pulse AI GA Adoption</div>
+        <p class="win-desc">
+          Achieved <strong>38% paid attach rate</strong> across Q3 new enterprise bookings within 90 days of General Availability, lifting average new-logo ACV by 24% compared to Q2.
+        </p>
+      </div>
+      <div class="win-card">
+        <div class="win-title">EU Sovereign Cloud &amp; ISO 42001 Certification</div>
+        <p class="win-desc">
+          Launched dedicated Frankfurt multi-tenant cluster and earned ISO/IEC 42001 AI governance certification, unblocking <strong>$2.9M</strong> in late-stage regulated EMEA pipeline.
+        </p>
+      </div>
+      <div class="win-card">
+        <div class="win-title">Snowflake &amp; Databricks Co-Sell Acceleration</div>
+        <p class="win-desc">
+          Earned Premier Tier status in partner marketplaces; partner-influenced bookings grew 41% QoQ to represent <strong>31% of total Q3 new ARR</strong>, reducing blended CAC payback to 14.8 months.
+        </p>
+      </div>
+    </div>
+  </section>
+  <section class="report-section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Risk Register &amp; Severity Assessment</h2>
+    </div>
+    <p>
+      Leadership actively tracks operational, competitive, and macroeconomic risks entering Q4. Mitigation owners report bi-weekly against quantified leading indicators.
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 22%;">Risk Factor</th>
+          <th style="width: 11%;">Severity</th>
+          <th style="width: 31%;">Potential Business Impact</th>
+          <th style="width: 36%;">Active Mitigation Plan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>AI Inference Cost Volatility</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>Uncapped natural-language query bursts on Pulse AI could compress Non-GAAP gross margin by 150&ndash;220 bps as adoption scales.</td>
+          <td>Deploying semantic query caching, routing routine prompts to distilled smaller models, and enforcing tiered compute credits on enterprise plans.</td>
+        </tr>
+        <tr>
+          <td><strong>Enterprise Procurement Elongation</strong></td>
+          <td><span class="badge badge-high">High</span></td>
+          <td>CISO AI-governance reviews in Fortune 1000 accounts are adding 18&ndash;25 days to Q4 late-stage close cycles ($4.6M pipeline exposed).</td>
+          <td>Pre-packaging ISO 42001 + SOC 2 Type II trust bundles at Stage 2 discovery and offering mutual close plans with legal redline SLAs.</td>
+        </tr>
+        <tr>
+          <td><strong>SMB &amp; Lower Mid-Market Churn</strong></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td>Sub-$25K ACV cohort still exhibits 10.4% annualized logo churn due to IT budget consolidation among smaller tech customers.</td>
+          <td>Launching automated in-product onboarding health scores, CSM pooled intervention playbooks, and annual-prepay renewal incentives.</td>
+        </tr>
+        <tr>
+          <td><strong>Senior Solutions Architect Capacity</strong></td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td>EMEA and APAC pre-sales engineering utilization reached 91% in September, risking technical POC bottlenecks in Q4.</td>
+          <td>4 senior SAs hired (starting Oct 2026) alongside partner-certified deployment accreditation across 6 regional SIs.</td>
+        </tr>
+        <tr>
+          <td><strong>FX Headwinds (EUR / GBP / AUD)</strong></td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td>Currency fluctuations across growing non-USD billings (34% of new international contracts) could create minor reported revenue variance.</td>
+          <td>Rolling 6-month natural expense matching in London/Frankfurt hubs plus Treasury forward hedging thresholds above $2M exposure.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="report-section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Q4 2026 Strategic Priorities</h2>
+    </div>
+    <p>
+      Entering our seasonally strongest enterprise buying quarter, Northwind is focused on crossing the <strong>$75.0M ARR milestone</strong> while protecting gross margin expansion and setting up FY2027 pipeline coverage.
+    </p>
+    <div class="priority-list">
+      <div class="priority-item">
+        <div class="priority-tag">P1 &bull; Revenue</div>
+        <div class="priority-body">
+          <strong>Surpass $75.2M Ending ARR (+$6.8M Net New ARR)</strong>
+          <span>Close 22+ six-figure enterprise deals and convert $11.4M of Q4 renewal cohort at &ge;95% gross retention and &ge;116% NRR.</span>
+        </div>
+        <div class="priority-owner">CRO &amp; VP Customer Success</div>
+      </div>
+
+      <div class="priority-item">
+        <div class="priority-tag">P2 &bull; Product</div>
+        <div class="priority-body">
+          <strong>Ship Embedded Analytics SDK 3.0 &amp; Governed Metrics Layer</strong>
+          <span>Release zero-copy embedded components for SaaS builders, targeting $1.8M in Q4 expansion pipeline across existing ISV customers.</span>
+        </div>
+        <div class="priority-owner">CPO &amp; VP Engineering</div>
+      </div>
+
+      <div class="priority-item">
+        <div class="priority-tag">P3 &bull; Efficiency</div>
+        <div class="priority-body">
+          <strong>Reach 80.0% Non-GAAP Gross Margin via AI Routing</strong>
+          <span>Roll out semantic query caching and hybrid model tiering across 100% of Pulse AI tenants by November 15, cutting per-query inference cost by 32%.</span>
+        </div>
+        <div class="priority-owner">CTO &amp; VP Infrastructure</div>
+      </div>
+
+      <div class="priority-item">
+        <div class="priority-tag">P4 &bull; Global GTM</div>
+        <div class="priority-body">
+          <strong>Scale EMEA &amp; APAC Partner-Sourced Pipeline for FY2027</strong>
+          <span>Certify 60 partner solutions architects and build 3.4x Q1 FY2027 pipeline coverage across DACH, UKI, and ANZ territories.</span>
+        </div>
+        <div class="priority-owner">VP Global Alliances</div>
+      </div>
+
+      <div class="priority-item">
+        <div class="priority-tag">P5 &bull; Finance</div>
+        <div class="priority-body">
+          <strong>Finalize FY2027 Operating Plan &amp; Sustain &ge;12% FCF Margin</strong>
+          <span>Complete zero-based departmental budgeting by December 10 while maintaining Rule-of-40 performance above 42%.</span>
+        </div>
+        <div class="priority-owner">CFO &amp; FP&amp;A Lead</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="report-footer">
+    <span><strong>Northwind Analytics, Inc.</strong> &mdash; Confidential Internal &amp; Board Distribution</span>
+    <span>Prepared by Strategic Finance &amp; RevOps &bull; Q3 FY2026</span>
+  </footer>
+</body>
+</html>

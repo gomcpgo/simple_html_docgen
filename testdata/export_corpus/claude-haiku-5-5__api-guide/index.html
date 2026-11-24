@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payments REST API – Developer Integration Guide</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #1f2933; line-height: 1.6; max-width: 900px; margin: 40px auto; padding: 0 24px; }
+  h1 { font-size: 2.2em; border-bottom: 3px solid #1f4e79; padding-bottom: 8px; color: #1f4e79; }
+  h2 { font-size: 1.6em; color: #1f4e79; border-bottom: 1px solid #d0d7de; padding-bottom: 4px; margin-top: 48px; }
+  h3 { font-size: 1.2em; color: #33475b; margin-top: 28px; }
+  p, li { font-size: 0.98em; }
+  code { font-family: Consolas, "Courier New", monospace; background: #f3f5f7; padding: 1px 5px; border-radius: 3px; font-size: 0.92em; }
+  pre { background: #0f1b26; color: #e6edf3; padding: 14px 16px; border-radius: 6px; overflow-x: auto; font-size: 0.85em; line-height: 1.45; }
+  pre code { background: none; padding: 0; color: inherit; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0 22px; font-size: 0.92em; }
+  th, td { border: 1px solid #d0d7de; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #eef3f8; color: #1f4e79; }
+  .method { font-family: Consolas, monospace; font-weight: bold; }
+  .note { border-left: 4px solid #1f4e79; background: #f0f6fb; padding: 10px 14px; margin: 16px 0; }
+  .warn { border-left: 4px solid #b45309; background: #fff7ed; padding: 10px 14px; margin: 16px 0; }
+  .toc a { color: #1f4e79; text-decoration: none; }
+  .toc li { margin: 2px 0; }
+  .meta { color: #5b6770; font-size: 0.9em; }
+  @media print {
+    body { background: white !important; color: #000 !important; margin: 0; max-width: none; }
+    pre { background: #f5f5f5 !important; color: #000 !important; white-space: pre-wrap; border: 1px solid #ccc; }
+    .note, .warn { background: none !important; }
+    h2 { page-break-after: avoid; }
+    table, pre { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Payments REST API – Developer Integration Guide</h1>
+<p class="meta">Version 1.0 · Audience: backend and integration engineers · Applies to API version <code>v1</code></p>
+
+<div class="toc">
+<h3>Contents</h3>
+<ol>
+  <li><a href="#overview">Overview and base URL</a></li>
+  <li><a href="#auth">Authentication</a></li>
+  <li><a href="#endpoints">Endpoints</a></li>
+  <li><a href="#json-examples">Request and response examples (JSON)</a></li>
+  <li><a href="#curl">curl examples</a></li>
+  <li><a href="#errors">Error codes</a></li>
+  <li><a href="#webhooks">Webhooks</a></li>
+  <li><a href="#rate-limits">Rate limits</a></li>
+</ol>
+</div>
+
+<h2 id="overview">1. Overview and base URL</h2>
+<p>This guide covers integrating with the Payments REST API to create and manage payments, refunds, and payment methods, and to receive asynchronous events through webhooks.</p>
+
+<h3>Base URLs</h3>
+<table>
+  <tr><th>Environment</th><th>Base URL</th><th>Purpose</th></tr>
+  <tr><td>Sandbox</td><td><code>https://sandbox.api.example-pay.com/v1</code></td><td>Testing with simulated card networks and test keys. No real money moves.</td></tr>
+  <tr><td>Production</td><td><code>https://api.example-pay.com/v1</code></td><td>Live transactions. Use only after passing certification.</td></tr>
+</table>
+
+<p>All requests must use HTTPS. Requests over plain HTTP are rejected with a <code>400</code> response. Request and response bodies use <code>application/json; charset=utf-8</code>.</p>
+
+<h3>Versioning and idempotency</h3>
+<p>The version is part of the path (<code>/v1</code>). Non-breaking changes such as new optional fields or new endpoints are released within <code>v1</code>. Build clients to ignore unknown fields.</p>
+<p>All <code>POST</code> requests that create resources accept an <code>Idempotency-Key</code> header. Send a unique value (for example, a UUID v4) per logical operation. If a request is retried with the same key and the same body, the original response is returned. Keys are retained for 24 hours.</p>
+
+<div class="note"><strong>Amounts.</strong> All amounts are integers in the smallest currency unit (for example, cents for USD: <code>2500</code> means $25.00). Never send floating-point amounts. Currency codes follow ISO 4217 in lowercase or uppercase.</div>
+
+<h2 id="auth">2. Authentication</h2>
+<p>The API uses API keys sent as Bearer tokens in the <code>Authorization</code> header. Each project has separate sandbox and production keys.</p>
+
+<h3>Key types</h3>
+<table>
+  <tr><th>Prefix</th><th>Environment</th><th>Use</th></tr>
+  <tr><td><code>sk_test_</code></td><td>Sandbox</td><td>Server-side calls in testing</td></tr>
+  <tr><td><code>sk_live_</code></td><td>Production</td><td>Server-side calls with live money. Never expose in client code.</td></tr>
+  <tr><td><code>pk_test_</code> / <code>pk_live_</code></td><td>Either</td><td>Publishable key for client-side tokenization only. Cannot read or create charges.</td></tr>
+</table>
+
+<h3>Making an authenticated request</h3>
+<pre><code>Authorization: Bearer sk_test_51Nx...redacted
+Content-Type: application/json</code></pre>
+
+<h3>Key management guidance</h3>
+<ul>
+  <li>Store secret keys in a secrets manager or environment variables. Do not commit them to source control.</li>
+  <li>Rotate keys from the dashboard. Old keys remain valid for 24 hours after rotation so you can deploy safely.</li>
+  <li>Restrict each key to the minimum scope needed (for example, <code>payments:write</code>, <code>refunds:write</code>, <code>read_only</code>).</li>
+  <li>Use separate keys per service so you can revoke one without affecting others.</li>
+</ul>
+
+<div class="warn"><strong>Security.</strong> If a secret key is exposed, revoke it immediately in the dashboard. Requests using a revoked key return <code>401 unauthorized</code>.</div>
+
+<h2 id="endpoints">3. Endpoints</h2>
+<p>All paths are relative to the base URL. Resource IDs use prefixes: <code>pay_</code> (payment), <code>ref_</code> (refund), <code>pm_</code> (payment method), <code>whk_</code> (webhook endpoint), <code>evt_</code> (event).</p>
+
+<table>
+  <tr><th>Method</th><th>Path</th><th>Description</th><th>Idempotent</th></tr>
+  <tr><td><span class="method">POST</span></td><td><code>/payments</code></td><td>Create a payment and attempt to capture funds.</td><td>Via <code>Idempotency-Key</code></td></tr>
+  <tr><td><span class="method">GET</span></td><td><code>/payments</code></td><td>List payments. Supports <code>limit</code>, <code>starting_after</code>, <code>status</code>, and <code>created_after</code> filters.</td><td>Yes</td></tr>
+  <tr><td><span class="method">GET</span></td><td><code>/payments/{id}</code></td><td>Retrieve a single payment.</td><td>Yes</td></tr>
+  <tr><td><span class="method">POST</span></td><td><code>/payments/{id}/capture</code></td><td>Capture a previously authorized payment. Optional <code>amount</code> for partial capture.</td><td>Via <code>Idempotency-Key</code></td></tr>
+  <tr><td><span class="method">POST</span></td><td><code>/payments/{id}/cancel</code></td><td>Void an authorized payment that has not been captured.</td><td>Via <code>Idempotency-Key</code></td></tr>
+  <tr><td><span class="method">POST</span></td><td><code>/refunds</code></td><td>Refund all or part of a captured payment.</td><td>Via <code>Idempotency-Key</code></td></tr>
+  <tr><td><span class="method">GET</span></td><td><code>/refunds/{id}</code></td><td>Retrieve a refund.</td><td>Yes</td></tr>
+  <tr><td><span class="method">POST</span></td><td><code>/payment_methods</code></td><td>Store a tokenized payment method for later use.</td><td>Via <code>Idempotency-Key</code></td></tr>
+  <tr><td><span class="method">GET</span></td><td><code>/payment_methods/{id}</code></td><td>Retrieve a stored payment method (masked details only).</td><td>Yes</td></tr>
+  <tr><td><span class="method">DELETE</span></td><td><code>/payment_methods/{id}</code></td><td>Detach a stored payment method from its customer.</td><td>Yes</td></tr>
+  <tr><td><span class="method">POST</span></td><td><code>/webhook_endpoints</code></td><td>Register a URL to receive event notifications.</td><td>Via <code>Idempotency-Key</code></td></tr>
+  <tr><td><span class="method">GET</span></td><td><code>/events/{id}</code></td><td>Retrieve an event object. Events are kept for 30 days.</td><td>Yes</td></tr>
+</table>
+
+<h3>Pagination</h3>
+<p>List endpoints return up to <code>limit</code> items (default 10, maximum 100). The response includes <code>has_more</code>. To fetch the next page, pass the <code>id</code> of the last item as <code>starting_after</code>.</p>
+
+<h2 id="json-examples">4. Request and response examples (JSON)</h2>
+<h3>4.1 Create a payment</h3>
+<p><strong>Request</strong> — <span class="method">POST /v1/payments</span></p>
+<pre><code>{
+  "amount": 2500,
+  "currency": "usd",
+  "payment_method": "pm_1NxQ7a2eZvKYlo2C",
+  "capture": true,
+  "description": "Order #10482",
+  "customer": "cus_9sLk3Xe1",
+  "metadata": {
+    "order_id": "10482"
+  }
+}</code></pre>
+
+<p><strong>Response</strong> — <code>201 Created</code></p>
+<pre><code>{
+  "id": "pay_3MtwBwLkdIwHu7ix28a3tqPa",
+  "object": "payment",
+  "amount": 2500,
+  "amount_captured": 2500,
+  "amount_refunded": 0,
+  "currency": "usd",
+  "status": "succeeded",
+  "payment_method": "pm_1NxQ7a2eZvKYlo2C",
+  "customer": "cus_9sLk3Xe1",
+  "description": "Order #10482",
+  "metadata": {
+    "order_id": "10482"
+  },
+  "created": 1763892000,
+  "livemode": false
+}</code></pre>
+
+<h3>4.2 Create a payment that requires action</h3>
+<p>Some payments (for example, 3-D Secure) return <code>requires_action</code>. Redirect the customer using <code>next_action.redirect_url</code>, then confirm the result by retrieving the payment or waiting for a webhook.</p>
+<pre><code>{
+  "id": "pay_4QvRk8LmnXy2Hb71",
+  "object": "payment",
+  "amount": 15000,
+  "amount_captured": 0,
+  "currency": "eur",
+  "status": "requires_action",
+  "next_action": {
+    "type": "redirect_to_url",
+    "redirect_url": "https://hooks.example-pay.com/3ds/pay_4QvRk8LmnXy2Hb71"
+  },
+  "created": 1763892410,
+  "livemode": false
+}</code></pre>
+
+<h3>4.3 Partial refund</h3>
+<p><strong>Request</strong> — <span class="method">POST /v1/refunds</span></p>
+<pre><code>{
+  "payment": "pay_3MtwBwLkdIwHu7ix28a3tqPa",
+  "amount": 1000,
+  "reason": "requested_by_customer"
+}</code></pre>
+
+<p><strong>Response</strong> — <code>201 Created</code></p>
+<pre><code>{
+  "id": "ref_1PqZ0vLkdIwHu7ix",
+  "object": "refund",
+  "payment": "pay_3MtwBwLkdIwHu7ix28a3tqPa",
+  "amount": 1000,
+  "currency": "usd",
+  "status": "succeeded",
+  "reason": "requested_by_customer",
+  "created": 1763892700,
+  "livemode": false
+}</code></pre>
+
+<h3>4.4 List payments</h3>
+<p><strong>Request</strong> — <span class="method">GET /v1/payments?limit=2&amp;status=succeeded</span></p>
+<pre><code>{
+  "object": "list",
+  "data": [
+    { "id": "pay_3MtwBwLkdIwHu7ix28a3tqPa", "object": "payment", "amount": 2500, "currency": "usd", "status": "succeeded", "created": 1763892000 },
+    { "id": "pay_7HsJd2KpQo9Wn4Le", "object": "payment", "amount": 4200, "currency": "usd", "status": "succeeded", "created": 1763890113 }
+  ],
+  "has_more": true
+}</code></pre>
+
+<h3>4.5 Error response</h3>
+<pre><code>{
+  "error": {
+    "type": "invalid_request_error",
+    "code": "amount_too_small",
+    "message": "The amount must be at least 50 cents for USD.",
+    "param": "amount",
+    "request_id": "req_Xk29sLmQ81ZpRt"
+  }
+}</code></pre>
+
+<h2 id="curl">5. curl examples</h2>
+<p>Set your key once in the shell. Examples use the sandbox base URL.</p>
+<pre><code>export PAY_API_KEY="sk_test_51Nx...redacted"
+export PAY_BASE="https://sandbox.api.example-pay.com/v1"</code></pre>
+
+<h3>5.1 Create a payment</h3>
+<pre><code>curl -X POST "$PAY_BASE/payments" \
+  -H "Authorization: Bearer $PAY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 6f1c2a4e-9b3d-4c7a-8e21-0d5f9a7b3c11" \
+  -d '{
+    "amount": 2500,
+    "currency": "usd",
+    "payment_method": "pm_1NxQ7a2eZvKYlo2C",
+    "capture": true,
+    "metadata": { "order_id": "10482" }
+  }'</code></pre>
+
+<h3>5.2 Retrieve a payment</h3>
+<pre><code>curl "$PAY_BASE/payments/pay_3MtwBwLkdIwHu7ix28a3tqPa" \
+  -H "Authorization: Bearer $PAY_API_KEY"</code></pre>
+
+<h3>5.3 List succeeded payments, 20 per page</h3>
+<pre><code>curl -G "$PAY_BASE/payments" \
+  -H "Authorization: Bearer $PAY_API_KEY" \
+  --data-urlencode "status=succeeded" \
+  --data-urlencode "limit=20"</code></pre>
+
+<h3>5.4 Authorize now, capture later</h3>
+<pre><code># Step 1: authorize only
+curl -X POST "$PAY_BASE/payments" \
+  -H "Authorization: Bearer $PAY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 0b7e9d12-4f6a-4e8b-9c35-7a1d2e4f6b88" \
+  -d '{ "amount": 8000, "currency": "usd", "payment_method": "pm_1NxQ7a2eZvKYlo2C", "capture": false }'
+
+# Step 2: capture 6500 of the 8000 authorized
+curl -X POST "$PAY_BASE/payments/pay_5RtUv9WxYz1Ab2Cd/capture" \
+  -H "Authorization: Bearer $PAY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 3d4e5f60-1a2b-4c3d-8e9f-a0b1c2d3e4f5" \
+  -d '{ "amount": 6500 }'</code></pre>
+
+<h3>5.5 Partial refund</h3>
+<pre><code>curl -X POST "$PAY_BASE/refunds" \
+  -H "Authorization: Bearer $PAY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 9a8b7c6d-5e4f-4a3b-9c2d-1e0f9a8b7c6d" \
+  -d '{ "payment": "pay_3MtwBwLkdIwHu7ix28a3tqPa", "amount": 1000, "reason": "requested_by_customer" }'</code></pre>
+
+<h3>5.6 Register a webhook endpoint</h3>
+<pre><code>curl -X POST "$PAY_BASE/webhook_endpoints" \
+  -H "Authorization: Bearer $PAY_API_KEY" \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 2c3d4e5f-6a7b-4c8d-9e0f-1a2b3c4d5e6f" \
+  -d '{
+    "url": "https://www.example.com/webhooks/payments",
+    "events": ["payment.succeeded", "payment.failed", "refund.succeeded"]
+  }'</code></pre>
+
+<p>Note: The curl examples use <code>-G</code> with <code>--data-urlencode</code> for query parameters so that values are encoded correctly.</p>
+
+<h2 id="errors">6. Error codes</h2>
+<p>Errors use standard HTTP status codes. The body always contains an <code>error</code> object with <code>type</code>, <code>code</code>, <code>message</code>, and <code>request_id</code>. Include <code>request_id</code> when contacting support.</p>
+
+<table>
+  <tr><th>HTTP status</th><th>Error code</th><th>Type</th><th>Meaning and what to do</th></tr>
+  <tr><td>400</td><td><code>invalid_request</code></td><td>invalid_request_error</td><td>Malformed JSON or missing required field. Fix the request; do not retry unchanged.</td></tr>
+  <tr><td>400</td><td><code>amount_too_small</code></td><td>invalid_request_error</td><td>Amount is below the currency minimum (for example, 50 cents for USD).</td></tr>
+  <tr><td>400</td><td><code>currency_not_supported</code></td><td>invalid_request_error</td><td>The currency is not enabled for your account.</td></tr>
+  <tr><td>401</td><td><code>unauthorized</code></td><td>authentication_error</td><td>Missing, malformed, or revoked API key.</td></tr>
+  <tr><td>402</td><td><code>card_declined</code></td><td>card_error</td><td>The issuer declined the payment. Check <code>decline_code</code> for details (for example, <code>insufficient_funds</code>). Ask the customer for another method.</td></tr>
+  <tr><td>403</td><td><code>forbidden</code></td><td>authentication_error</td><td>The key lacks the scope required for this operation.</td></tr>
+  <tr><td>404</td><td><code>resource_missing</code></td><td>invalid_request_error</td><td>No resource with that ID exists in this environment. Check you are using the right sandbox or production key.</td></tr>
+  <tr><td>409</td><td><code>idempotency_conflict</code></td><td>invalid_request_error</td><td>The <code>Idempotency-Key</code> was reused with a different request body.</td></tr>
+  <tr><td>409</td><td><code>invalid_state</code></td><td>invalid_request_error</td><td>The operation is not valid for the payment's current status (for example, capturing a payment that is already captured).</td></tr>
+  <tr><td>422</td><td><code>payment_method_unusable</code></td><td>card_error</td><td>The stored payment method is expired or has been detached.</td></tr>
+  <tr><td>429</td><td><code>rate_limited</code></td><td>rate_limit_error</td><td>Too many requests. Wait for the time in the <code>Retry-After</code> header, then retry with exponential backoff.</td></tr>
+  <tr><td>500</td><td><code>internal_error</code></td><td>api_error</td><td>Unexpected server error. Retry with the same <code>Idempotency-Key</code>.</td></tr>
+  <tr><td>502 / 503 / 504</td><td><code>service_unavailable</code></td><td>api_error</td><td>Temporary upstream or maintenance issue. Retry with backoff and the same <code>Idempotency-Key</code>.</td></tr>
+</table>
+
+<div class="note"><strong>Retry guidance.</strong> Retry only on <code>429</code> and <code>5xx</code> responses, and on network timeouts. Always reuse the original <code>Idempotency-Key</code> so a retry cannot create a duplicate charge. Do not retry other <code>4xx</code> responses without changing the request.</div>
+
+<h2 id="webhooks">7. Webhooks</h2>
+<p>Webhooks push events to your server when something changes, such as a payment succeeding or a refund failing. Use them to update your system asynchronously instead of polling.</p>
+
+<h3>Event types</h3>
+<table>
+  <tr><th>Event</th><th>Triggered when</th></tr>
+  <tr><td><code>payment.succeeded</code></td><td>A payment is captured successfully.</td></tr>
+  <tr><td><code>payment.failed</code></td><td>A payment attempt is declined or errors out.</td></tr>
+  <tr><td><code>payment.requires_action</code></td><td>The customer must complete an additional step, such as 3-D Secure.</td></tr>
+  <tr><td><code>payment.canceled</code></td><td>An authorized payment is voided.</td></tr>
+  <tr><td><code>refund.succeeded</code></td><td>A refund is settled.</td></tr>
+  <tr><td><code>refund.failed</code></td><td>A refund is rejected by the network.</td></tr>
+  <tr><td><code>payment_method.detached</code></td><td>A stored payment method is removed from a customer.</td></tr>
+</table>
+
+<h3>Event payload</h3>
+<pre><code>{
+  "id": "evt_1NxW3pLkdIwHu7ix",
+  "object": "event",
+  "type": "payment.succeeded",
+  "created": 1763892005,
+  "livemode": false,
+  "api_version": "v1",
+  "data": {
+    "object": {
+      "id": "pay_3MtwBwLkdIwHu7ix28a3tqPa",
+      "object": "payment",
+      "amount": 2500,
+      "currency": "usd",
+      "status": "succeeded"
+    }
+  }
+}</code></pre>
+
+<h3>Signature verification</h3>
+<p>Each delivery includes a <code>Payments-Signature</code> header in the form <code>t=&lt;unix_timestamp&gt;,v1=&lt;hex_signature&gt;</code>. The signature is an HMAC-SHA256 of the string <code>&lt;timestamp&gt;.&lt;raw_request_body&gt;</code>, keyed with your endpoint's signing secret (<code>whsec_...</code>).</p>
+<ol>
+  <li>Read the raw request body before any JSON parsing.</li>
+  <li>Compute the expected signature and compare it with <code>v1</code> using a constant-time comparison.</li>
+  <li>Reject requests whose timestamp is more than 5 minutes from your server time.</li>
+</ol>
+
+<h3>Delivery and retries</h3>
+<ul>
+  <li>Respond with any <code>2xx</code> status within 10 seconds. Process heavy work asynchronously.</li>
+  <li>Any other response, or a timeout, counts as a failure and triggers retries with exponential backoff for up to 72 hours.</li>
+  <li>Deliveries are at least once. Deduplicate using the event <code>id</code>.</li>
+  <li>Events may arrive out of order. Use the <code>created</code> timestamp or re-fetch the object from the API before acting on it.</li>
+</ul>
+
+<div class="warn"><strong>Endpoints that repeatedly fail</strong> are disabled after 50 consecutive failed deliveries. Re-enable them from the dashboard after fixing the receiver.</div>
+
+<h2 id="rate-limits">8. Rate limits</h2>
+<p>Rate limits are applied per API key and per environment. Limits are shared across all servers using the same key.</p>
+
+<table>
+  <tr><th>Scope</th><th>Limit</th><th>Window</th></tr>
+  <tr><td>Read requests (<code>GET</code>)</td><td>100 requests</td><td>per second</td></tr>
+  <tr><td>Write requests (<code>POST</code>, <code>DELETE</code>)</td><td>25 requests</td><td>per second</td></tr>
+  <tr><td>Concurrent in-flight requests</td><td>20</td><td>per key</td></tr>
+</table>
+
+<h3>Rate limit headers</h3>
+<p>Every response includes the following headers:</p>
+<table>
+  <tr><th>Header</th><th>Description</th></tr>
+  <tr><td><code>RateLimit-Limit</code></td><td>The request limit for the current window.</td></tr>
+  <tr><td><code>RateLimit-Remaining</code></td><td>Requests left in the current window.</td></tr>
+  <tr><td><code>RateLimit-Reset</code></td><td>Seconds until the window resets.</td></tr>
+  <tr><td><code>Retry-After</code></td><td>Included on <code>429</code> responses only. Seconds to wait before retrying.</td></tr>
+</table>
+
+<h3>Handling 429 responses</h3>
+<ul>
+  <li>Wait for <code>Retry-After</code> seconds before retrying.</li>
+  <li>If the header is absent, use exponential backoff starting at 1 second, with random jitter.</li>
+  <li>Reuse the original <code>Idempotency-Key</code> for write requests.</li>
+  <li>Prefer webhooks over polling. If you must poll, keep it under 10 requests per second per key.</li>
+</ul>
+
+<div class="note"><strong>Higher limits.</strong> Contact support to request higher limits for high-volume integrations. Include your account ID and expected peak requests per second.</div>
+
+<p class="meta" style="margin-top:40px">Document version 1.0. Limits, retention periods, and event types are subject to change; check the changelog in the developer dashboard for updates.</p>
+
+</body>
+</html>

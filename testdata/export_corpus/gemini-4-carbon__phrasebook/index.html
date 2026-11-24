@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Essential 5-Language Travel Phrasebook</title>
+  <style>
+    :root {
+      --ink: #1e293b;
+      --muted: #64748b;
+      --accent: #0f766e;
+      --accent-soft: #f0fdfa;
+      --border: #cbd5e1;
+      --row-alt: #f8fafc;
+      --cat-bg: #134e4a;
+      --cat-text: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Noto Sans JP", "Noto Sans Devanagari", "Noto Sans Arabic", sans-serif;
+      color: var(--ink);
+      background: #f1f5f9;
+      margin: 0;
+      padding: 32px 24px;
+      line-height: 1.5;
+    }
+
+    header.doc-header,
+    section.doc-section {
+      max-width: 1180px;
+      margin: 0 auto 24px auto;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+
+    header.doc-header {
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+      color: #ffffff;
+      border: none;
+    }
+
+    header.doc-header h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.9rem;
+      letter-spacing: -0.02em;
+    }
+
+    header.doc-header p {
+      margin: 0;
+      opacity: 0.92;
+      font-size: 1rem;
+    }
+
+    .badge-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      padding: 3px 12px;
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+
+    h2.cat-heading {
+      margin: 0 0 14px 0;
+      font-size: 1.2rem;
+      color: var(--cat-bg);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 8px;
+    }
+
+    .cat-num {
+      background: var(--accent);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+    }
+
+    table.phrase-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 0.92rem;
+    }
+
+    table.phrase-table th,
+    table.phrase-table td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      vertical-align: top;
+      word-wrap: break-word;
+    }
+
+    table.phrase-table thead th {
+      background: var(--accent-soft);
+      color: var(--cat-bg);
+      font-weight: 700;
+      text-align: left;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    table.phrase-table thead th.col-num { width: 4%; text-align: center; }
+    table.phrase-table thead th.col-en  { width: 17%; }
+    table.phrase-table thead th.col-es  { width: 19%; }
+    table.phrase-table thead th.col-ja  { width: 20%; }
+    table.phrase-table thead th.col-hi  { width: 20%; }
+    table.phrase-table thead th.col-ar  { width: 20%; text-align: right; }
+
+    table.phrase-table tbody tr:nth-child(even) {
+      background: var(--row-alt);
+    }
+
+    td.num-cell {
+      text-align: center;
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .en-phrase {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .native {
+      display: block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 3px;
+    }
+
+    .romaji {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-style: italic;
+      direction: ltr;
+    }
+
+    td.ar-cell {
+      text-align: right;
+    }
+
+    td.ar-cell .native-ar {
+      display: block;
+      direction: rtl;
+      unicode-bidi: isolate;
+      text-align: right;
+      font-size: 1.12rem;
+      font-weight: 600;
+      line-height: 1.6;
+      color: #0f172a;
+      margin-bottom: 3px;
+    }
+
+    td.ar-cell .romaji {
+      text-align: right;
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .tip-card {
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 16px;
+      background: var(--row-alt);
+    }
+
+    .tip-card h3 {
+      margin: 0 0 6px 0;
+      font-size: 0.98rem;
+      color: var(--cat-bg);
+    }
+
+    .tip-card p {
+      margin: 0;
+      font-size: 0.88rem;
+      color: #334155;
+    }
+
+    @media print {
+      body {
+        background: white !important;
+        padding: 0 !important;
+      }
+      header.doc-header,
+      section.doc-section,
+      .tip-card,
+      table.phrase-table thead th,
+      table.phrase-table tbody tr:nth-child(even) {
+        background: white !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+      header.doc-header {
+        color: var(--ink) !important;
+        border-bottom: 2px solid var(--ink) !important;
+        border-radius: 0 !important;
+        padding: 12px 0 !important;
+      }
+      .badge {
+        border-color: var(--border) !important;
+        color: var(--ink) !important;
+      }
+      section.doc-section {
+        border: none !important;
+        padding: 8px 0 !important;
+        margin-bottom: 16px !important;
+        break-inside: avoid;
+      }
+      .cat-num {
+        background: none !important;
+        color: var(--cat-bg) !important;
+        border: 1px solid var(--cat-bg) !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="doc-header">
+    <h1>Essential 5-Language Travel Phrasebook</h1>
+    <p>20 high-utility phrases for travelers across English, Spanish, Japanese, Hindi, and Arabic — complete with native scripts and pronunciation guides.</p>
+    <div class="badge-bar">
+      <span class="badge">English</span>
+      <span class="badge">Español (Spanish)</span>
+      <span class="badge">日本語 (Japanese)</span>
+      <span class="badge">हिन्दी (Hindi)</span>
+      <span class="badge" dir="rtl" lang="ar">العربية (Arabic · RTL)</span>
+    </div>
+  </header>
+  <section class="doc-section">
+    <h2 class="cat-heading"><span class="cat-num">Category 1</span> Greetings &amp; Politeness</h2>
+    <table class="phrase-table">
+      <thead>
+        <tr>
+          <th class="col-num">#</th>
+          <th class="col-en">English</th>
+          <th class="col-es">Spanish</th>
+          <th class="col-ja">Japanese</th>
+          <th class="col-hi">Hindi</th>
+          <th class="col-ar" dir="rtl" lang="ar">العربية (Arabic)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num-cell">1</td>
+          <td class="en-phrase">Hello / Good day</td>
+          <td lang="es">
+            <span class="native">Hola / Buenos días</span>
+            <span class="romaji">OH-lah / BWEH-nohs DEE-ahs</span>
+          </td>
+          <td lang="ja">
+            <span class="native">こんにちは</span>
+            <span class="romaji">Konnichiwa</span>
+          </td>
+          <td lang="hi">
+            <span class="native">नमस्ते</span>
+            <span class="romaji">Namaste</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">مرحباً / السلام عليكم</span>
+            <span class="romaji">Marḥaban / As-salāmu ʿalaykum</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">2</td>
+          <td class="en-phrase">Please</td>
+          <td lang="es">
+            <span class="native">Por favor</span>
+            <span class="romaji">pohr fah-VOHR</span>
+          </td>
+          <td lang="ja">
+            <span class="native">お願いします</span>
+            <span class="romaji">Onegaishimasu</span>
+          </td>
+          <td lang="hi">
+            <span class="native">कृपया</span>
+            <span class="romaji">Kripayā</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">من فضلك</span>
+            <span class="romaji">Min faḍlik</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">3</td>
+          <td class="en-phrase">Thank you very much</td>
+          <td lang="es">
+            <span class="native">Muchas gracias</span>
+            <span class="romaji">MOO-chahs GRAH-syahs</span>
+          </td>
+          <td lang="ja">
+            <span class="native">ありがとうございます</span>
+            <span class="romaji">Arigatō gozaimasu</span>
+          </td>
+          <td lang="hi">
+            <span class="native">बहुत धन्यवाद</span>
+            <span class="romaji">Bahut dhanyavād</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">شكراً جزيلاً</span>
+            <span class="romaji">Shukran jazīlan</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">4</td>
+          <td class="en-phrase">Excuse me / I'm sorry</td>
+          <td lang="es">
+            <span class="native">Disculpe / Lo siento</span>
+            <span class="romaji">dees-KOOL-peh / loh SYEHN-toh</span>
+          </td>
+          <td lang="ja">
+            <span class="native">すみません</span>
+            <span class="romaji">Sumimasen</span>
+          </td>
+          <td lang="hi">
+            <span class="native">माफ़ कीजिए</span>
+            <span class="romaji">Māf kījiye</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">عفواً / آسف</span>
+            <span class="romaji">ʿAfwan / Āsif</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">5</td>
+          <td class="en-phrase">Do you speak English?</td>
+          <td lang="es">
+            <span class="native">¿Habla inglés?</span>
+            <span class="romaji">AH-blah een-GLEHS?</span>
+          </td>
+          <td lang="ja">
+            <span class="native">英語を話せますか？</span>
+            <span class="romaji">Eigo o hanasemasu ka?</span>
+          </td>
+          <td lang="hi">
+            <span class="native">क्या आप अंग्रेज़ी बोलते हैं?</span>
+            <span class="romaji">Kyā āp Angrezī bolte hain?</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">هل تتحدث الإنجليزية؟</span>
+            <span class="romaji">Hal tataḥaddath al-injilīziyyah?</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="doc-section">
+    <h2 class="cat-heading"><span class="cat-num">Category 2</span> Getting Around &amp; Directions</h2>
+    <table class="phrase-table">
+      <thead>
+        <tr>
+          <th class="col-num">#</th>
+          <th class="col-en">English</th>
+          <th class="col-es">Spanish</th>
+          <th class="col-ja">Japanese</th>
+          <th class="col-hi">Hindi</th>
+          <th class="col-ar" dir="rtl" lang="ar">العربية (Arabic)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num-cell">6</td>
+          <td class="en-phrase">Where is the train station?</td>
+          <td lang="es">
+            <span class="native">¿Dónde está la estación de tren?</span>
+            <span class="romaji">DOHN-deh ehs-TAH lah ehs-tah-SYOHN deh trehn?</span>
+          </td>
+          <td lang="ja">
+            <span class="native">駅はどこですか？</span>
+            <span class="romaji">Eki wa doko desu ka?</span>
+          </td>
+          <td lang="hi">
+            <span class="native">रेलवे स्टेशन कहाँ है?</span>
+            <span class="romaji">Relve steshan kahāṅ hai?</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">أين محطة القطار؟</span>
+            <span class="romaji">Ayna maḥaṭṭat al-qiṭār?</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">7</td>
+          <td class="en-phrase">Where is the restroom?</td>
+          <td lang="es">
+            <span class="native">¿Dónde está el baño?</span>
+            <span class="romaji">DOHN-deh ehs-TAH ehl BAH-nyoh?</span>
+          </td>
+          <td lang="ja">
+            <span class="native">トイレはどこですか？</span>
+            <span class="romaji">Toire wa doko desu ka?</span>
+          </td>
+          <td lang="hi">
+            <span class="native">शौचालय कहाँ है?</span>
+            <span class="romaji">Shauchālay kahāṅ hai?</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">أين دورة المياه؟</span>
+            <span class="romaji">Ayna dawrat al-miyāh?</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">8</td>
+          <td class="en-phrase">How do I get to the airport?</td>
+          <td lang="es">
+            <span class="native">¿Cómo llego al aeropuerto?</span>
+            <span class="romaji">KOH-moh YEH-goh ahl ah-eh-roh-PWEHR-toh?</span>
+          </td>
+          <td lang="ja">
+            <span class="native">空港へはどう行けばいいですか？</span>
+            <span class="romaji">Kūkō e wa dō ikeba ii desu ka?</span>
+          </td>
+          <td lang="hi">
+            <span class="native">हवाई अड्डे कैसे जाएँ?</span>
+            <span class="romaji">Havāī aḍḍe kaise jāeṅ?</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">كيف أصل إلى المطار؟</span>
+            <span class="romaji">Kayfa aṣilu ilā al-maṭār?</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">9</td>
+          <td class="en-phrase">One ticket, please</td>
+          <td lang="es">
+            <span class="native">Un boleto, por favor</span>
+            <span class="romaji">oon boh-LEH-toh, pohr fah-VOHR</span>
+          </td>
+          <td lang="ja">
+            <span class="native">切符を一枚お願いします</span>
+            <span class="romaji">Kippu o ichimai onegaishimasu</span>
+          </td>
+          <td lang="hi">
+            <span class="native">कृपया एक टिकट दीजिए</span>
+            <span class="romaji">Kripayā ek ṭikaṭ dījiye</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">تذكرة واحدة، من فضلك</span>
+            <span class="romaji">Tadhkirah wāḥidah, min faḍlik</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">10</td>
+          <td class="en-phrase">Please take me to this address</td>
+          <td lang="es">
+            <span class="native">Lléveme a esta dirección, por favor</span>
+            <span class="romaji">YEH-veh-meh ah EHS-tah dee-rehk-SYOHN, pohr fah-VOHR</span>
+          </td>
+          <td lang="ja">
+            <span class="native">この住所までお願いします</span>
+            <span class="romaji">Kono jūsho made onegaishimasu</span>
+          </td>
+          <td lang="hi">
+            <span class="native">कृपया मुझे इस पते पर ले चलिए</span>
+            <span class="romaji">Kripayā mujhe is pate par le chaliye</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">خذني إلى هذا العنوان، من فضلك</span>
+            <span class="romaji">Khudhnī ilā hādhā al-ʿunwān, min faḍlik</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="doc-section">
+    <h2 class="cat-heading"><span class="cat-num">Category 3</span> Dining &amp; Shopping</h2>
+    <table class="phrase-table">
+      <thead>
+        <tr>
+          <th class="col-num">#</th>
+          <th class="col-en">English</th>
+          <th class="col-es">Spanish</th>
+          <th class="col-ja">Japanese</th>
+          <th class="col-hi">Hindi</th>
+          <th class="col-ar" dir="rtl" lang="ar">العربية (Arabic)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num-cell">11</td>
+          <td class="en-phrase">How much does this cost?</td>
+          <td lang="es">
+            <span class="native">¿Cuánto cuesta esto?</span>
+            <span class="romaji">KWAHN-toh KWEHS-tah EHS-toh?</span>
+          </td>
+          <td lang="ja">
+            <span class="native">これはいくらですか？</span>
+            <span class="romaji">Kore wa ikura desu ka?</span>
+          </td>
+          <td lang="hi">
+            <span class="native">यह कितने का है?</span>
+            <span class="romaji">Yah kitne kā hai?</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">بكم هذا؟</span>
+            <span class="romaji">Bikam hādhā?</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">12</td>
+          <td class="en-phrase">Water, please</td>
+          <td lang="es">
+            <span class="native">Agua, por favor</span>
+            <span class="romaji">AH-gwah, pohr fah-VOHR</span>
+          </td>
+          <td lang="ja">
+            <span class="native">お水をお願いします</span>
+            <span class="romaji">Omizu o onegaishimasu</span>
+          </td>
+          <td lang="hi">
+            <span class="native">कृपया पानी दीजिए</span>
+            <span class="romaji">Kripayā pānī dījiye</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">ماء، من فضلك</span>
+            <span class="romaji">Māʾ, min faḍlik</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">13</td>
+          <td class="en-phrase">I am vegetarian</td>
+          <td lang="es">
+            <span class="native">Soy vegetariano / vegetariana</span>
+            <span class="romaji">soy beh-heh-tah-RYAH-noh / -nah</span>
+          </td>
+          <td lang="ja">
+            <span class="native">私はベジタリアンです</span>
+            <span class="romaji">Watashi wa bejitarian desu</span>
+          </td>
+          <td lang="hi">
+            <span class="native">मैं शाकाहारी हूँ</span>
+            <span class="romaji">Main shākāhārī hūṅ</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">أنا نباتي / نباتية</span>
+            <span class="romaji">Anā nabātī (m) / nabātiyyah (f)</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">14</td>
+          <td class="en-phrase">The bill, please</td>
+          <td lang="es">
+            <span class="native">La cuenta, por favor</span>
+            <span class="romaji">lah KWEHN-tah, pohr fah-VOHR</span>
+          </td>
+          <td lang="ja">
+            <span class="native">お会計をお願いします</span>
+            <span class="romaji">Okaikei o onegaishimasu</span>
+          </td>
+          <td lang="hi">
+            <span class="native">कृपया बिल लाइए</span>
+            <span class="romaji">Kripayā bil lāiye</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">الحساب، من فضلك</span>
+            <span class="romaji">Al-ḥisāb, min faḍlik</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">15</td>
+          <td class="en-phrase">Can I pay by card?</td>
+          <td lang="es">
+            <span class="native">¿Puedo pagar con tarjeta?</span>
+            <span class="romaji">PWEH-doh pah-GAHR kohn tahr-HEH-tah?</span>
+          </td>
+          <td lang="ja">
+            <span class="native">カードで払えますか？</span>
+            <span class="romaji">Kādo de haraemasu ka?</span>
+          </td>
+          <td lang="hi">
+            <span class="native">क्या मैं कार्ड से भुगतान कर सकता हूँ?</span>
+            <span class="romaji">Kyā main kārḍ se bhugtān kar saktā hūṅ?</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">هل يمكنني الدفع بالبطاقة؟</span>
+            <span class="romaji">Hal yumkinunī ad-dafʿ bil-biṭāqah?</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="doc-section">
+    <h2 class="cat-heading"><span class="cat-num">Category 4</span> Emergencies &amp; Assistance</h2>
+    <table class="phrase-table">
+      <thead>
+        <tr>
+          <th class="col-num">#</th>
+          <th class="col-en">English</th>
+          <th class="col-es">Spanish</th>
+          <th class="col-ja">Japanese</th>
+          <th class="col-hi">Hindi</th>
+          <th class="col-ar" dir="rtl" lang="ar">العربية (Arabic)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num-cell">16</td>
+          <td class="en-phrase">Help!</td>
+          <td lang="es">
+            <span class="native">¡Ayuda! / ¡Socorro!</span>
+            <span class="romaji">ah-YOO-dah! / soh-KOH-rroh!</span>
+          </td>
+          <td lang="ja">
+            <span class="native">助けて！</span>
+            <span class="romaji">Tasukete!</span>
+          </td>
+          <td lang="hi">
+            <span class="native">बचाओ! / मदद कीजिए!</span>
+            <span class="romaji">Bachāo! / Madad kījiye!</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">النجدة! / ساعدوني!</span>
+            <span class="romaji">An-najdah! / Sāʿidūnī!</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">17</td>
+          <td class="en-phrase">Can you help me, please?</td>
+          <td lang="es">
+            <span class="native">¿Puede ayudarme, por favor?</span>
+            <span class="romaji">PWEH-deh ah-yoo-DAHR-meh, pohr fah-VOHR?</span>
+          </td>
+          <td lang="ja">
+            <span class="native">手伝っていただけますか？</span>
+            <span class="romaji">Tetsudatte itadakemasu ka?</span>
+          </td>
+          <td lang="hi">
+            <span class="native">क्या आप मेरी मदद कर सकते हैं?</span>
+            <span class="romaji">Kyā āp merī madad kar sakte hain?</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">هل يمكنك مساعدتي، من فضلك؟</span>
+            <span class="romaji">Hal yumkinuka musāʿadatī, min faḍlik?</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">18</td>
+          <td class="en-phrase">I am lost</td>
+          <td lang="es">
+            <span class="native">Estoy perdido / perdida</span>
+            <span class="romaji">ehs-TOY pehr-DEE-doh / -dah</span>
+          </td>
+          <td lang="ja">
+            <span class="native">道に迷いました</span>
+            <span class="romaji">Michi ni mayoimashita</span>
+          </td>
+          <td lang="hi">
+            <span class="native">मैं रास्ता भटक गया / गई हूँ</span>
+            <span class="romaji">Main rāstā bhaṭak gayā (m) / gaī (f) hūṅ</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">أنا تائه / تائهة</span>
+            <span class="romaji">Anā tāʾih (m) / tāʾihah (f)</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">19</td>
+          <td class="en-phrase">I need a doctor</td>
+          <td lang="es">
+            <span class="native">Necesito un médico</span>
+            <span class="romaji">neh-seh-SEE-toh oon MEH-dee-koh</span>
+          </td>
+          <td lang="ja">
+            <span class="native">医者が必要です</span>
+            <span class="romaji">Isha ga hitsuyō desu</span>
+          </td>
+          <td lang="hi">
+            <span class="native">मुझे डॉक्टर की ज़रूरत है</span>
+            <span class="romaji">Mujhe ḍôkṭar kī zarūrat hai</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">أحتاج إلى طبيب</span>
+            <span class="romaji">Aḥtāju ilā ṭabīb</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="num-cell">20</td>
+          <td class="en-phrase">Could you speak more slowly?</td>
+          <td lang="es">
+            <span class="native">¿Puede hablar más despacio?</span>
+            <span class="romaji">PWEH-deh ah-BLAHR mahs dehs-PAH-syoh?</span>
+          </td>
+          <td lang="ja">
+            <span class="native">もう少しゆっくり話してください</span>
+            <span class="romaji">Mō sukoshi yukkuri hanashite kudasai</span>
+          </td>
+          <td lang="hi">
+            <span class="native">कृपया थोड़ा धीरे बोलिए</span>
+            <span class="romaji">Kripayā thoṛā dhīre boliye</span>
+          </td>
+          <td class="ar-cell">
+            <span class="native-ar" dir="rtl" lang="ar">هل يمكنك التحدث ببطء أكثر؟</span>
+            <span class="romaji">Hal yumkinuka at-taḥadduth bibuṭʾ akthar?</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="doc-section">
+    <h2 class="cat-heading"><span class="cat-num">Quick Guide</span> Practical Travel Language Tips</h2>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h3>1. Lead with Polite Openers</h3>
+        <p>Starting any question with <em>Disculpe</em> (Spanish), <em>Sumimasen</em> (Japanese), <em>Māf kījiye</em> (Hindi), or <em>ʿAfwan / Law samaḥt</em> (Arabic) immediately sets a warm, respectful tone before asking for directions or help.</p>
+      </div>
+      <div class="tip-card">
+        <h3>2. Watch Speaker &amp; Listener Gender</h3>
+        <p>Spanish, Hindi, and Arabic adjust certain adjectives and verbs by gender — for example, <em>perdido / perdida</em> in Spanish or <em>tāʾih / tāʾihah</em> in Arabic ("lost"). Where two forms are shown, <strong>(m)</strong> is used by male speakers and <strong>(f)</strong> by female speakers.</p>
+      </div>
+      <div class="tip-card">
+        <h3>3. Point to the Native Script</h3>
+        <p>If pronunciation gets tricky in noisy stations or taxis, show the native Japanese, Devanagari (Hindi), or right-to-left Arabic script directly on your screen or printout — especially for addresses, dietary needs, and medical requests.</p>
+      </div>
+      <div class="tip-card">
+        <h3>4. Modern Standard vs. Local Arabic</h3>
+        <p>The Arabic phrases here use clear, polite Modern Standard Arabic understood across the Arab world, while everyday speech varies by region (e.g., <em>ʿĀyiz mayyah</em> in Egypt vs. <em>Biddī mayy</em> in the Levant for "I want water").</p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

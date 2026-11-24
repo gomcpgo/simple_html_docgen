@@ -1,12 +1,11 @@
 package export
 
 import (
-	"bytes"
+	"bufio"
 	"context"
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"simple_html_docgen/pkg/document"
 	"strings"
@@ -15,30 +14,72 @@ import (
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
 	"github.com/go-rod/rod/lib/proto"
-	"github.com/go-rod/rod/lib/utils"
+	"github.com/gomcpgo/htmltodocx"
 	"github.com/ysmood/gson"
 )
 
 // Exporter handles document export operations
 type Exporter struct {
-	pandocTimeout time.Duration
 	chromeTimeout time.Duration
+	docxTimeout   time.Duration
+	// defaultPageSize gives the page size when the caller names none.
+	defaultPageSize func() string
 }
 
 // NewExporter creates a new exporter instance
 func NewExporter() *Exporter {
 	return &Exporter{
-		pandocTimeout: 30 * time.Second,
-		chromeTimeout: 30 * time.Second,
+		chromeTimeout:   30 * time.Second,
+		docxTimeout:     30 * time.Second,
+		defaultPageSize: DefaultPageSize,
 	}
 }
 
+// Options are the caller's choices for an export.
+type Options struct {
+	// PageSize is one of PageSizes for DOCX and PDF; empty means the size
+	// for the user's locale. HTML export ignores it.
+	PageSize string
+}
+
+// Result describes a finished export.
+type Result struct {
+	Path string
+	// PageSize is the page size used, for DOCX and PDF.
+	PageSize string
+	// Warnings report what a DOCX export could not carry over exactly, such
+	// as an image that could not be loaded. The file was still written.
+	Warnings []Warning
+}
+
+// Warning is one thing the export approximated or left out.
+type Warning struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+// maxWarnings bounds the warnings returned for one export; the document's
+// HTML is model-written and could produce any number of distinct ones.
+const maxWarnings = 50
+
 // ExportDocument exports a document to the specified format
-func (e *Exporter) ExportDocument(documentID, format, outputPath string, docSvc *document.Service) (string, error) {
+func (e *Exporter) ExportDocument(ctx context.Context, documentID, format, outputPath string, opts Options, docSvc *document.Service) (*Result, error) {
+	var ps pageSize
+	if format == "pdf" || format == "docx" {
+		name := opts.PageSize
+		if name == "" {
+			name = e.defaultPageSize()
+		}
+		var err error
+		if ps, err = parsePageSize(name); err != nil {
+			return nil, err
+		}
+	}
+
 	// Get the document
 	doc, err := docSvc.GetDocument(documentID)
 	if err != nil {
-		return "", fmt.Errorf("failed to get document: %w", err)
+		return nil, fmt.Errorf("failed to get document: %w", err)
 	}
 
 	// Use provided output path or generate default
@@ -48,19 +89,31 @@ func (e *Exporter) ExportDocument(documentID, format, outputPath string, docSvc 
 		// Ensure parent directory exists
 		dir := filepath.Dir(outputPath)
 		if err := os.MkdirAll(dir, 0755); err != nil {
-			return "", fmt.Errorf("failed to create output directory: %w", err)
+			return nil, fmt.Errorf("failed to create output directory: %w", err)
 		}
 	}
 
 	switch format {
 	case "html":
-		return e.exportHTML(doc, outputPath)
+		path, err := e.exportHTML(doc, outputPath)
+		if err != nil {
+			return nil, err
+		}
+		return &Result{Path: path}, nil
 	case "pdf":
-		return e.exportPDF(doc, outputPath, docSvc)
+		path, err := e.exportPDF(ctx, doc, outputPath, ps, docSvc)
+		if err != nil {
+			return nil, err
+		}
+		return &Result{Path: path, PageSize: ps.name}, nil
 	case "docx":
-		return e.exportDOCX(doc, outputPath, docSvc)
+		warnings, err := e.exportDOCX(ctx, doc, outputPath, ps, docSvc)
+		if err != nil {
+			return nil, err
+		}
+		return &Result{Path: outputPath, PageSize: ps.name, Warnings: warnings}, nil
 	default:
-		return "", fmt.Errorf("unsupported format: %s", format)
+		return nil, fmt.Errorf("unsupported format: %s", format)
 	}
 }
 
@@ -69,8 +122,7 @@ func (e *Exporter) ExportDocument(documentID, format, outputPath string, docSvc 
 // be unique per export: every export used to write the same "temp_export.html"
 // and remove it on the way out, so two exports of one document issued in the
 // same turn (a model asking for PDF and DOCX together) raced — one deleted the
-// file the other was still converting, and the PDF route's failure was then
-// reported as pandoc's "xelatex not found".
+// file the other was still converting.
 func writeTempHTML(dir, content string) (string, func(), error) {
 	f, err := os.CreateTemp(dir, "temp_export_*.html")
 	if err != nil {
@@ -98,193 +150,134 @@ func (e *Exporter) exportHTML(doc *document.Document, outputPath string) (string
 	return outputPath, nil
 }
 
-// exportPDF exports the document as PDF, trying Chrome first, then falling back to Pandoc
-func (e *Exporter) exportPDF(doc *document.Document, outputPath string, docSvc *document.Service) (string, error) {
-	// Try Chrome/Chromium first (best CSS preservation)
-	chromeErr := e.exportPDFWithChrome(doc, outputPath, docSvc)
-	if chromeErr == nil {
-		return outputPath, nil
+// exportPDF prints the document to PDF with headless Chrome or Chromium,
+// using an installed browser if there is one and letting rod download
+// Chromium otherwise. Like DOCX, the file is written under a temporary name
+// and renamed into place.
+func (e *Exporter) exportPDF(ctx context.Context, doc *document.Document, outputPath string, ps pageSize, docSvc *document.Service) (string, error) {
+	ctx, cancel := context.WithTimeout(ctx, e.chromeTimeout)
+	defer cancel()
+	if err := ctx.Err(); err != nil {
+		return "", fmt.Errorf("PDF export failed: %w", err)
 	}
 
-	// Fallback to Pandoc. Chrome is the route that works on a machine with no
-	// LaTeX engine, so when the fallback fails too its "install xelatex" message
-	// describes the fallback and not the real failure. Report both, Chrome first.
-	path, pandocErr := e.exportPDFWithPandoc(doc, outputPath, docSvc)
-	if pandocErr != nil {
-		return "", fmt.Errorf("PDF export failed: %w (fallback also failed: %v)", chromeErr, pandocErr)
-	}
-	return path, nil
-}
-
-// exportPDFWithChrome exports the document as PDF using headless Chrome
-func (e *Exporter) exportPDFWithChrome(doc *document.Document, outputPath string, docSvc *document.Service) error {
-	// Inject default print styles as fallback (conservative approach)
-	// These will be overridden by any @media print rules the LLM includes
-	htmlWithPrintStyles := InjectDefaultPrintStyles(doc.HTMLContent)
-
-	// Create a temporary HTML file
-	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), htmlWithPrintStyles)
+	// Default print styles; the document's own @media print rules win.
+	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), InjectDefaultPrintStyles(doc.HTMLContent))
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer cleanup()
 
-	// Create context with timeout
-	ctx, cancel := context.WithTimeout(context.Background(), e.chromeTimeout)
-	defer cancel()
-
-	// Try to find existing Chrome/Chromium installation first
-	chromePath, _ := launcher.LookPath()
-
-	// Launch browser with system Chrome if available, otherwise auto-download
-	var controlURL string
-	if chromePath != "" {
-		// Use system Chrome/Chromium
-		l := launcher.New().Bin(chromePath).Headless(true)
-		controlURL = l.MustLaunch()
-	} else {
-		// Let rod auto-download Chromium as fallback
-		l := launcher.New().Headless(true)
-		controlURL = l.MustLaunch()
+	l := launcher.New().Context(ctx).Headless(true)
+	if chromePath, ok := launcher.LookPath(); ok {
+		l = l.Bin(chromePath)
 	}
+	controlURL, err := l.Launch()
+	if err != nil {
+		return "", fmt.Errorf("PDF export needs Google Chrome or Chromium, which could not be started: %w", err)
+	}
+	defer l.Kill()
 
 	browser := rod.New().ControlURL(controlURL).Context(ctx)
 	if err := browser.Connect(); err != nil {
-		return fmt.Errorf("chrome not available: %w", err)
+		return "", fmt.Errorf("PDF export could not connect to Chrome: %w", err)
 	}
-	defer browser.MustClose()
+	defer browser.Close()
 
-	// Load the HTML file
 	page, err := browser.Page(proto.TargetCreateTarget{URL: "file://" + tmpHTMLPath})
 	if err != nil {
-		return fmt.Errorf("failed to create page: %w", err)
+		return "", fmt.Errorf("failed to create page: %w", err)
 	}
-
-	// Wait for page to load
 	if err := page.WaitLoad(); err != nil {
-		return fmt.Errorf("failed to load page: %w", err)
+		return "", fmt.Errorf("failed to load page: %w", err)
 	}
 
-	// Generate PDF with custom settings
 	pdfStream, err := page.PDF(&proto.PagePrintToPDF{
 		PrintBackground:   true, // Include background colors and images
+		PaperWidth:        gson.Num(ps.widthIn),
+		PaperHeight:       gson.Num(ps.heightIn),
 		MarginTop:         gson.Num(0.4),
 		MarginBottom:      gson.Num(0.4),
 		MarginLeft:        gson.Num(0.4),
 		MarginRight:       gson.Num(0.4),
-		PreferCSSPageSize: true, // Use CSS @page size if specified
+		PreferCSSPageSize: true, // A CSS @page size wins over PaperWidth/PaperHeight
 	})
 	if err != nil {
-		return fmt.Errorf("failed to generate PDF: %w", err)
+		return "", fmt.Errorf("failed to generate PDF: %w", err)
 	}
-
-	// Write PDF stream to output file
-	if err := utils.OutputFile(outputPath, pdfStream); err != nil {
-		return fmt.Errorf("failed to write PDF file: %w", err)
-	}
-
-	return nil
-}
-
-// exportPDFWithPandoc exports the document as PDF using Pandoc (fallback)
-func (e *Exporter) exportPDFWithPandoc(doc *document.Document, outputPath string, docSvc *document.Service) (string, error) {
-	if err := e.checkPandoc(); err != nil {
-		return "", err
-	}
-
-	// Create a temporary HTML file for Pandoc
-	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), doc.HTMLContent)
+	err = writeFileAtomic(outputPath, func(w io.Writer) error {
+		_, err := io.Copy(w, pdfStream)
+		return err
+	})
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to write PDF file: %w", err)
 	}
-	defer cleanup()
-
-	// Run Pandoc conversion
-	args := []string{
-		"-f", "html",
-		"-o", outputPath,
-		"--pdf-engine=xelatex", // For Unicode/emoji support
-		tmpHTMLPath,
-	}
-
-	if err := e.runPandoc(args, docSvc.GetDocumentPath(doc.ID)); err != nil {
-		return "", fmt.Errorf("PDF conversion failed: %w", err)
-	}
-
 	return outputPath, nil
 }
 
-// exportDOCX exports the document as DOCX using Pandoc
-func (e *Exporter) exportDOCX(doc *document.Document, outputPath string, docSvc *document.Service) (string, error) {
-	if err := e.checkPandoc(); err != nil {
-		return "", err
-	}
+// exportDOCX converts the document with htmltodocx. Images and stylesheets
+// are read from the document's own folder and nowhere else. The file is
+// written under a temporary name and renamed into place, so a failed export
+// leaves no partial file and does not replace an earlier one.
+func (e *Exporter) exportDOCX(ctx context.Context, doc *document.Document, outputPath string, ps pageSize, docSvc *document.Service) ([]Warning, error) {
+	ctx, cancel := context.WithTimeout(ctx, e.docxTimeout)
+	defer cancel()
 
-	// Create a temporary HTML file for Pandoc
-	tmpHTMLPath, cleanup, err := writeTempHTML(docSvc.GetDocumentPath(doc.ID), doc.HTMLContent)
-	if err != nil {
-		return "", err
-	}
-	defer cleanup()
-
-	// Run Pandoc conversion
-	args := []string{
-		"-f", "html",
-		"-o", outputPath,
-		tmpHTMLPath,
-	}
-
-	if err := e.runPandoc(args, docSvc.GetDocumentPath(doc.ID)); err != nil {
-		return "", fmt.Errorf("DOCX conversion failed: %w", err)
-	}
-
-	return outputPath, nil
-}
-
-// checkPandoc checks if Pandoc is installed
-func (e *Exporter) checkPandoc() error {
-	cmd := exec.Command("pandoc", "--version")
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("pandoc not found: please install pandoc to enable PDF/DOCX export")
-	}
-	return nil
-}
-
-// runPandoc executes a Pandoc command with timeout
-func (e *Exporter) runPandoc(args []string, workDir string) error {
-	cmd := exec.Command("pandoc", args...)
-	cmd.Dir = workDir
-
-	var stderr bytes.Buffer
-	cmd.Stderr = &stderr
-
-	// Run with timeout
-	done := make(chan error, 1)
-	go func() {
-		done <- cmd.Run()
-	}()
-
-	select {
-	case err := <-done:
-		if err != nil {
-			if stderr.Len() > 0 {
-				return fmt.Errorf("pandoc error: %s", stderr.String())
+	var warnings []Warning
+	dropped := 0
+	opts := &htmltodocx.Options{
+		Page:      htmltodocx.Page{Size: ps.docx},
+		Resources: htmltodocx.DirLoader(docSvc.GetDocumentPath(doc.ID)),
+		Warn: func(w htmltodocx.Warning) {
+			if len(warnings) < maxWarnings {
+				warnings = append(warnings, Warning{Code: w.Code, Message: w.Message})
+			} else {
+				dropped++
 			}
-			return fmt.Errorf("pandoc failed: %w", err)
-		}
-		return nil
-	case <-time.After(e.pandocTimeout):
-		if cmd.Process != nil {
-			cmd.Process.Kill()
-		}
-		return fmt.Errorf("pandoc conversion timed out after %v", e.pandocTimeout)
+		},
 	}
+	err := writeFileAtomic(outputPath, func(w io.Writer) error {
+		return htmltodocx.Convert(ctx, strings.NewReader(doc.HTMLContent), w, opts)
+	})
+	if err != nil {
+		return nil, fmt.Errorf("DOCX conversion failed: %w", err)
+	}
+	if dropped > 0 {
+		warnings = append(warnings, Warning{Code: "more", Message: fmt.Sprintf("%d more warnings not shown", dropped)})
+	}
+	return warnings, nil
 }
 
-// CheckPandocAvailable checks if Pandoc is available (exported for terminal mode)
-func CheckPandocAvailable() bool {
-	cmd := exec.Command("pandoc", "--version")
-	return cmd.Run() == nil
+// writeFileAtomic writes a file through write and moves it to path only if
+// write succeeds.
+func writeFileAtomic(path string, write func(io.Writer) error) (err error) {
+	f, err := os.CreateTemp(filepath.Dir(path), "."+filepath.Base(path)+"-*.tmp")
+	if err != nil {
+		return fmt.Errorf("failed to create output file: %w", err)
+	}
+	defer func() {
+		if err != nil {
+			f.Close()
+			os.Remove(f.Name())
+		}
+	}()
+	bw := bufio.NewWriter(f)
+	if err := write(bw); err != nil {
+		return err
+	}
+	if err := bw.Flush(); err != nil {
+		return fmt.Errorf("failed to write output file: %w", err)
+	}
+	if err := f.Chmod(0644); err != nil {
+		return fmt.Errorf("failed to write output file: %w", err)
+	}
+	if err := f.Close(); err != nil {
+		return fmt.Errorf("failed to write output file: %w", err)
+	}
+	if err := os.Rename(f.Name(), path); err != nil {
+		return fmt.Errorf("failed to write output file: %w", err)
+	}
+	return nil
 }
 
 // CopyFile copies a file from src to dst

@@ -1,0 +1,8 @@
+model: gpt-6.1-terra
+doc: phrasebook
+images: false
+conversation: 3MUf800udD0KfJXyEapO4ncUOCF
+prompt: |
+  Create a travel phrasebook table with 20 useful phrases, each in English, Spanish, Japanese, Hindi and Arabic, grouped into categories, plus a short tips section. Make sure the Arabic reads right to left.
+  
+  Create it as an HTML document with the document tools. Do not export it.

@@ -1,0 +1,8 @@
+model: claude-sonnet-5-5
+doc: product-brochure
+images: true
+conversation: 3MUjklEbxfuPil4xdxJbr3XnwDJ
+prompt: |
+  Create a product brochure for a specialty coffee roaster: generate two images (the shop interior and a bag of coffee) and include them, plus sections for our story, the coffee range with prices, brewing tips and contact details.
+  
+  Create it as an HTML document with the document tools. Do not export it.

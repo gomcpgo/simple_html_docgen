@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Priya Raman — Senior Backend Engineer</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --ink-secondary: #334155;
+      --ink-muted: #64748b;
+      --accent: #0f766e;
+      --accent-soft: #f0fdfa;
+      --accent-border: #99f6e4;
+      --rule: #e2e8f0;
+      --card-bg: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background: #f1f5f9;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      max-width: 840px;
+      margin: 32px auto;
+      padding: 44px 48px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      line-height: 1.5;
+      font-size: 13.5px;
+    }
+
+    /* Header */
+    .resume-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .identity h1 {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      line-height: 1.15;
+    }
+
+    .identity .role {
+      font-size: 15.5px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 4px;
+      letter-spacing: 0.01em;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: auto;
+      gap: 4px;
+      text-align: right;
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+    }
+
+    .contact-grid a {
+      color: var(--ink-secondary);
+      text-decoration: none;
+    }
+
+    .contact-grid a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .contact-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .dot {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 22px;
+    }
+
+    .section:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .section-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* Summary */
+    .summary-text {
+      color: var(--ink-secondary);
+      font-size: 13.8px;
+      line-height: 1.58;
+    }
+
+    .metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .metric-box {
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      border-radius: 6px;
+      padding: 9px 12px;
+    }
+
+    .metric-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .metric-label {
+      font-size: 11.5px;
+      color: var(--ink-secondary);
+      margin-top: 1px;
+    }
+
+    /* Skills */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px 18px;
+    }
+
+    .skill-group {
+      background: var(--card-bg);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+
+    .skill-group-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .tag {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      background: #ffffff;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    .tag.primary {
+      color: var(--accent);
+      border-color: var(--accent-border);
+      background: var(--accent-soft);
+      font-weight: 600;
+    }
+
+    /* Experience */
+    .job {
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px dashed var(--rule);
+    }
+
+    .job:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 3px;
+    }
+
+    .job-title-line {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .job-company {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .job-meta {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      white-space: nowrap;
+    }
+
+    .job-sub {
+      font-size: 12px;
+      color: var(--ink-muted);
+      margin-bottom: 7px;
+      font-style: italic;
+    }
+
+    .job ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .job li {
+      position: relative;
+      padding-left: 15px;
+      margin-bottom: 5px;
+      color: var(--ink-secondary);
+      line-height: 1.48;
+    }
+
+    .job li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .job li strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Two-column footer for Education & Certifications */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 24px;
+    }
+
+    .edu-item, .cert-item {
+      margin-bottom: 10px;
+    }
+
+    .edu-item:last-child, .cert-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .edu-degree, .cert-name {
+      font-weight: 700;
+      color: var(--ink);
+      font-size: 13.5px;
+    }
+
+    .edu-school, .cert-issuer {
+      color: var(--ink-secondary);
+      font-size: 12.5px;
+    }
+
+    .edu-meta, .cert-meta {
+      color: var(--ink-muted);
+      font-size: 11.8px;
+      margin-top: 2px;
+    }
+
+    .cert-badge {
+      display: inline-block;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    @page {
+      size: letter;
+      margin: 0.5in 0.55in;
+    }
+
+    @media print {
+      html, body {
+        background: #ffffff !important;
+      }
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        font-size: 12.5px;
+      }
+      .metric-box,
+      .skill-group,
+      .tag,
+      .tag.primary,
+      .cert-badge {
+        background: #ffffff !important;
+        box-shadow: none !important;
+      }
+      .job, .two-col, .skill-group {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="resume-header">
+    <div class="identity">
+      <h1>Priya Raman</h1>
+      <div class="role">Senior Backend Engineer &nbsp;·&nbsp; Distributed Systems, Go, PostgreSQL &amp; Kubernetes</div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-pill">Seattle, WA (Open to Hybrid / Remote)</div>
+      <div class="contact-pill"><a href="mailto:priya.raman@devmail.io">priya.raman@devmail.io</a> <span class="dot">·</span> (206) 555-0184</div>
+      <div class="contact-pill"><a href="https://github.com/priyaraman">github.com/priyaraman</a> <span class="dot">·</span> <a href="https://linkedin.com/in/priyaraman-eng">linkedin.com/in/priyaraman-eng</a></div>
+    </div>
+  </header>
+  <section class="section" aria-labelledby="summary-heading">
+    <h2 id="summary-heading" class="section-title">Professional Summary</h2>
+    <p class="summary-text">
+      Senior Backend Engineer with <strong>10 years of experience</strong> architecting, scaling, and operating mission-critical distributed systems and financial/cloud data platforms. Deep expertise in high-concurrency <strong>Go</strong> microservices, multi-terabyte <strong>PostgreSQL</strong> performance engineering, and multi-region <strong>Kubernetes</strong> infrastructure. Proven technical leader known for reducing tail latencies, driving zero-downtime data migrations, and mentoring engineering teams from design RFCs through production observability.
+    </p>
+    <div class="metrics-strip">
+      <div class="metric-box">
+        <div class="metric-value">180K+ RPS</div>
+        <div class="metric-label">Sustained Go gRPC throughput at 99.995% availability</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value">40+ TB</div>
+        <div class="metric-label">Partitioned PostgreSQL clusters managed with zero data loss</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-value">38% Cost Cut</div>
+        <div class="metric-label">Kubernetes compute &amp; storage optimization across multi-AZ clusters</div>
+      </div>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="skills-heading">
+    <h2 id="skills-heading" class="section-title">Core Technical Skills</h2>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <div class="skill-group-title">Languages &amp; API Architecture</div>
+        <div class="tag-list">
+          <span class="tag primary">Go (Golang)</span>
+          <span class="tag primary">SQL / PL/pgSQL</span>
+          <span class="tag">Python</span>
+          <span class="tag">Rust (Familiar)</span>
+          <span class="tag">gRPC &amp; Protobuf</span>
+          <span class="tag">REST / OpenAPI</span>
+          <span class="tag">GraphQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Data Stores &amp; Streaming</div>
+        <div class="tag-list">
+          <span class="tag primary">PostgreSQL (14–17)</span>
+          <span class="tag primary">PgBouncer &amp; Patroni</span>
+          <span class="tag">Apache Kafka</span>
+          <span class="tag">Redis Cluster</span>
+          <span class="tag">ClickHouse</span>
+          <span class="tag">Logical Replication</span>
+          <span class="tag">Partitioning &amp; Query Tuning</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Cloud-Native &amp; Orchestration</div>
+        <div class="tag-list">
+          <span class="tag primary">Kubernetes (EKS / GKE)</span>
+          <span class="tag primary">Helm &amp; Kustomize</span>
+          <span class="tag">Custom Operators (kubebuilder)</span>
+          <span class="tag">Istio / Cilium</span>
+          <span class="tag">Docker</span>
+          <span class="tag">Terraform</span>
+          <span class="tag">Argo CD (GitOps)</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <div class="skill-group-title">Reliability, Security &amp; Observability</div>
+        <div class="tag-list">
+          <span class="tag primary">OpenTelemetry</span>
+          <span class="tag">Prometheus &amp; Grafana</span>
+          <span class="tag">pprof &amp; eBPF Profiling</span>
+          <span class="tag">AWS &amp; GCP</span>
+          <span class="tag">mTLS / Vault</span>
+          <span class="tag">SLO / Incident Command</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="experience-heading">
+    <h2 id="experience-heading" class="section-title">Professional Experience</h2>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title-line">Senior Backend Engineer, Core Ledger &amp; Settlement <span class="dot">·</span> <span class="job-company">Meridian Financial Technologies</span></div>
+        <div class="job-meta">Mar 2022 – Present · Seattle, WA</div>
+      </div>
+      <div class="job-sub">Real-time B2B payment clearing and programmable treasury platform processing $14B+ in annual volume</div>
+      <ul>
+        <li><strong>Architected a double-entry ledger engine in Go</strong> using idempotent gRPC services and transactional outbox patterns over Kafka, scaling sustained throughput from 35K to <strong>180K+ RPS</strong> while maintaining <strong>99.995% availability</strong> and strict serializable consistency on critical balance paths.</li>
+        <li><strong>Led zero-downtime sharding and partitioning of a 42 TB PostgreSQL cluster</strong> (PostgreSQL 16, Patroni, PgBouncer), introducing time-and-tenant declarative partitioning, BRIN/partial indexing, and read-replica routing that cut p99 query latency from <strong>410 ms to 28 ms</strong>.</li>
+        <li><strong>Built a custom Kubernetes operator in Go (kubebuilder)</strong> automating tenant database provisioning, schema migrations, connection-pool autoscaling, and automated PITR validation across 4 multi-AZ AWS EKS clusters, reducing onboarding lead time from 3 days to 9 minutes.</li>
+        <li><strong>Drove a 38% ($460K/yr) reduction in Kubernetes infrastructure spend</strong> by profiling Go memory allocations with <code>pprof</code>, tuning GOMEMLIMIT, right-sizing Karpenter node pools, and migrating stateless workloads to AWS Graviton3 ARM64 nodes.</li>
+        <li><strong>Mentored 7 backend engineers</strong>, instituted organization-wide RFC review standards, and authored OpenTelemetry distributed tracing libraries adopted across 45+ Go microservices.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title-line">Backend Software Engineer II → Senior Backend Engineer <span class="dot">·</span> <span class="job-company">Kestrel Cloud Observability</span></div>
+        <div class="job-meta">Jun 2019 – Feb 2022 · Bellevue, WA</div>
+      </div>
+      <div class="job-sub">High-cardinality cloud metrics, alerting, and log ingestion SaaS for enterprise DevOps teams (promoted in 2021)</div>
+      <ul>
+        <li><strong>Designed and owned high-throughput Go ingestion pipelines</strong> utilizing worker pools, ring buffers, and Protobuf batch compression to ingest <strong>1.2M events/sec</strong> with sub-2-second alert evaluation SLA.</li>
+        <li><strong>Re-engineered control-plane metadata storage on PostgreSQL</strong>, eliminating table bloat and autovacuum stalls via hot-update schema redesign, advisory-lock lease coordination, and connection multiplexing—cutting database CPU utilization by <strong>52%</strong> during peak traffic spikes.</li>
+        <li><strong>Led the migration of 30+ stateful and stateless services from EC2/ECS to GKE Kubernetes</strong> using Helm, Argo CD GitOps workflows, and Istio mTLS, cutting production deployment rollbacks by <strong>65%</strong> via progressive canary rollouts.</li>
+        <li><strong>Served as Incident Commander</strong> in the tier-1 on-call rotation; introduced automated chaos testing for Postgres failover and Kafka broker loss, lowering MTTR from 47 minutes to under 11 minutes.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-header">
+        <div class="job-title-line">Software Engineer, Backend Platform <span class="dot">·</span> <span class="job-company">Northstar Logistics Systems</span></div>
+        <div class="job-meta">Jul 2016 – May 2019 · Portland, OR</div>
+      </div>
+      <div class="job-sub">Real-time fleet routing, shipment tracking, and warehouse fulfillment platform</div>
+      <ul>
+        <li><strong>Decomposed a legacy Python/Django monolith into modular Go REST &amp; gRPC services</strong> for shipment Pricing, Geospatial ETA, and Carrier Dispatch, cutting p95 API latency by <strong>71%</strong> (from 620 ms to 180 ms).</li>
+        <li><strong>Optimized PostgreSQL + PostGIS geospatial queries</strong> and Redis write-through caching for live tracking of 95,000+ commercial vehicles, increasing peak dispatch capacity 4× during holiday surges.</li>
+        <li><strong>Containerized backend workloads with Docker and early Kubernetes (1.9–1.13)</strong>, building CI/CD pipelines with automated integration test suites against ephemeral Postgres containers that halved release cycle times.</li>
+      </ul>
+    </article>
+  </section>
+  <div class="two-col">
+    <section class="section" aria-labelledby="education-heading">
+      <h2 id="education-heading" class="section-title">Education</h2>
+      <div class="edu-item">
+        <div class="edu-degree">B.S. in Computer Science</div>
+        <div class="edu-school">University of Washington — Paul G. Allen School</div>
+        <div class="edu-meta">Graduated Jun 2016 · Seattle, WA · Cum Laude (GPA: 3.84/4.0)</div>
+        <div class="edu-meta">Focus: Distributed Systems, Database Internals, Operating Systems</div>
+      </div>
+      <div class="edu-item">
+        <div class="edu-degree">Open-Source &amp; Community</div>
+        <div class="edu-school">Contributor — pgx (Go PostgreSQL Driver) &amp; OpenTelemetry-Go</div>
+        <div class="edu-meta">Speaker, GopherCon Northwest &amp; Seattle Postgres User Group (2024, 2025)</div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="certs-heading">
+      <h2 id="certs-heading" class="section-title">Certifications</h2>
+      <div class="cert-item">
+        <div class="cert-name">Certified Kubernetes Administrator (CKA) <span class="cert-badge">CNCF</span></div>
+        <div class="cert-issuer">Cloud Native Computing Foundation / The Linux Foundation</div>
+        <div class="cert-meta">Issued 2024 · Active through 2027 · ID: LF-CKA-904821</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-name">Certified Kubernetes Security Specialist (CKS) <span class="cert-badge">CNCF</span></div>
+        <div class="cert-issuer">Cloud Native Computing Foundation / The Linux Foundation</div>
+        <div class="cert-meta">Issued 2025 · Active through 2028 · ID: LF-CKS-318409</div>
+      </div>
+      <div class="cert-item">
+        <div class="cert-name">AWS Certified Solutions Architect – Professional <span class="cert-badge">AWS</span></div>
+        <div class="cert-issuer">Amazon Web Services</div>
+        <div class="cert-meta">Renewed 2025 · Active through 2028</div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

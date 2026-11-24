@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project Management Tools Comparison</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #1f2937; background: #f3f4f6; margin: 0; padding: 32px; line-height: 1.5; }
+  .container { max-width: 1400px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+  h1 { margin: 0 0 4px; font-size: 30px; color: #111827; }
+  .subtitle { color: #6b7280; margin-bottom: 28px; }
+  h2 { margin-top: 36px; font-size: 22px; color: #1e3a8a; border-bottom: 2px solid #dbeafe; padding-bottom: 6px; }
+  h3 { font-size: 16px; margin-bottom: 4px; }
+  .table-wrap { overflow-x: auto; border: 1px solid #d1d5db; border-radius: 6px; }
+  table.compare { border-collapse: collapse; width: 100%; min-width: 1500px; font-size: 13px; }
+  table.compare th, table.compare td { border: 1px solid #e5e7eb; padding: 9px 11px; vertical-align: top; text-align: left; }
+  table.compare thead th { text-align: center; color: #fff; }
+  table.compare thead tr.groups th { font-size: 14px; letter-spacing: .3px; }
+  table.compare thead tr.criteria th { font-size: 12px; font-weight: 600; }
+  .g-tool { background: #111827; }
+  .g-cost { background: #1d4ed8; } .c-cost { background: #3b82f6; }
+  .g-people { background: #047857; } .c-people { background: #10b981; }
+  .g-work { background: #b45309; } .c-work { background: #f59e0b; }
+  .g-connect { background: #7e22ce; } .c-connect { background: #a855f7; }
+  .g-insight { background: #be123c; } .c-insight { background: #f43f5e; }
+  table.compare tbody th { background: #f9fafb; text-align: left; white-space: nowrap; position: sticky; left: 0; }
+  table.compare tbody tr:nth-child(even) td { background: #fafafa; }
+  .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 10px; font-weight: 600; }
+  .good { background: #d1fae5; color: #065f46; } .mid { background: #fef3c7; color: #92400e; } .low { background: #fee2e2; color: #991b1b; }
+  .note { font-size: 12px; color: #6b7280; margin-top: 10px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .card { border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; background: #f9fafb; }
+  .card.top { border-color: #1d4ed8; background: #eff6ff; }
+  .card p, .card ul { margin: 6px 0; font-size: 14px; }
+  @media print {
+    body { background: #fff !important; padding: 0; }
+    .container { box-shadow: none !important; padding: 0; max-width: none; }
+    .table-wrap { overflow: visible; }
+    table.compare { min-width: 0; font-size: 9px; }
+    table.compare th, table.compare td { padding: 4px 5px; }
+    table.compare thead th { background: #e5e7eb !important; color: #111 !important; }
+    table.compare tbody th { position: static; }
+    .card.top { background: #fff !important; }
+    h2 { page-break-after: avoid; } .card { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Project Management Tools Comparison</h1>
+  <div class="subtitle">Asana · Trello · monday.com · Jira · ClickUp · Smartsheet — ten criteria in five groups</div>
+
+  <h2>1. Overview</h2>
+  <p>This document compares six widely used project-management platforms across ten criteria, grouped into <strong>Cost</strong>, <strong>People</strong>, <strong>Work Management</strong>, <strong>Connectivity</strong> and <strong>Insight</strong>. The table scrolls horizontally on narrow screens. Ratings use colored tags: <span class="tag good">Strong</span> <span class="tag mid">Adequate</span> <span class="tag low">Limited</span>.</p>
+<p class="note">Prices are approximate list prices per user per month on annual billing, based on publicly known pricing tiers. Vendors change plans often, so confirm current pricing before purchasing.</p>
+
+  <h2>2. Detailed Comparison Table</h2>
+  <div class="table-wrap">
+<table class="compare">
+  <thead>
+    <tr class="groups">
+      <th class="g-tool" rowspan="2">Tool</th>
+      <th class="g-cost" colspan="2">Cost</th>
+      <th class="g-people" colspan="2">People</th>
+      <th class="g-work" colspan="2">Work Management</th>
+      <th class="g-connect" colspan="2">Connectivity</th>
+      <th class="g-insight" colspan="2">Insight</th>
+    </tr>
+    <tr class="criteria">
+      <th class="c-cost">1. Price (paid, entry)</th>
+      <th class="c-cost">2. Free plan</th>
+      <th class="c-people">3. Users / team size</th>
+      <th class="c-people">4. Ease of use</th>
+      <th class="c-work">5. Views &amp; task model</th>
+      <th class="c-work">6. Automation</th>
+      <th class="c-connect">7. Integrations</th>
+      <th class="c-connect">8. API &amp; customization</th>
+      <th class="c-insight">9. Reporting</th>
+      <th class="c-insight">10. Best for</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Asana</th>
+      <td>~$11 / user / mo (Starter)</td>
+      <td>Yes, up to 10 users, basic features</td>
+      <td>Small teams to enterprise; strong cross-team coordination</td>
+      <td><span class="tag good">Strong</span> Clean UI, short learning curve</td>
+      <td>List, board, timeline, calendar; subtasks, dependencies, portfolios</td>
+      <td><span class="tag good">Strong</span> Rules and workflow builder; limits on lower tiers</td>
+      <td><span class="tag good">Strong</span> 300+ apps (Slack, Google, Microsoft, Salesforce)</td>
+      <td><span class="tag mid">Adequate</span> Custom fields, forms, REST API</td>
+      <td><span class="tag mid">Adequate</span> Dashboards; advanced reporting on higher tiers</td>
+      <td>Cross-functional teams that need clarity on ownership and deadlines</td>
+    </tr>
+    <tr>
+      <th>Trello</th>
+      <td>~$5 / user / mo (Standard)</td>
+      <td>Yes, up to 10 collaborators per workspace</td>
+      <td>Individuals and small teams; gets unwieldy at scale</td>
+      <td><span class="tag good">Strong</span> Easiest to learn; kanban-first</td>
+      <td>Kanban boards; other views on paid plans; simple cards and checklists</td>
+      <td><span class="tag mid">Adequate</span> Butler automation; run limits on free plan</td>
+      <td><span class="tag good">Strong</span> Power-Ups for many apps (Atlassian, Slack, Google)</td>
+      <td><span class="tag mid">Adequate</span> Public API; customization via Power-Ups</td>
+      <td><span class="tag low">Limited</span> Basic dashboards on paid plans only</td>
+      <td>Simple visual workflows, personal and small-team task tracking</td>
+    </tr>
+    <tr>
+      <th>monday.com</th>
+      <td>~$9 / seat / mo (Basic; 3-seat minimum)</td>
+      <td>Yes, up to 2 seats, limited features</td>
+      <td>Small teams to enterprise; priced in seat bundles</td>
+      <td><span class="tag good">Strong</span> Highly visual, quick onboarding</td>
+      <td>Boards, Gantt, kanban, calendar, workload; flexible column types</td>
+      <td><span class="tag good">Strong</span> No-code recipes; action caps by tier</td>
+      <td><span class="tag good">Strong</span> 200+ integrations and an app marketplace</td>
+      <td><span class="tag good">Strong</span> Very customizable boards, GraphQL API</td>
+      <td><span class="tag good">Strong</span> Dashboards and widgets; advanced on Pro tier</td>
+      <td>Operations, marketing and mixed-team work that needs custom workflows</td>
+    </tr>
+    <tr>
+      <th>Jira</th>
+      <td>~$8 / user / mo (Standard)</td>
+      <td>Yes, up to 10 users</td>
+      <td>Software teams of any size; scales to large enterprises</td>
+      <td><span class="tag low">Limited</span> Powerful, but a steeper curve for non-technical users</td>
+      <td>Scrum and kanban boards, backlogs, sprints, roadmaps, issue types</td>
+      <td><span class="tag good">Strong</span> Mature rules engine; monthly run limits on lower tiers</td>
+      <td><span class="tag good">Strong</span> Atlassian suite and thousands of Marketplace apps</td>
+      <td><span class="tag good">Strong</span> Custom workflows and fields, REST API</td>
+      <td><span class="tag good">Strong</span> Velocity, burndown and control charts; JQL dashboards</td>
+      <td>Software development and agile engineering teams</td>
+    </tr>
+    <tr>
+      <th>ClickUp</th>
+      <td>~$7 / user / mo (Unlimited)</td>
+      <td>Yes, "Free Forever" with unlimited members but feature limits</td>
+      <td>Individuals to large teams; generous at low cost</td>
+      <td><span class="tag mid">Adequate</span> Feature-dense; takes time to configure</td>
+      <td>15+ views (list, board, Gantt, mind map, docs); tasks, docs and goals in one place</td>
+      <td><span class="tag good">Strong</span> Large automation library; usage limits on lower tiers</td>
+      <td><span class="tag good">Strong</span> 1,000+ via native integrations and Zapier</td>
+      <td><span class="tag good">Strong</span> Highly configurable, public API</td>
+      <td><span class="tag good">Strong</span> Dashboards and widgets; some limited by plan</td>
+      <td>Cost-conscious teams that want an all-in-one workspace</td>
+    </tr>
+    <tr>
+      <th>Smartsheet</th>
+      <td>~$9 / user / mo (Pro; paid plans cost more at scale)</td>
+      <td>Limited free tier or trial only</td>
+      <td>Mid-size to large enterprises; strong governance</td>
+      <td><span class="tag mid">Adequate</span> Spreadsheet-style and familiar to Excel users</td>
+      <td>Grid, Gantt, card, calendar; resource management and critical path</td>
+      <td><span class="tag mid">Adequate</span> Workflow automation; advanced on Business and above</td>
+      <td><span class="tag good">Strong</span> Microsoft 365, Google, Salesforce, Jira connectors</td>
+      <td><span class="tag good">Strong</span> API, formulas, Control Center for portfolios</td>
+      <td><span class="tag good">Strong</span> Dashboards, rollup reports, portfolio views</td>
+      <td>Enterprise PMOs, program management and spreadsheet-driven teams</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p class="note">Group headers span two criteria columns each. The Tool column stays pinned when scrolling horizontally.</p>
+
+  <h2>3. Recommendation</h2>
+  <p>No single tool wins for every team. The right choice depends on team type, budget and how much reporting and governance you need.</p>
+<div class="grid">
+  <div class="card top">
+    <h3>🏆 Best overall: monday.com or Asana</h3>
+    <p>For most cross-functional teams of 5–200 people, <strong>monday.com</strong> offers the best balance of ease of use, customization, integrations and reporting. <strong>Asana</strong> is a close alternative if you value structured task ownership over customizable boards.</p>
+  </div>
+  <div class="card">
+    <h3>💻 Software teams: Jira</h3>
+    <p>Choose <strong>Jira</strong> for sprints, backlogs and agile reporting. Expect to invest in setup and training, and pair it with Confluence for documentation.</p>
+  </div>
+  <div class="card">
+    <h3>💸 Best value: ClickUp</h3>
+    <p><strong>ClickUp</strong> gives the most features per dollar, with unlimited members on the free plan. Plan time for configuration, and keep your setup simple to avoid clutter.</p>
+  </div>
+  <div class="card">
+    <h3>🗂️ Simplest start: Trello</h3>
+    <p><strong>Trello</strong> suits individuals and small teams with straightforward kanban workflows. Expect to outgrow it once you need reporting or complex dependencies.</p>
+  </div>
+  <div class="card">
+    <h3>🏢 Enterprise PMOs: Smartsheet</h3>
+    <p><strong>Smartsheet</strong> fits organizations with portfolio governance, resource planning and spreadsheet-centric habits. It costs more at scale and is less suited to small teams.</p>
+  </div>
+  <div class="card">
+    <h3>✅ Suggested next steps</h3>
+    <ul>
+      <li>Shortlist two tools based on team type.</li>
+      <li>Run a 2–4 week pilot with one real project.</li>
+      <li>Check integration needs (Slack, Google, Microsoft) and plan limits on automation.</li>
+      <li>Confirm current pricing and security requirements with the vendor.</li>
+    </ul>
+  </div>
+</div>
+</div>
+</body>
+</html>

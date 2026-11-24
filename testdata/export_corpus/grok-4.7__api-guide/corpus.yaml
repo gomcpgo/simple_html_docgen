@@ -1,0 +1,8 @@
+model: grok-4.7
+doc: api-guide
+images: false
+conversation: 3MUc495al51epMosOwFmk3NoSOe
+prompt: |
+  Write a developer integration guide for a payments REST API: authentication, base URL, an endpoints table, request and response examples in JSON, curl examples, error codes table, webhooks, and rate limits.
+  
+  Create it as an HTML document with the document tools. Do not export it.

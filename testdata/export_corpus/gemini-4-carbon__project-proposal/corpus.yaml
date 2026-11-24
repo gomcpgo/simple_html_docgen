@@ -1,0 +1,8 @@
+model: gemini-4-carbon
+doc: project-proposal
+images: false
+conversation: 3MUaIEONCSFz942GRDGX2i3bnWg
+prompt: |
+  Write a project proposal for migrating a hospital's patient records system to the cloud: background, objectives, scope, a phased timeline table, a budget table with totals, team roles, risks and mitigations, and a call to action.
+  
+  Create it as an HTML document with the document tools. Do not export it.

@@ -1,0 +1,8 @@
+model: claude-haiku-5-5
+doc: cover-letter
+images: false
+conversation: 3MUYm1dMrwKIR8djVmOy6TUCMeQ
+prompt: |
+  Write a formal cover letter from Daniel Okafor applying for an operations manager role at Harbor Logistics, with sender and recipient address blocks, date, subject line, four paragraphs and a signature block.
+  
+  Create it as an HTML document with the document tools. Do not export it.

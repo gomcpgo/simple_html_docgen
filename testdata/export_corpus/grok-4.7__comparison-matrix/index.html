@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Management Tools Comparison</title>
+<style>
+  :root {
+    --ink: #1c2430;
+    --muted: #5c6775;
+    --line: #d8dee6;
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --accent: #1f4e79;
+    --accent-2: #2e6b4f;
+    --group-a: #1f4e79;
+    --group-b: #3d5a3a;
+    --group-c: #6b4c2a;
+    --soft-a: #e8f0f7;
+    --soft-b: #eaf3ea;
+    --soft-c: #f7f0e6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Calibri, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 28px 64px;
+  }
+  header.hero {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-top: 6px solid var(--accent);
+    padding: 28px 32px 22px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  }
+  header.hero h1 {
+    margin: 0 0 8px;
+    font-size: 30px;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  header.hero .subtitle {
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+  }
+  .meta {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  h2 {
+    font-size: 22px;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 17px;
+    margin: 22px 0 8px;
+  }
+  p { margin: 0 0 12px; }
+  section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 24px 28px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  }
+  @media print {
+    @page { size: landscape; margin: 0.45in; }
+    body { background: white !important; color: black !important; }
+    .wrap { max-width: none !important; padding: 0 !important; }
+    header.hero, section {
+      box-shadow: none !important;
+      background: white !important;
+      border-color: #ccc !important;
+    }
+    .table-wrap { overflow: visible !important; }
+    a { color: black !important; text-decoration: none !important; }
+    .no-print { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>Project Management Tools: A Detailed Comparison</h1>
+    <p class="subtitle">Six widely used platforms evaluated across ten criteria, with grouped headers for cost, work management, and platform depth.</p>
+    <p class="meta">Prepared 23 November 2026 · Indicative commercial terms; confirm current plans with each vendor before buying.</p>
+  </header>
+</div>
+<style>
+  .lede { font-size: 16px; max-width: 78ch; }
+  .note, .footnote { color: var(--muted); font-size: 13px; }
+  .group-key { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; padding: 0; list-style: none; }
+  .group-key li { font-size: 13px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: #fafbfc; }
+  .swatch { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 6px; vertical-align: baseline; }
+  .sw-a { background: var(--group-a); }
+  .sw-b { background: var(--group-b); }
+  .sw-c { background: var(--group-c); }
+  .sw-d { background: #3e4c59; }
+  .table-wrap { overflow-x: auto; margin-top: 8px; border: 1px solid var(--line); }
+  table.compare { border-collapse: collapse; width: max-content; min-width: 100%; font-size: 13px; line-height: 1.4; }
+  table.compare th, table.compare td { border: 1px solid var(--line); padding: 8px 10px; vertical-align: top; text-align: left; }
+  table.compare thead th { color: #fff; font-weight: 650; letter-spacing: 0.01em; }
+  table.compare .tool-head, table.compare .tool-cell { position: sticky; left: 0; z-index: 2; min-width: 148px; max-width: 168px; background: #f7f9fb; }
+  table.compare thead .tool-head { z-index: 3; background: #243140; }
+  table.compare .g-a { background: var(--group-a); }
+  table.compare .g-b { background: var(--group-b); }
+  table.compare .g-c { background: var(--group-c); }
+  table.compare .g-d { background: #3e4c59; }
+  table.compare .c-a { background: #24588a; font-weight: 600; font-size: 12px; white-space: nowrap; }
+  table.compare .c-b { background: #4a6b46; font-weight: 600; font-size: 12px; white-space: nowrap; }
+  table.compare .c-c { background: #7a5832; font-weight: 600; font-size: 12px; white-space: nowrap; }
+  table.compare .c-d { background: #4d5d6c; font-weight: 600; font-size: 12px; white-space: nowrap; }
+  table.compare tbody tr:nth-child(even) td { background: #fbfcfd; }
+  table.compare tbody tr:nth-child(even) .tool-cell { background: #f3f6f8; }
+  table.compare .tool-name { display: block; font-weight: 700; font-size: 14px; }
+  table.compare .tool-fit { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; font-weight: 500; }
+  table.compare td strong { font-weight: 650; }
+  .callout { border-left: 4px solid var(--accent); background: var(--soft-a); padding: 12px 14px; margin: 12px 0; }
+  .callout.alt { border-left-color: var(--accent-2); background: var(--soft-b); }
+  .rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .rec-card { border: 1px solid var(--line); padding: 12px 14px; background: #fafbfc; }
+  .rec-card h3 { margin: 0 0 6px; font-size: 15px; }
+  .rec-card p { margin: 0; font-size: 14px; }
+  table.decision { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 8px; }
+  table.decision th, table.decision td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  table.decision th { background: #243140; color: #fff; font-weight: 650; }
+  ul.clean { margin: 8px 0 0; padding-left: 18px; }
+  ul.clean li { margin-bottom: 6px; }
+  @media (max-width: 800px) { .rec-grid { grid-template-columns: 1fr; } }
+  @media print {
+    .table-wrap { overflow: visible !important; border-color: #bbb !important; }
+    table.compare { font-size: 9px !important; width: 100% !important; }
+    table.compare th, table.compare td { padding: 4px 5px !important; }
+    table.compare thead th, table.decision th { color: black !important; background: #eee !important; }
+    .callout, .rec-card { background: white !important; box-shadow: none !important; }
+  }
+</style>
+
+<section id="how-to-read">
+  <h2>How to read this comparison</h2>
+  <p class="lede">The six tools below cover the choices most teams actually shortlist: a cross-functional work manager (Asana), a visual operations platform (Monday.com), an engineering system of record (Jira), an all-in-one workspace (ClickUp), a kanban board (Trello), and a formal scheduler inside Microsoft 365 (Microsoft Project, with Planner as the lightweight sibling).</p>
+  <p>Ten criteria are arranged as columns under four groups. Read across a row to judge one product. Read down a column to compare one buying question. Cells describe the practical limit, not the marketing maximum.</p>
+  <ul class="group-key">
+    <li><span class="swatch sw-a"></span>Commercial — price, free plan, seat model</li>
+    <li><span class="swatch sw-b"></span>Scale &amp; access — who can be in the workspace</li>
+    <li><span class="swatch sw-c"></span>Work management — views, planning, automation</li>
+    <li><span class="swatch sw-d"></span>Platform depth — integrations and reporting</li>
+  </ul>
+  <p class="note" style="margin-top:12px;">Prices are approximate published USD list rates for annual cloud billing, as commonly quoted in vendor materials. Minimum seats, automation caps, regional tax, and enterprise discounts move the invoice. Confirm current plans before buying. This is not a quote.</p>
+</section><section id="matrix">
+  <h2>Comparison matrix</h2>
+  <p class="note">Grouped column headers span the criteria they cover. The first column is sticky when you scroll sideways.</p>
+  <div class="table-wrap">
+    <table class="compare">
+      <thead>
+        <tr>
+          <th class="tool-head" rowspan="2">Tool</th>
+          <th class="g-a" colspan="3">Commercial</th>
+          <th class="g-b" colspan="2">Scale &amp; access</th>
+          <th class="g-c" colspan="3">Work management</th>
+          <th class="g-d" colspan="2">Platform depth</th>
+        </tr>
+        <tr>
+          <th class="c-a">Price (paid entry)</th>
+          <th class="c-a">Free plan</th>
+          <th class="c-a">Seat model</th>
+          <th class="c-b">Users &amp; guests</th>
+          <th class="c-b">Permissions</th>
+          <th class="c-c">Views &amp; planning</th>
+          <th class="c-c">Automation</th>
+          <th class="c-c">Docs &amp; goals</th>
+          <th class="c-d">Integrations</th>
+          <th class="c-d">Reporting</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="tool-cell"><span class="tool-name">Asana</span><span class="tool-fit">Cross-functional work</span></td>
+          <td><strong>Starter ~$10.99</strong> per user / month (annual). Advanced ~$24.99. Enterprise custom. A Starter add-on exists for AI features.</td>
+          <td>Yes. Up to 10 teammates, unlimited tasks, list / board / calendar. No timeline, no workflow builder, no custom fields on the free tier.</td>
+          <td>Per user. Guests (external, project-limited) are free and do not consume a paid seat. View-only and comment-only access is available on higher tiers.</td>
+          <td>Personal, Starter, and Advanced have no hard user cap. Enterprise+ is the tier that adds portfolio-level controls and admin scale. Guests are unlimited in practice for collaboration.</td>
+          <td>Project, team, and organization roles. Private projects from paid plans. Admin console, SAML SSO, and SCIM from Enterprise. Field-level and approval controls improve on Advanced and above.</td>
+          <td>List, board, calendar, timeline (Gantt-style) from Starter. Workload and goals from Advanced. Portfolios and capacity planning from Advanced / Enterprise. Dependencies and milestones are first-class.</td>
+          <td>Rules (if-this-then-that) with monthly action caps that rise by tier. Forms, approvals, and proofing on paid plans. Bundles and workflow builder on higher tiers. AI Studio is a paid add-on, not included in base seats.</td>
+          <td>Project briefs, status updates, and goals. Not a full document suite — teams usually pair it with Google Docs or Notion. Goals roll up to portfolios on Advanced+.</td>
+          <td>200+ native apps: Slack, Teams, Google Workspace, Outlook, Salesforce, Jira, GitHub, Zoom. Open REST API, webhooks, and a mature Zapier / Make surface. Enterprise has an admin API.</td>
+          <td>Dashboards with charts, workload, and universal reporting on Advanced+. Portfolio status and goal progress. Export to CSV. Advanced analytics and data export (including a data lake option) sit on Enterprise.</td>
+        </tr>
+        <tr>
+          <td class="tool-cell"><span class="tool-name">Monday.com</span><span class="tool-fit">Visual operations</span></td>
+          <td><strong>Basic ~$9</strong> per seat / month (annual, 3-seat minimum). Standard ~$12, Pro ~$19, Enterprise custom. CRM, dev, and service are separate products.</td>
+          <td>Free plan for up to 2 seats, with a 200-item / board cap and limited views. Fine for a trial, not for a team.</td>
+          <td>Per seat, with a 3-seat minimum on paid plans. Viewers and guests can be added; guest rules and item limits differ by plan. AI credits are metered separately on some tiers.</td>
+          <td>Unlimited boards on paid plans. Seat count is the commercial limit, not a product cap. Guests see only shared boards. Enterprise adds advanced account hierarchy.</td>
+          <td>Board owners, members, viewers, guests. Column permissions and board privacy from Standard / Pro. Enterprise adds SCIM, audit log, HIPAA options, and session controls.</td>
+          <td>Table, kanban, calendar, Gantt, workload, chart, map, and form views. Timeline and dependencies from Standard. Critical path, baseline, and private boards typically from Pro. Highly visual, template-heavy.</td>
+          <td>Automations and integrations share a monthly action quota (roughly 250 on Basic, 25,000 on Pro; Enterprise is high or custom). Recipes are easy for non-technical owners. AI blocks consume credits.</td>
+          <td>Workdocs for lightweight docs inside the account. Dashboards can be shared as a status page. Goals and OKR-style widgets exist but are thinner than dedicated goal tools.</td>
+          <td>200+ integrations: Slack, Teams, Gmail, Outlook, Salesforce, HubSpot, Jira, GitHub, Zoom, Adobe. Apps marketplace and a column-level API. Automation recipes double as lightweight integrations and count against the action cap.</td>
+          <td>Dashboard widgets (chart, battery, numbers, workload, Gantt) are a core selling point from Standard up. Cross-board dashboards on Pro. Scheduled PDF / email snapshots. Enterprise adds advanced analytics and audit reporting.</td>
+        </tr>
+        <tr>
+          <td class="tool-cell"><span class="tool-name">Jira</span><span class="tool-fit">Software delivery</span></td>
+          <td><strong>Standard ~$7.91</strong> per user / month (annual, list varies by seat band). Premium ~$14.54. Enterprise custom. Free to 10 users. Prices step down in larger bands.</td>
+          <td>Yes, up to 10 users, 2 GB storage, community support. Enough for a small engineering squad. No advanced roadmaps, no audit log, no SLA on Free.</td>
+          <td>Per user. Customers and stakeholders are often better modeled as Jira Service Management agents or as guests via product access, not as free external collaborators in the Asana sense.</td>
+          <td>Standard supports up to 50,000 users per site. Premium and Enterprise add sandbox, release tracks, and (on Enterprise) multiple sites and data residency choices. Automation run caps scale with tier.</td>
+          <td>Project roles, permission schemes, issue security levels. Premium adds admin insights and sandbox. Enterprise adds org-wide admin, Atlassian Guard for SSO / SCIM (often sold adjacent), and data residency.</td>
+          <td>Scrum and kanban boards, backlog, roadmap (basic on Standard, advanced Plans on Premium), calendar, timeline, list. Releases, versions, sprints, and epics are native. Not a friendly general-purpose task list for non-engineers without configuration.</td>
+          <td>Automation rules with monthly run limits (1,000 on Free, 1,700 on Standard, 1,000 per user on Premium). Deep workflow schemes, validators, and conditions. ScriptRunner and Forge apps extend this further, at extra cost and complexity.</td>
+          <td>Confluence is the companion for docs and is priced separately. Goals exist inside Plans / Atlas-style views but are not Jira’s strength. Product discovery is a separate Jira Product Discovery license.</td>
+          <td>Thousands of Marketplace apps. Native links to Bitbucket, GitHub, GitLab, Slack, Teams, Figma, Zendesk, and CI tools. REST and GraphQL APIs, webhooks, Forge, and Connect. The deepest developer ecosystem of the six.</td>
+          <td>Dashboards, filter gadgets, velocity, burndown, cumulative flow, release reports. Advanced roadmaps and cross-project plans on Premium. Analytics and sandbox insights improve on Premium / Enterprise. CSV and API export. Not a polished executive scorecard out of the box.</td>
+        </tr>
+        <tr>
+          <td class="tool-cell"><span class="tool-name">ClickUp</span><span class="tool-fit">All-in-one workspace</span></td>
+          <td><strong>Unlimited ~$7</strong> per user / month (annual). Business ~$12. Enterprise custom. ClickUp Brain is typically an add-on (~$9 / user on higher discussion, confirm current packaging).</td>
+          <td>Yes. Unlimited tasks and members on Free, with caps on spaces, custom fields, dashboards, storage (100 MB), and automations. Generous for individuals and tiny teams.</td>
+          <td>Per member. Guests are free with limits on Free and Unlimited (often 5 guests); guest caps rise or become unlimited on Business and Enterprise. View-only guests do not need a full seat.</td>
+          <td>Unlimited members on every plan, including Free. The constraint is feature gates and storage, not headcount. Hierarchy is Workspace → Space → Folder → List, which scales but can sprawl.</td>
+          <td>Custom roles from Business. Granular permissions, private views, and admin controls improve sharply on Business and Enterprise. SSO, SCIM, and advanced audit on Enterprise. Free is intentionally open inside the workspace.</td>
+          <td>15+ views: list, board, calendar, Gantt, timeline, workload, map, mind map, table, whiteboard. Sprints, milestones, dependencies, and critical path. Native time tracking and goals. Breadth is the product’s identity — and its learning-curve cost.</td>
+          <td>Automations with monthly action caps (100 on Free, 1,000 on Unlimited, 10,000 on Business, higher on Enterprise). Custom fields, forms, and proofing. AI via ClickUp Brain as an add-on. Easy to over-automate a messy hierarchy.</td>
+          <td>Docs, wikis, whiteboards, clips, and goals live in the same workspace. Strongest “replace five tools” pitch of the set. Docs are capable for specs and SOPs, weaker than Confluence or Google Docs for heavy publishing.</td>
+          <td>1,000+ integrations via native apps plus Zapier, Make, and a public API. Slack, Teams, GitHub, GitLab, Google, Outlook, Zoom, Figma, Salesforce. Webhooks and a growing app framework. Breadth is high; some connectors are thinner than Asana or Jira natives.</td>
+          <td>Dashboards with cards for tasks, time, sprints, and goals. Unlimited dashboards from Business (caps on lower tiers). Calculated fields, burndown, and workload. CSV and API export. Executive reporting is good once someone owns the dashboard taxonomy.</td>
+        </tr>
+        <tr>
+          <td class="tool-cell"><span class="tool-name">Trello</span><span class="tool-fit">Simple kanban</span></td>
+          <td><strong>Standard ~$5</strong> per user / month (annual). Premium ~$10. Enterprise ~$17.50 (often a 50-user annual minimum). Atlassian account required.</td>
+          <td>Yes. Unlimited cards, up to 10 boards per Workspace, unlimited Power-Ups on Free with a 1 Power-Up-per-board cap, 10 MB attachments, no advanced checklists.</td>
+          <td>Per user on Standard and Premium. Enterprise is commonly sold with a user minimum. Guests can be invited to a single board without joining the Workspace, which keeps casual collaborators cheap.</td>
+          <td>Unlimited Workspace members on paid plans. Free workspaces are board-capped (10). Single-board guests are the practical way to include clients. Observers exist on Premium for read-mostly stakeholders.</td>
+          <td>Workspace admin, board admin, member, observer (Premium+), guest. Collections and board-level restrictions on Premium. Enterprise adds Atlassian Guard-adjacent SSO, visibility controls, and org admin. Not a fine-grained permission scheme.</td>
+          <td>Boards, lists, cards, calendar, timeline (Premium), table, dashboard, map, workspace views. Simple dependencies via Power-Ups or Premium timeline. No real resource leveling, baselines, or critical path. Best when the work fits a board.</td>
+          <td>Butler automation: rule runs are capped (about 250 / month on Free, 1,000 on Standard, unlimited on Premium). Card buttons, scheduled commands, and email-to-board. Power-Ups extend behavior but fragment the experience.</td>
+          <td>Card descriptions and checklists only. No native docs, goals, or portfolios. Teams that outgrow the card usually leave for Asana, Monday, or Jira rather than stretching Trello.</td>
+          <td>Power-Ups for Slack, Google Drive, Jira, Confluence, Salesforce, Miro, and hundreds more. Atlassian account links it cleanly to Jira and Confluence. REST API and webhooks. Integrations are abundant but often live as Power-Ups rather than deep native objects.</td>
+          <td>Dashboard view (charts) and workspace table on Premium. Limited compared with the other five. CSV export of boards. No workload, no portfolio health, no goal rollup. Reporting is the clearest reason to graduate off Trello.</td>
+        </tr>
+        <tr>
+          <td class="tool-cell"><span class="tool-name">Microsoft Project</span><span class="tool-fit">Formal scheduling</span></td>
+          <td><strong>Planner Plan 1 ~$10</strong> per user / month. Planner and Project Plan 3 ~$30. Plan 5 ~$55. Often bundled inside Microsoft 365 — check existing licenses before buying a new seat.</td>
+          <td>No standalone free Project. Microsoft 365 subscribers get basic Planner (boards and simple plans) inside many M365 suites at no extra Project license. Full scheduling requires Plan 1 or above.</td>
+          <td>Per user, licensed through the Microsoft 365 admin center. Guests from other tenants can be added to Planner plans under Entra ID guest rules. Project desktop (Plan 3 / 5) is a named-user install, not a guest tool.</td>
+          <td>Scales with the tenant. Plan 1 is web scheduling for teams. Plan 3 adds desktop client, baselines, and richer resource views. Plan 5 adds portfolio selection and demand management. No artificial small-team cap.</td>
+          <td>Inherits Entra ID: groups, sensitivity labels, Conditional Access, SSO, and DLP from the surrounding Microsoft 365 tenant. This is the strongest identity story of the six if you already run M365. Project-specific permissions are coarser than Jira schemes.</td>
+          <td>Grid, board, timeline, and Goals in the new Planner. Project for the web and the desktop client (Plan 3+) add dependencies, constraints, baselines, critical path, resource leveling, and .mpp compatibility. The only tool here built as a scheduler first.</td>
+          <td>Power Automate is the automation layer, licensed partly via M365 and partly via premium connectors. Rules inside Planner are lighter than Monday or Asana. Strength is the surrounding cloud (Approvals, Teams workflows), not in-product recipes.</td>
+          <td>Loop, OneNote, SharePoint, and Word are the document layer — excellent if the company already lives there, invisible if it does not. Goals in Planner cover OKRs lightly. No native wiki of Confluence’s depth.</td>
+          <td>Native to Teams, Outlook, Loop, SharePoint, Power BI, and the Power Platform. Graph API for Planner and Project. Third-party connectors exist but the strategic integrations are Microsoft’s own. Weakest choice if the company standard is Google Workspace.</td>
+          <td>Planner charts are basic. Serious reporting means Power BI against the Project / Planner dataverse or Dataverse exports — the most powerful reporting path of the six, and the one that requires a BI owner. Baselines and variance live in the desktop client (Plan 3+).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="footnote">Seat prices are rounded published annual-cloud figures commonly cited by vendors and reviewers, not a live quote. Automation caps, AI packaging, and guest rules change often — treat those cells as directional. “Project” here means Microsoft Planner plus Project Plan 1 / 3 / 5, not the retired Project Online.</p>
+</section><section id="recommendation">
+  <h2>Recommendation</h2>
+  <p>There is no single best tool in this set. The right choice is the one whose default object matches how the team already talks about work. Buying the most capable product and hoping people will configure it is the usual failure mode — ClickUp and Jira both punish that approach.</p>
+
+  <div class="callout">
+    <strong>Default recommendation for a mixed company (product, marketing, ops, and a modest engineering group): Asana.</strong>
+    <p style="margin:6px 0 0;">It is the most even row in the matrix. Guests are free, the free-to-paid jump is understandable, timeline and rules arrive at the first paid tier, and reporting becomes executive-grade on Advanced without requiring a BI hire. Choose Advanced, not Starter, if you need workload, goals, or portfolios — those are the features people discover they wanted six weeks after launch.</p>
+  </div>
+
+  <h3>Choose by the job, not by the feature list</h3>
+  <div class="rec-grid">
+    <div class="rec-card">
+      <h3>Asana — cross-functional programs</h3>
+      <p>Marketing, ops, PMO, and product working in the same plans. Best balance of structure and approachability. Skip it if the core users are software engineers who already live in issues, sprints, and releases.</p>
+    </div>
+    <div class="rec-card">
+      <h3>Monday.com — visual operators</h3>
+      <p>Agencies, revenue ops, and teams that think in colorful boards and dashboards. Buy Pro if you need private boards, critical path, or a serious automation quota. Budget for the 3-seat minimum and for AI credits if you turn them on.</p>
+    </div>
+    <div class="rec-card">
+      <h3>Jira — software delivery</h3>
+      <p>Engineering system of record, especially with Bitbucket, GitHub, or a Marketplace app you already depend on. Buy Premium once you need Plans, sandbox, or higher automation. Pair it with Confluence; do not ask marketing to adopt Jira as their task list.</p>
+    </div>
+    <div class="rec-card">
+      <h3>ClickUp — one workspace, one bill</h3>
+      <p>A team that wants docs, tasks, time, whiteboards, and goals under one login and will appoint an owner to keep the hierarchy honest. Start on Unlimited; move to Business when custom roles and dashboard limits bite. Avoid it as a “we’ll figure out the structure later” rollout.</p>
+    </div>
+    <div class="rec-card">
+      <h3>Trello — a board, not a system</h3>
+      <p>Personal productivity, a single team’s kanban, or a client-facing board where guests should not see the rest of the workspace. Premium is the only tier worth paying for if you need timeline and dashboards. Leave when you need workload, portfolios, or real permissions.</p>
+    </div>
+    <div class="rec-card">
+      <h3>Microsoft Project — schedulers inside M365</h3>
+      <p>You already pay for Microsoft 365, identity is Entra ID, and someone must own a real schedule with baselines and critical path. Use included Planner for light work; buy Plan 3 when the desktop client and resource leveling are the point. Do not introduce it into a Google Workspace company.</p>
+    </div>
+  </div>
+
+  <h3>A practical buying rule</h3>
+  <table class="decision">
+    <thead>
+      <tr>
+        <th>If this is true</th>
+        <th>Buy this</th>
+        <th>Start on</th>
+        <th>Watch-out</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Several departments share one plan of record, and external partners comment often.</td>
+        <td>Asana</td>
+        <td>Advanced</td>
+        <td>AI Studio and some workflow features are add-ons or higher tiers. Price the seats you will actually assign, not the whole company directory.</td>
+      </tr>
+      <tr>
+        <td>Non-technical managers must build their own boards and dashboards in a week.</td>
+        <td>Monday.com</td>
+        <td>Pro</td>
+        <td>Automation and integration actions share a quota. A busy board can exhaust Basic or Standard mid-month.</td>
+      </tr>
+      <tr>
+        <td>The work is issues, sprints, releases, and developer toolchain links.</td>
+        <td>Jira</td>
+        <td>Standard, then Premium</td>
+        <td>Configuration debt. Appoint a Jira admin before you open the permission schemes.</td>
+      </tr>
+      <tr>
+        <td>You want to retire a stack of point tools and can fund an internal owner.</td>
+        <td>ClickUp</td>
+        <td>Unlimited, then Business</td>
+        <td>Feature breadth becomes noise. Freeze the hierarchy (spaces, folders, lists) before inviting the whole company.</td>
+      </tr>
+      <tr>
+        <td>The job is one board, or a client should see only that board.</td>
+        <td>Trello</td>
+        <td>Premium, or Free if 10 boards is enough</td>
+        <td>Reporting and permissions will force a migration later. Treat it as a deliberate ceiling, not a starter system.</td>
+      </tr>
+      <tr>
+        <td>Schedules, baselines, and Microsoft 365 are non-negotiable.</td>
+        <td>Microsoft Project</td>
+        <td>Plan 3 (Plan 1 if web-only is enough)</td>
+        <td>Reporting quality depends on Power BI skill. Confirm you are not already licensed through an E5 or existing Project SKU.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout alt">
+    <strong>What not to do.</strong>
+    <p style="margin:6px 0 0;">Do not run Jira for engineering and a second system for everyone else unless you have named an integration owner — the two backlogs will diverge in a month. Do not pilot more than two of these at once; the differences that matter (guest model, automation caps, whether reporting needs a BI person) show up in a two-week trial with a real project, not in a feature matrix. Shortlist two rows from the table above, load one live project into each, and decide on adoption friction and the invoice, not on the longest feature list.</p>
+  </div>
+  <p class="footnote">Recommendation assumes a company of roughly 20–500 people choosing a primary work-management system in 2026. Regulated industries should re-check Enterprise security add-ons (Atlassian Guard, Monday Enterprise, Microsoft Purview) against their own control list before signing.</p>
+</section></body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payments REST API — Developer Integration Guide</title>
+<style>
+  :root {
+    --ink: #1a2332;
+    --muted: #5c6b7a;
+    --line: #e4e9ef;
+    --accent: #0b6e4f;
+    --accent-soft: #e8f5f0;
+    --warn: #8a4b08;
+    --warn-bg: #fff6eb;
+    --err: #9b2c2c;
+    --err-bg: #fdecec;
+    --code-bg: #f4f7f9;
+    --card: #ffffff;
+    --page: #f7f8fa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--page);
+    line-height: 1.55;
+    font-size: 16px;
+  }
+  .wrap {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 40px 28px 72px;
+    background: var(--card);
+    box-shadow: 0 1px 4px rgba(16, 24, 40, 0.06);
+  }
+  header.hero {
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 22px;
+    margin-bottom: 28px;
+  }
+  header.hero .kicker {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  h1 { font-size: 32px; line-height: 1.2; margin: 0 0 10px; }
+  .lede { color: var(--muted); margin: 0; max-width: 68ch; }
+  nav.toc {
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 22px 0 8px;
+  }
+  nav.toc strong { display: block; margin-bottom: 6px; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent); }
+  nav.toc ol { margin: 0; padding-left: 20px; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+  h2 {
+    font-size: 22px;
+    margin: 36px 0 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+  h3 { font-size: 17px; margin: 22px 0 8px; }
+  p { margin: 0 0 12px; }
+  code, pre {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13.5px;
+  }
+  code {
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  pre {
+    background: #12202b;
+    color: #e8eef3;
+    padding: 14px 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.45;
+    margin: 10px 0 16px;
+  }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 18px;
+    font-size: 14.5px;
+  }
+  th, td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  th { background: #f0f4f7; font-weight: 650; }
+  .method {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: #fff;
+  }
+  .get { background: #1d6fbf; }
+  .post { background: #0b6e4f; }
+  .del { background: #9b2c2c; }
+  .note {
+    background: var(--warn-bg);
+    border-left: 3px solid #d97706;
+    padding: 10px 14px;
+    margin: 12px 0 16px;
+    border-radius: 0 6px 6px 0;
+    color: var(--warn);
+  }
+  .meta { color: var(--muted); font-size: 13px; margin-top: 28px; }
+  @media print {
+    body { background: white !important; }
+    .wrap { box-shadow: none !important; max-width: none; padding: 0; }
+    pre { background: #f4f7f9 !important; color: #1a2332 !important; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <p class="kicker">Northline Payments · API v1</p>
+  <h1>Developer Integration Guide</h1>
+  <p class="lede">Integrate card and bank payments, refunds, and payment-status webhooks against the Northline Payments REST API. This guide covers authentication, the resource model, request and response shapes, errors, and operational limits.</p>
+</header>
+<nav class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#auth">Authentication</a></li>
+    <li><a href="#base-url">Base URL</a></li>
+    <li><a href="#endpoints">Endpoints</a></li>
+    <li><a href="#examples">Request and response examples</a></li>
+    <li><a href="#curl">curl examples</a></li>
+    <li><a href="#errors">Error codes</a></li>
+    <li><a href="#webhooks">Webhooks</a></li>
+    <li><a href="#limits">Rate limits</a></li>
+  </ol>
+</nav>
+
+<section id="auth">
+<h2>Authentication</h2>
+<p>Every request is authenticated with a secret API key sent as a bearer token. Keys are scoped to an environment (test or live) and to a merchant account. Treat secret keys like passwords: store them in a secrets manager, never ship them in a mobile or browser app, and rotate them if they leak.</p>
+<p>Send the key on every call:</p>
+<pre><code>Authorization: Bearer sk_test_YOUR_SECRET_KEY
+Idempotency-Key: 7c9e6679-7425-40de-944b-e07fc1f90ae7</code></pre>
+<ul>
+  <li><code>sk_test_…</code> — test mode. Charges are simulated; no money moves.</li>
+  <li><code>sk_live_…</code> — live mode. Charges settle to the linked bank account.</li>
+  <li><code>pk_test_…</code> / <code>pk_live_…</code> — publishable keys, safe for client-side tokenization only. They cannot create charges.</li>
+</ul>
+<p>Mutating requests (<code>POST</code>, and refunds) should include an <code>Idempotency-Key</code> header: a UUID you generate. Replaying the same key with the same body within 24 hours returns the original response instead of creating a second payment. A different body with a reused key returns <code>409 idempotency_key_reused</code>.</p>
+<div class="note">Never log full card numbers, CVVs, or secret keys. Tokenize card data with the client SDK or a PCI-compliant vault, then charge the token server-side.</div>
+</section>
+<section id="base-url">
+<h2>Base URL</h2>
+<p>All paths in this guide are relative to the versioned base URL. The version is pinned in the path so a later major version does not change existing integrations.</p>
+<table>
+  <thead><tr><th>Environment</th><th>Base URL</th></tr></thead>
+  <tbody>
+    <tr><td>Test</td><td><code>https://api.sandbox.northlinepay.example/v1</code></td></tr>
+    <tr><td>Live</td><td><code>https://api.northlinepay.example/v1</code></td></tr>
+  </tbody>
+</table>
+<p>Use HTTPS only. Requests must send <code>Content-Type: application/json</code> and <code>Accept: application/json</code>. Amounts are integers in the currency’s minor unit (cents for USD, pence for GBP). Timestamps are ISO 8601 in UTC. Object IDs are prefixed strings such as <code>pay_</code>, <code>cus_</code>, and <code>ref_</code>.</p>
+</section>
+<section id="endpoints">
+<h2>Endpoints</h2>
+<p>Resources are JSON objects. List endpoints accept <code>limit</code> (1–100, default 20) and <code>starting_after</code> (an object ID) for cursor pagination. Successful creates return <code>201</code>; reads return <code>200</code>.</p>
+<table>
+  <thead>
+    <tr><th>Method</th><th>Path</th><th>Purpose</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="method post">POST</span></td>
+      <td><code>/payments</code></td>
+      <td>Create a payment (authorize and capture, or authorize only).</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/payments/{id}</code></td>
+      <td>Retrieve a payment by ID.</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/payments</code></td>
+      <td>List payments. Filter with <code>customer</code>, <code>status</code>, <code>created_gte</code>.</td>
+    </tr>
+    <tr>
+      <td><span class="method post">POST</span></td>
+      <td><code>/payments/{id}/capture</code></td>
+      <td>Capture a previously authorized payment, in full or in part.</td>
+    </tr>
+    <tr>
+      <td><span class="method post">POST</span></td>
+      <td><code>/refunds</code></td>
+      <td>Refund a captured payment, in full or in part.</td>
+    </tr>
+    <tr>
+      <td><span class="method post">POST</span></td>
+      <td><code>/customers</code></td>
+      <td>Create a customer to store payment methods against.</td>
+    </tr>
+    <tr>
+      <td><span class="method get">GET</span></td>
+      <td><code>/customers/{id}</code></td>
+      <td>Retrieve a customer.</td>
+    </tr>
+    <tr>
+      <td><span class="method post">POST</span></td>
+      <td><code>/payment_methods</code></td>
+      <td>Attach a tokenized card or bank account to a customer.</td>
+    </tr>
+    <tr>
+      <td><span class="method post">POST</span></td>
+      <td><code>/webhook_endpoints</code></td>
+      <td>Register an HTTPS URL to receive event notifications.</td>
+    </tr>
+  </tbody>
+</table>
+<h3>Create payment — body fields</h3>
+<table>
+  <thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>amount</code></td><td>Yes</td><td>Integer, minor units. Minimum 50 for USD.</td></tr>
+    <tr><td><code>currency</code></td><td>Yes</td><td>ISO 4217, lowercase. Example: <code>usd</code>.</td></tr>
+    <tr><td><code>payment_method</code></td><td>Yes</td><td>ID of a tokenized method, e.g. <code>pm_card_visa</code>.</td></tr>
+    <tr><td><code>customer</code></td><td>No</td><td>Customer ID. Required when reusing a saved method.</td></tr>
+    <tr><td><code>capture</code></td><td>No</td><td>Default <code>true</code>. Set <code>false</code> to authorize only.</td></tr>
+    <tr><td><code>description</code></td><td>No</td><td>Shown on the customer’s statement descriptor suffix area and in your dashboard. Max 255 characters.</td></tr>
+    <tr><td><code>metadata</code></td><td>No</td><td>Up to 20 key/value string pairs. Returned on the object and on webhooks.</td></tr>
+  </tbody>
+</table>
+</section>
+<section id="examples">
+<h2>Request and response examples</h2>
+<h3>Create and capture a payment</h3>
+<p>Request body:</p>
+<pre><code>{
+  "amount": 2499,
+  "currency": "usd",
+  "payment_method": "pm_card_visa",
+  "customer": "cus_8f3a91c2",
+  "capture": true,
+  "description": "Order 10482 — wool coat",
+  "metadata": {
+    "order_id": "10482"
+  }
+}</code></pre>
+<p>Response <code>201 Created</code>:</p>
+<pre><code>{
+  "id": "pay_3k91ab20",
+  "object": "payment",
+  "amount": 2499,
+  "amount_captured": 2499,
+  "currency": "usd",
+  "status": "succeeded",
+  "customer": "cus_8f3a91c2",
+  "payment_method": "pm_card_visa",
+  "description": "Order 10482 — wool coat",
+  "metadata": { "order_id": "10482" },
+  "created": "2026-11-01T14:22:08Z"
+}</code></pre>
+<p><code>status</code> is one of <code>requires_action</code>, <code>authorized</code>, <code>processing</code>, <code>succeeded</code>, <code>failed</code>, or <code>canceled</code>. When the issuer requires 3-D Secure, status is <code>requires_action</code> and <code>next_action.redirect_url</code> is set. Send the customer to that URL; the result arrives as a webhook, not as a browser return you should trust alone.</p>
+<h3>Refund</h3>
+<p>Request body to <code>POST /v1/refunds</code>:</p>
+<pre><code>{
+  "payment": "pay_3k91ab20",
+  "amount": 500,
+  "reason": "requested_by_customer"
+}</code></pre>
+<p>Omit <code>amount</code> to refund the full captured amount. Response <code>201</code>:</p>
+<pre><code>{
+  "id": "ref_11c04e",
+  "object": "refund",
+  "payment": "pay_3k91ab20",
+  "amount": 500,
+  "currency": "usd",
+  "status": "succeeded",
+  "reason": "requested_by_customer",
+  "created": "2026-11-02T09:01:44Z"
+}</code></pre>
+<h3>Error body</h3>
+<p>Failures use a single envelope. HTTP status matches the class of error; the machine-readable code is in <code>error.code</code>.</p>
+<pre><code>{
+  "error": {
+    "type": "card_error",
+    "code": "card_declined",
+    "message": "The card was declined.",
+    "decline_code": "insufficient_funds",
+    "payment": "pay_9aa01c",
+    "request_id": "req_6f20c1d8"
+  }
+}</code></pre>
+</section>
+<section id="curl">
+<h2>curl examples</h2>
+<p>Replace the key and IDs with values from your dashboard. These calls target the sandbox.</p>
+<h3>Create a payment</h3>
+<pre><code>curl https://api.sandbox.northlinepay.example/v1/payments \
+  -u sk_test_YOUR_SECRET_KEY: \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 7c9e6679-7425-40de-944b-e07fc1f90ae7" \
+  -d '{
+    "amount": 2499,
+    "currency": "usd",
+    "payment_method": "pm_card_visa",
+    "description": "Order 10482 — wool coat",
+    "metadata": { "order_id": "10482" }
+  }'</code></pre>
+<p><code>-u key:</code> sends HTTP Basic auth with an empty password, which the API accepts as equivalent to <code>Authorization: Bearer</code>.</p>
+<h3>Retrieve a payment</h3>
+<pre><code>curl https://api.sandbox.northlinepay.example/v1/payments/pay_3k91ab20 \
+  -u sk_test_YOUR_SECRET_KEY:</code></pre>
+<h3>Partial refund</h3>
+<pre><code>curl https://api.sandbox.northlinepay.example/v1/refunds \
+  -u sk_test_YOUR_SECRET_KEY: \
+  -H "Content-Type: application/json" \
+  -H "Idempotency-Key: 2b1a9c44-0e5d-4f1a-9c33-aa10e2d8b771" \
+  -d '{
+    "payment": "pay_3k91ab20",
+    "amount": 500,
+    "reason": "requested_by_customer"
+  }'</code></pre>
+</section>
+<section id="errors">
+<h2>Error codes</h2>
+<p>Retry only errors marked retryable, and only with the same idempotency key. Card declines are final for that attempt — ask the customer for another method rather than looping.</p>
+<table>
+  <thead>
+    <tr><th>HTTP</th><th>Code</th><th>Meaning</th><th>Retry</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>400</td><td><code>invalid_request</code></td><td>Missing or malformed field. <code>error.param</code> names the field.</td><td>No</td></tr>
+    <tr><td>401</td><td><code>authentication_failed</code></td><td>Missing, revoked, or wrong-environment API key.</td><td>No</td></tr>
+    <tr><td>402</td><td><code>card_declined</code></td><td>Issuer declined. See <code>decline_code</code> (<code>insufficient_funds</code>, <code>lost_card</code>, <code>do_not_honor</code>).</td><td>No</td></tr>
+    <tr><td>402</td><td><code>expired_card</code></td><td>Card expiry is in the past.</td><td>No</td></tr>
+    <tr><td>403</td><td><code>permission_denied</code></td><td>Key lacks the scope, or the resource belongs to another account.</td><td>No</td></tr>
+    <tr><td>404</td><td><code>resource_missing</code></td><td>Unknown payment, customer, or refund ID.</td><td>No</td></tr>
+    <tr><td>409</td><td><code>idempotency_key_reused</code></td><td>Same key sent with a different request body.</td><td>No</td></tr>
+    <tr><td>409</td><td><code>payment_already_captured</code></td><td>Capture called on a payment that is already captured or refunded.</td><td>No</td></tr>
+    <tr><td>422</td><td><code>amount_too_small</code></td><td>Amount is below the currency minimum.</td><td>No</td></tr>
+    <tr><td>429</td><td><code>rate_limit_exceeded</code></td><td>Too many requests. Honor <code>Retry-After</code>.</td><td>Yes</td></tr>
+    <tr><td>500</td><td><code>api_error</code></td><td>Unexpected server error. Safe to retry with the same idempotency key.</td><td>Yes</td></tr>
+    <tr><td>503</td><td><code>service_unavailable</code></td><td>Temporary outage or maintenance.</td><td>Yes</td></tr>
+  </tbody>
+</table>
+<p>Every error response includes <code>request_id</code>. Include it when contacting support.</p>
+</section>
+<section id="webhooks">
+<h2>Webhooks</h2>
+<p>Register an HTTPS endpoint that returns <code>2xx</code> within 10 seconds. The API delivers events as <code>POST</code> requests with <code>Content-Type: application/json</code>. Delivery is at-least-once: your handler must be idempotent on <code>event.id</code>.</p>
+<h3>Signature</h3>
+<p>Each delivery includes <code>Northline-Signature</code>:</p>
+<pre><code>t=1730470928,v1=5257a869e7ecebeda32affa62cdca3fa51cad7e77a0e56ff536d0ce8e108d8bd</code></pre>
+<p>Compute HMAC-SHA256 over <code>{t}.{raw_body}</code> using the endpoint’s signing secret (<code>whsec_…</code>), and compare to <code>v1</code> with a constant-time compare. Reject timestamps older than five minutes to limit replay. Do not parse the body before verifying.</p>
+<h3>Event envelope</h3>
+<pre><code>{
+  "id": "evt_44b91e",
+  "object": "event",
+  "type": "payment.succeeded",
+  "created": "2026-11-01T14:22:09Z",
+  "data": {
+    "object": {
+      "id": "pay_3k91ab20",
+      "object": "payment",
+      "amount": 2499,
+      "currency": "usd",
+      "status": "succeeded",
+      "metadata": { "order_id": "10482" }
+    }
+  }
+}</code></pre>
+<table>
+  <thead><tr><th>Event</th><th>When it fires</th></tr></thead>
+  <tbody>
+    <tr><td><code>payment.succeeded</code></td><td>A payment is captured and funds are pending settlement.</td></tr>
+    <tr><td><code>payment.failed</code></td><td>Authorization or capture failed after an async step.</td></tr>
+    <tr><td><code>payment.requires_action</code></td><td>The customer must complete 3-D Secure or a bank redirect.</td></tr>
+    <tr><td><code>refund.succeeded</code></td><td>A refund has been accepted by the network.</td></tr>
+    <tr><td><code>refund.failed</code></td><td>A refund could not be processed. The payment remains captured.</td></tr>
+  </tbody>
+</table>
+<p>Failed deliveries are retried with exponential backoff for 72 hours. Return <code>2xx</code> only after you have durably recorded the event. Use the dashboard to resend a single event while integrating.</p>
+</section>
+<section id="limits">
+<h2>Rate limits</h2>
+<p>Limits are applied per API key and reset on a rolling window. When you exceed a limit the API returns <code>429</code> with <code>code: rate_limit_exceeded</code> and a <code>Retry-After</code> header in seconds. Back off at least that long, then retry with the original idempotency key.</p>
+<table>
+  <thead><tr><th>Scope</th><th>Limit</th></tr></thead>
+  <tbody>
+    <tr><td>Read requests (<code>GET</code>)</td><td>100 requests / second</td></tr>
+    <tr><td>Write requests (<code>POST</code>)</td><td>25 requests / second</td></tr>
+    <tr><td>Payment creates, per key</td><td>50 requests / second burst, sustained 20 / second</td></tr>
+    <tr><td>Test-mode keys</td><td>Same ceilings, plus a daily cap of 1,000 payment creates</td></tr>
+  </tbody>
+</table>
+<p>Response headers on every call:</p>
+<ul>
+  <li><code>X-RateLimit-Limit</code> — ceiling for this route class.</li>
+  <li><code>X-RateLimit-Remaining</code> — requests left in the current window.</li>
+  <li><code>X-RateLimit-Reset</code> — unix timestamp when the window resets.</li>
+</ul>
+<div class="note">Do not poll <code>GET /payments/{id}</code> for status. Subscribe to webhooks and fetch the payment only when you need the full object.</div>
+<p>Need a higher ceiling for a launch or a batch import? Contact support with your expected peak requests per second and the key prefix. Increases are granted per live key, not account-wide.</p>
+</section>
+
+<p class="meta">Northline Payments API reference · version 2026-11-01 · not a live production contract until your account is provisioned.</p>
+</div>
+</body>
+</html>

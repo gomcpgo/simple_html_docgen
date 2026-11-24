@@ -1,6 +1,7 @@
 package export
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"sync"
@@ -39,13 +40,13 @@ func TestConcurrentExportsDoNotCollide(t *testing.T) {
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		p, err := e.ExportDocument(doc.ID, "pdf", filepath.Join(root, "out", "doc.pdf"), svc)
-		results[0] = result{"pdf", p, err}
+		res, err := e.ExportDocument(context.Background(), doc.ID, "pdf", filepath.Join(root, "out", "doc.pdf"), Options{PageSize: "a4"}, svc)
+		results[0] = result{"pdf", resultPath(res), err}
 	}()
 	go func() {
 		defer wg.Done()
-		p, err := e.ExportDocument(doc.ID, "docx", filepath.Join(root, "out", "doc.docx"), svc)
-		results[1] = result{"docx", p, err}
+		res, err := e.ExportDocument(context.Background(), doc.ID, "docx", filepath.Join(root, "out", "doc.docx"), Options{PageSize: "a4"}, svc)
+		results[1] = result{"docx", resultPath(res), err}
 	}()
 	wg.Wait()
 
@@ -63,4 +64,11 @@ func TestConcurrentExportsDoNotCollide(t *testing.T) {
 			t.Errorf("%s export wrote an empty file", r.format)
 		}
 	}
+}
+
+func resultPath(r *Result) string {
+	if r == nil {
+		return ""
+	}
+	return r.Path
 }

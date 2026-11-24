@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Blueprint — Vanguard Engineering Monthly Newsletter (November 2026)</title>
+  <style>
+    :root {
+      --navy: #14284b;
+      --slate: #2c4268;
+      --teal: #0e7490;
+      --amber: #d97706;
+      --amber-light: #fef3c7;
+      --bg-page: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-subtle: #f8fafc;
+      --border: #cbd5e1;
+      --text-main: #1e293b;
+      --text-muted: #475569;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 32px auto;
+      padding: 0 16px 40px;
+    }
+
+    .section-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 32px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--slate) 65%, var(--teal) 100%);
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 34px 36px 26px;
+      margin-bottom: 22px;
+      box-shadow: 0 6px 18px rgba(20, 40, 75, 0.18);
+    }
+
+    .banner-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+
+    .header-banner h1 {
+      margin: 0 0 8px 0;
+      font-size: 2.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .banner-tagline {
+      margin: 0 0 20px 0;
+      font-size: 1.02rem;
+      opacity: 0.92;
+    }
+
+    .issue-toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: 0.82rem;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 10px 14px;
+      border-radius: 6px;
+    }
+
+    .issue-toc span {
+      font-weight: 600;
+    }
+
+    /* Typography & Badges */
+    .kicker {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--teal);
+      margin-bottom: 6px;
+    }
+
+    h2 {
+      margin: 0 0 12px 0;
+      font-size: 1.5rem;
+      color: var(--navy);
+      line-height: 1.28;
+    }
+
+    h3 {
+      margin: 0 0 8px 0;
+      font-size: 1.12rem;
+      color: var(--navy);
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 0 0 14px 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    .byline {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 18px 0;
+      padding: 16px;
+      background: var(--bg-subtle);
+      border-left: 4px solid var(--teal);
+      border-radius: 4px;
+    }
+
+    .metric-item strong {
+      display: block;
+      font-size: 1.35rem;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+
+    .metric-item span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Two-column shorter news */
+    .two-col-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 14px;
+    }
+
+    .news-item {
+      background: var(--bg-subtle);
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 18px 20px;
+    }
+
+    .news-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--slate);
+      background: #e2e8f0;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-bottom: 8px;
+    }
+
+    /* Highlighted Callout Box for Upcoming Events */
+    .events-callout {
+      background: linear-gradient(to right, #fffbeb, #fef3c7);
+      border: 2px solid var(--amber);
+      border-left-width: 8px;
+      border-radius: 8px;
+      padding: 26px 30px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(217, 119, 6, 0.08);
+    }
+
+    .events-callout .kicker {
+      color: #b45309;
+    }
+
+    .events-list {
+      list-style: none;
+      padding: 0;
+      margin: 14px 0 0 0;
+    }
+
+    .events-list li {
+      display: flex;
+      gap: 16px;
+      padding: 12px 0;
+      border-top: 1px dashed rgba(180, 83, 9, 0.3);
+    }
+
+    .event-date {
+      min-width: 82px;
+      text-align: center;
+      background: #ffffff;
+      border: 1px solid #f59e0b;
+      border-radius: 6px;
+      padding: 6px 8px;
+      height: fit-content;
+    }
+
+    .event-date .month {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #b45309;
+    }
+
+    .event-date .day {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.1;
+    }
+
+    .event-details strong {
+      display: block;
+      color: var(--navy);
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+
+    .event-meta {
+      font-size: 0.83rem;
+      color: #78350f;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    /* Employee Spotlight */
+    .spotlight-layout {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 24px;
+      align-items: start;
+      margin-top: 12px;
+    }
+
+    .avatar-card {
+      text-align: center;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 12px;
+    }
+
+    .avatar-monogram {
+      width: 78px;
+      height: 78px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      background: var(--navy);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .avatar-role {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    blockquote.spotlight-quote {
+      margin: 14px 0;
+      padding: 12px 16px;
+      border-left: 4px solid var(--teal);
+      background: var(--bg-subtle);
+      font-style: italic;
+      color: var(--navy);
+    }
+
+    /* Footer */
+    .newsletter-footer {
+      text-align: center;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      border-top: 2px solid var(--border);
+      padding: 22px 16px 8px;
+      margin-top: 10px;
+    }
+
+    .footer-links {
+      margin: 8px 0;
+      font-weight: 600;
+      color: var(--slate);
+    }
+
+    @media (max-width: 640px) {
+      .two-col-grid,
+      .metrics-bar,
+      .spotlight-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .header-banner {
+        background: #ffffff !important;
+        color: var(--navy) !important;
+        border: 2px solid var(--navy) !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+      .banner-top {
+        border-bottom-color: var(--border) !important;
+      }
+      .issue-toc {
+        background: transparent !important;
+        border: 1px solid var(--border) !important;
+      }
+      .section-card,
+      .news-item,
+      .events-callout,
+      .avatar-card,
+      .metrics-bar,
+      blockquote.spotlight-quote {
+        background: #ffffff !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+      .section-card,
+      .events-callout {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header-banner">
+    <div class="banner-top">
+      <span>Vanguard Structural &amp; Systems Engineering</span>
+      <span>Issue No. 47 &bull; November 2026</span>
+    </div>
+    <h1>THE BLUEPRINT</h1>
+    <p class="banner-tagline">Monthly news, project milestones, and team stories across our 200-person engineering practice</p>
+    <div class="issue-toc">
+      <span>In This Issue:</span>
+      <span>&bull; Lead Story: Harborview Microgrid</span>
+      <span>&bull; Firm Updates</span>
+      <span>&bull; Upcoming Events</span>
+      <span>&bull; Employee Spotlight</span>
+    </div>
+  </header>
+  <section class="section-card">
+    <span class="kicker">Lead Story &bull; Project Milestone</span>
+    <h2>Vanguard Commissions 18-MW Harborview Transit &amp; Hospital Microgrid Ahead of Schedule</h2>
+    <div class="byline">By Elena Rostova, PE, Director of Power &amp; Controls &bull; November 23, 2026</div>
+    <p>
+      Last Thursday at 04:00 EST, a 34-person multidisciplinary team spanning our Power Systems, Civil-Structural, and Embedded Controls groups completed live islanding verification for the <strong>Harborview Regional Resilience Microgrid</strong>. Under full simulated grid-loss conditions, the facility seamlessly transitioned both the Harborview Trauma Center and the Eastside Light-Rail Traction Substation onto local battery storage and combined heat-and-power generation in under 68 milliseconds.
+    </p>
+    <div class="metrics-bar">
+      <div class="metric-item">
+        <strong>18.4 MW</strong>
+        <span>Peak Islanded Capacity</span>
+      </div>
+      <div class="metric-item">
+        <strong>67.4 ms</strong>
+        <span>Grid-to-Island Transfer Time</span>
+      </div>
+      <div class="metric-item">
+        <strong>0</strong>
+        <span>Recordable Safety Incidents (41,200 hrs)</span>
+      </div>
+    </div>
+    <p>
+      Originally slated for turnover in mid-December, our field commissioning crew shaved three weeks off the critical path by building a hardware-in-the-loop digital twin in our Denver lab prior to switchgear delivery. That upfront simulation caught two relay coordination edge cases before a single cable was pulled on-site.
+    </p>
+    <p>
+      Special recognition goes to site lead <strong>Marcus Vance</strong>, structural foundation lead <strong>Priya Nair</strong>, and the entire protection-and-controls bench across our Boston, Denver, and Seattle offices. We will host a technical lessons-learned brown bag on December 4 to walk through the controller architecture and seismic anchorage details.
+    </p>
+  </section>
+  <section class="section-card">
+    <span class="kicker">Around the Firm</span>
+    <h2>Briefings &amp; Practice Updates</h2>
+    <div class="two-col-grid">
+      <article class="news-item">
+        <span class="news-tag">Tools &amp; Compute</span>
+        <h3>FEA &amp; CFD Cluster Upgrade Live</h3>
+        <p>
+          IT and Computational Engineering completed the migration to our new 16-node GPU/CPU solver cluster over the weekend. Early benchmarks on transient wind-loading models show a <strong>3.4&times; reduction in runtime</strong>. Check the #hpc-queue channel for updated Slurm job templates.
+        </p>
+      </article>
+
+      <article class="news-item">
+        <span class="news-tag">New Win</span>
+        <h3>Alder Creek Fish-Passage Bridge</h3>
+        <p>
+          Our Civil &amp; Structural group secured the $4.2M final design contract for the 240-foot Alder Creek Steel Arch Replacement in Oregon. Kickoff begins December 7, with geotechnical borings scheduled ahead of winter river highs.
+        </p>
+      </article>
+
+      <article class="news-item">
+        <span class="news-tag">Licensure &amp; Growth</span>
+        <h3>Six New Professional Engineers!</h3>
+        <p>
+          Join us in congratulating <strong>Hannah Cho, Devon Brooks, Mateo Silva, Aisha Patel, Liam O'Connor,</strong> and <strong>Grace Lindqvist</strong> on passing their October PE and SE exams! Vanguard's exam-prep stipend and peer study cohorts reopen for spring registration on January 5.
+        </p>
+      </article>
+
+      <article class="news-item">
+        <span class="news-tag">Quality &amp; Safety</span>
+        <h3>ISO 9001 Surveillance Audit Passed</h3>
+        <p>
+          External auditors wrapped up our annual quality management review with <strong>zero non-conformances</strong> across 14 sampled project binders. Thank you to every project engineer who kept calc-check logs and revision stamps razor-sharp.
+        </p>
+      </article>
+    </div>
+  </section>
+  <aside class="events-callout">
+    <span class="kicker">Mark Your Calendar</span>
+    <h2>Upcoming Firm Events &amp; Deadlines</h2>
+    <p>Key technical sessions, community drives, and year-end gatherings across our Boston, Denver, and Seattle offices:</p>
+    <ul class="events-list">
+      <li>
+        <div class="event-date">
+          <span class="month">Dec</span>
+          <span class="day">04</span>
+        </div>
+        <div class="event-details">
+          <strong>Technical Brown Bag: Harborview HIL Microgrid Architecture</strong>
+          <div class="event-meta">12:00 PM &ndash; 1:00 PM EST &bull; Hybrid (Denver Conf. Room A + Teams Live) &bull; 1.0 PDH Credit</div>
+          <p>Deep dive into hardware-in-the-loop relay testing and seismic battery rack anchorage. Lunch provided in all three offices.</p>
+        </div>
+      </li>
+      <li>
+        <div class="event-date">
+          <span class="month">Dec</span>
+          <span class="day">10</span>
+        </div>
+        <div class="event-details">
+          <strong>STEM Robotics Mentorship Build Night</strong>
+          <div class="event-meta">5:30 PM &ndash; 8:00 PM Local Time &bull; Boston &amp; Seattle Fabrication Labs</div>
+          <p>Volunteer alongside local high school FIRST Robotics students to machine drivetrain brackets and debug CAN-bus wiring.</p>
+        </div>
+      </li>
+      <li>
+        <div class="event-date">
+          <span class="month">Dec</span>
+          <span class="day">17</span>
+        </div>
+        <div class="event-details">
+          <strong>Annual Winter Town Hall &amp; Year-End Celebration</strong>
+          <div class="event-meta">3:30 PM EST All-Hands Broadcast &bull; 5:30 PM Regional Dinners</div>
+          <p>2026 retrospective, Q1 project backlog outlook, annual Golden Caliper Innovation Awards, and regional evening receptions.</p>
+        </div>
+      </li>
+      <li>
+        <div class="event-date">
+          <span class="month">Dec</span>
+          <span class="day">21</span>
+        </div>
+        <div class="event-details">
+          <strong>Year-End Timesheet &amp; Expense Cutoff</strong>
+          <div class="event-meta">5:00 PM Local Time &bull; Deltek Vision Portal</div>
+          <p>Please submit all December billable hours and PE renewal reimbursements prior to the Dec 24 &ndash; Jan 1 firmwide winter shutdown.</p>
+        </div>
+      </li>
+    </ul>
+  </aside>
+  <section class="section-card">
+    <span class="kicker">Employee Spotlight</span>
+    <h2>Meet Tomás Herrera, SE &mdash; Senior Bridge &amp; Seismic Engineer</h2>
+    <div class="spotlight-layout">
+      <div class="avatar-card">
+        <div class="avatar-monogram" aria-hidden="true">TH</div>
+        <strong>Tomás Herrera, SE</strong>
+        <div class="avatar-role">
+          Structural Practice<br />
+          Seattle Office<br />
+          <em>6 Years at Vanguard</em>
+        </div>
+      </div>
+      <div>
+        <p>
+          If you have ever used Vanguard's automated nonlinear pushover scripts in OpenSees—or tasted the legendary smoked brisket at the Seattle summer picnic—you already know <strong>Tomás Herrera</strong>. Since joining our 45-person Seattle studio in 2020, Tomás has led seismic retrofit designs for nine lifeline bridges and mentored a dozen junior engineers through their SE lateral exams.
+        </p>
+        <blockquote class="spotlight-quote">
+          &ldquo;What keeps me energized in a 200-person firm is the sweet spot of scale: we tackle infrastructure problems big enough to matter to an entire city, yet I can walk twenty feet down the hall and whiteboard a soil-structure interaction puzzle with the geotech lead in ten minutes.&rdquo;
+        </blockquote>
+        <p>
+          <strong>Current obsession at work:</strong> Developing parametric base-isolation connection details for the Alder Creek Steel Arch Replacement.<br />
+          <strong>Outside the office:</strong> Restoring a 1978 steel-frame touring bicycle, sea kayaking around Puget Sound, and coaching his daughter's U-10 soccer squad.<br />
+          <strong>Ask him about:</strong> Post-tensioned rocking bridge piers, cast-iron sourdough baking, or his favorite rainy-day Espresso spots in Pioneer Square.
+        </p>
+      </div>
+    </div>
+  </section>
+  <footer class="newsletter-footer">
+    <div><strong>Vanguard Structural &amp; Systems Engineering, Inc.</strong> &bull; 200 Strong Across Boston &bull; Denver &bull; Seattle</div>
+    <div class="footer-links">
+      Intranet: <code>hub.vanguard-eng.internal</code> &nbsp;|&nbsp; Submit December Story Tips: <code>blueprint@vanguard-eng.internal</code> &nbsp;|&nbsp; Safety Hotline: <code>ext. 4110</code>
+    </div>
+    <div>Published monthly by Internal Communications &amp; Technical Practice Leadership &bull; Internal Distribution Only &bull; &copy; November 2026</div>
+  </footer>
+</body>
+</html>

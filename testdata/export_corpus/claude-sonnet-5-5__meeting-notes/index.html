@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Sprint Planning Meeting Notes</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; color: #222; max-width: 820px; margin: 30px auto; padding: 0 20px; line-height: 1.5; }
+  h1 { margin-bottom: 4px; color: #1f3a5f; }
+  h2 { color: #1f3a5f; border-bottom: 2px solid #d5deea; padding-bottom: 4px; margin-top: 32px; }
+  h3 { margin-bottom: 4px; }
+  .meta { color: #555; margin-bottom: 20px; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+  th, td { border: 1px solid #ccd3dc; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #eef2f7; }
+  .decision { background: #f1f7ee; border-left: 4px solid #5a9a3c; padding: 8px 12px; margin: 8px 0; }
+  ul.checklist { list-style: none; padding-left: 0; }
+  ul.checklist li { margin: 8px 0; }
+  @media print {
+    body { background: white !important; max-width: none; margin: 0; }
+    .decision { background: none !important; }
+    th { background: #eee !important; }
+    * { box-shadow: none !important; text-shadow: none !important; }
+  }
+</style>
+</head>
+<body>
+<h1>Sprint Planning Meeting Notes</h1>
+<div class="meta">
+  <strong>Meeting:</strong> Sprint 24 Planning &nbsp;|&nbsp; <strong>Date:</strong> Monday, November 23, 2026 &nbsp;|&nbsp; <strong>Time:</strong> 10:00–11:30 AM<br>
+  <strong>Sprint dates:</strong> Nov 24 – Dec 7, 2026 (2 weeks) &nbsp;|&nbsp; <strong>Note-taker:</strong> Priya Nair
+</div>
+<p><em>Note: This is a sample set of notes with illustrative names and details. Replace with your team's actual information.</em></p>
+
+<h2>Attendees</h2>
+<table>
+  <tr><th>Name</th><th>Role</th><th>Attendance</th></tr>
+  <tr><td>Maria Alvarez</td><td>Product Manager (facilitator)</td><td>Present</td></tr>
+  <tr><td>Daniel Kim</td><td>Engineering Lead</td><td>Present</td></tr>
+  <tr><td>Priya Nair</td><td>Scrum Master</td><td>Present</td></tr>
+  <tr><td>Tom Becker</td><td>Senior Backend Engineer</td><td>Present</td></tr>
+  <tr><td>Aisha Rahman</td><td>Frontend Engineer</td><td>Present</td></tr>
+  <tr><td>Leo Chen</td><td>Product Designer</td><td>Present</td></tr>
+  <tr><td>Sofia Rossi</td><td>QA Engineer</td><td>Present</td></tr>
+  <tr><td>Marcus Johnson</td><td>Data Analyst</td><td>Absent (sent input in advance)</td></tr>
+</table>
+
+<h2>Agenda</h2>
+<ol>
+  <li>Review of Sprint 23 outcomes and velocity (10 min)</li>
+  <li>Sprint 24 goal and priorities (15 min)</li>
+  <li>Backlog review and story estimation (35 min)</li>
+  <li>Capacity and risks (15 min)</li>
+  <li>Wrap-up, action items and open questions (15 min)</li>
+</ol>
+
+<h2>Discussion</h2>
+<h3>1. Review of Sprint 23 outcomes and velocity</h3>
+<ul>
+  <li>The team completed 34 of 40 committed story points (85%). Average velocity over the last three sprints is 36 points.</li>
+  <li>Two stories carried over: the notification preferences API (blocked by a pending security review) and the onboarding checklist UI (design revisions arrived late).</li>
+  <li>Sofia noted that two escaped defects in the search filter were found after release; both are fixed and a regression test was added.</li>
+  <li>Retro follow-up: the team agreed that design hand-offs should happen before sprint start, not during the sprint.</li>
+</ul>
+
+<h3>2. Sprint 24 goal and priorities</h3>
+<ul>
+  <li>Maria proposed the goal: <strong>"Ship the redesigned onboarding flow to 25% of new users and complete notification preferences."</strong></li>
+  <li>Leadership wants onboarding conversion data before the end-of-year planning cycle, so the onboarding rollout is the top priority.</li>
+  <li>Marcus provided analytics requirements by message: track step completion and drop-off per step, plus time to first key action.</li>
+  <li>Daniel asked that tech debt work be limited to one small item to protect the goal.</li>
+</ul>
+
+<h3>3. Backlog review and story estimation</h3>
+<table>
+  <tr><th>Story</th><th>Estimate</th><th>Notes</th></tr>
+  <tr><td>Onboarding flow: steps 1–3 UI</td><td>8 pts</td><td>Carried over; designs now final</td></tr>
+  <tr><td>Onboarding: feature flag and 25% rollout</td><td>5 pts</td><td>Needs experiment config from Tom</td></tr>
+  <tr><td>Onboarding analytics events</td><td>5 pts</td><td>Depends on Marcus's event spec</td></tr>
+  <tr><td>Notification preferences API</td><td>8 pts</td><td>Carried over; security review must close first</td></tr>
+  <tr><td>Notification preferences UI</td><td>5 pts</td><td>Starts once API contract is stable</td></tr>
+  <tr><td>Upgrade database client library</td><td>3 pts</td><td>Tech debt item chosen for this sprint</td></tr>
+  <tr><td>Bug fixes and QA regression buffer</td><td>4 pts</td><td>Reserved for escaped defects</td></tr>
+</table>
+<ul>
+  <li>Total committed: 38 points, slightly above the 36-point average. The team agreed this is acceptable because the carried-over stories are partly done.</li>
+  <li>The team debated splitting the onboarding UI story. Aisha preferred to keep it whole to avoid integration overhead, and Daniel agreed.</li>
+  <li>A proposed in-app tooltip tour (13 pts) was too large and too uncertain, so it was moved to the backlog for refinement.</li>
+</ul>
+
+<h3>4. Capacity and risks</h3>
+<ul>
+  <li>Capacity is reduced by about 10% because Tom is out Dec 3–4 and the US Thanksgiving holiday falls on Nov 26–27 for some team members.</li>
+  <li><strong>Risk:</strong> the security review for the notification API may not finish this week, which would delay the UI story. Mitigation: Tom will request a review slot today.</li>
+  <li><strong>Risk:</strong> the analytics event spec is still a draft. Mitigation: Marcus and Aisha will agree on a minimal event set by Wednesday.</li>
+  <li><strong>Risk:</strong> only one QA engineer is available. Mitigation: developers will write automated tests for their own stories.</li>
+</ul>
+
+<h3>5. Wrap-up</h3>
+<ul>
+  <li>Priya recapped the commitments and action items, and the team confirmed the sprint scope.</li>
+  <li>Sprint review is scheduled for Dec 7 at 2:00 PM.</li>
+</ul>
+
+<h2>Decisions</h2>
+<div class="decision"><strong>D1.</strong> The Sprint 24 goal is to ship the redesigned onboarding flow to 25% of new users and complete notification preferences.</div>
+<div class="decision"><strong>D2.</strong> The sprint is committed at 38 story points, including a 4-point bug and regression buffer.</div>
+<div class="decision"><strong>D3.</strong> The onboarding UI story stays as one 8-point story and will not be split.</div>
+<div class="decision"><strong>D4.</strong> The in-app tooltip tour is deferred to the backlog until it is refined and re-estimated.</div>
+<div class="decision"><strong>D5.</strong> Only one tech debt item, the database client upgrade, is included this sprint.</div>
+<div class="decision"><strong>D6.</strong> From the next sprint on, design hand-offs must be complete before sprint planning.</div>
+
+<h2>Action Items</h2>
+<table>
+  <tr><th>#</th><th>Action Item</th><th>Owner</th><th>Due Date</th><th>Status</th></tr>
+  <tr><td>1</td><td>Request a security review slot for the notification preferences API</td><td>Tom Becker</td><td>Nov 23, 2026</td><td>Not started</td></tr>
+  <tr><td>2</td><td>Finalize the onboarding analytics event spec with Aisha</td><td>Marcus Johnson</td><td>Nov 25, 2026</td><td>Not started</td></tr>
+  <tr><td>3</td><td>Share final onboarding design files and specs in the team workspace</td><td>Leo Chen</td><td>Nov 24, 2026</td><td>In progress</td></tr>
+  <tr><td>4</td><td>Create the feature flag and 25% experiment configuration</td><td>Tom Becker</td><td>Dec 1, 2026</td><td>Not started</td></tr>
+  <tr><td>5</td><td>Write the test plan for onboarding and notification preferences</td><td>Sofia Rossi</td><td>Nov 27, 2026</td><td>Not started</td></tr>
+  <tr><td>6</td><td>Refine and re-estimate the tooltip tour story</td><td>Maria Alvarez</td><td>Dec 4, 2026</td><td>Not started</td></tr>
+  <tr><td>7</td><td>Update the sprint board and send the sprint goal summary to stakeholders</td><td>Priya Nair</td><td>Nov 23, 2026</td><td>Not started</td></tr>
+  <tr><td>8</td><td>Plan and schedule the database client upgrade, including a rollback plan</td><td>Daniel Kim</td><td>Nov 30, 2026</td><td>Not started</td></tr>
+</table>
+
+<h2>Open Questions</h2>
+<ul class="checklist">
+  <li>☐ When will the security review of the notification API be completed, and who is the reviewer? (Owner: Tom)</li>
+  <li>☐ Does the 25% rollout need legal or privacy sign-off for the new data collected during onboarding? (Owner: Maria)</li>
+  <li>☐ What success threshold for onboarding conversion will we use to decide on a wider rollout? (Owner: Maria, Marcus)</li>
+  <li>☐ Can a second QA resource be borrowed from another team for the final sprint week? (Owner: Daniel)</li>
+  <li>☐ Should the database client upgrade be deployed before the holiday freeze starting Dec 18? (Owner: Daniel)</li>
+  <li>☐ Is the copy for onboarding steps 2 and 3 final, or does it still need review from marketing? (Owner: Leo)</li>
+</ul>
+</body>
+</html>

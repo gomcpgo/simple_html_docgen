@@ -1,0 +1,8 @@
+model: claude-haiku-5-5
+doc: policy-handbook
+images: false
+conversation: 3MUcZQRjN4wuXeEF3HmBi2leuhS
+prompt: |
+  Write an employee remote-work policy: purpose, scope, definitions, eligibility, numbered policy sections with nested sub-clauses, equipment and security requirements, a responsibilities table, and an acknowledgement section with signature lines.
+  
+  Create it as an HTML document with the document tools. Do not export it.

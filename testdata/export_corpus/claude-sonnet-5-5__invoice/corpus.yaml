@@ -1,0 +1,8 @@
+model: claude-sonnet-5-5
+doc: invoice
+images: false
+conversation: 3MUZjlaiBYTL8nPo0jkfTUpMjzo
+prompt: |
+  Create an invoice from Brightline Design Studio to Acme Corp: logo area, invoice number, dates, bill-to and ship-to blocks, a line-item table with quantity, rate and amount, subtotal, tax, discount and total, payment terms and bank details.
+  
+  Create it as an HTML document with the document tools. Do not export it.

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sprint Planning Meeting Notes</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; color: #1f2937; max-width: 880px; margin: 40px auto; padding: 0 24px; line-height: 1.55; }
+  h1 { font-size: 26px; margin-bottom: 4px; }
+  .subtitle { color: #6b7280; margin-top: 0; }
+  h2 { font-size: 19px; border-bottom: 2px solid #e5e7eb; padding-bottom: 4px; margin-top: 32px; }
+  h3 { font-size: 16px; margin-bottom: 6px; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 14px; }
+  th, td { border: 1px solid #d1d5db; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #f3f4f6; }
+  .meta td:first-child { width: 160px; font-weight: 600; background: #f9fafb; }
+  .decision { border-left: 4px solid #2563eb; background: #eff6ff; padding: 8px 12px; margin: 8px 0; }
+  .note { color: #4b5563; font-size: 14px; }
+  ul.checklist { list-style: none; padding-left: 0; }
+  ul.checklist li::before { content: "\2610  "; font-size: 16px; }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 12px; background: #e5e7eb; }
+  @media print {
+    body { background: white !important; color: #000; margin: 0; max-width: none; }
+    .decision { background: none !important; border-left: 3px solid #000; }
+    th { background: #eee !important; }
+    h2 { page-break-after: avoid; }
+    table, .decision { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<h1>Sprint Planning Meeting Notes</h1>
+<p class="subtitle">Sprint 24 planning &middot; Product Team</p>
+<p class="note"><em>Draft: names, figures, and discussion points are illustrative placeholders. Replace them with the actual meeting record before circulating.</em></p>
+
+<table class="meta">
+  <tr><td>Date &amp; time</td><td>Monday, November 23, 2026 &middot; 10:00–11:00</td></tr>
+  <tr><td>Location</td><td>Conference Room B / video call</td></tr>
+  <tr><td>Facilitator</td><td>Product Manager</td></tr>
+  <tr><td>Note-taker</td><td>Scrum Master</td></tr>
+  <tr><td>Sprint</td><td>Sprint 24 (Nov 24 – Dec 5, 2026, 2 weeks)</td></tr>
+  <tr><td>Sprint goal (proposed)</td><td>Ship self-serve onboarding v1 to 100% of new signups</td></tr>
+</table>
+
+<h2>Attendees</h2>
+<table>
+  <tr><th>Name</th><th>Role</th><th>Attendance</th></tr>
+  <tr><td>Maya Chen</td><td>Product Manager (facilitator)</td><td>Present</td></tr>
+  <tr><td>Daniel Okafor</td><td>Engineering Lead</td><td>Present</td></tr>
+  <tr><td>Priya Raman</td><td>Senior Frontend Engineer</td><td>Present</td></tr>
+  <tr><td>Tomás Silva</td><td>Backend Engineer</td><td>Present</td></tr>
+  <tr><td>Aisha Bello</td><td>UX Designer</td><td>Present</td></tr>
+  <tr><td>Lee Hoffman</td><td>QA Engineer</td><td>Present</td></tr>
+  <tr><td>Sam Park</td><td>Scrum Master (note-taker)</td><td>Present</td></tr>
+  <tr><td>Grace Kim</td><td>Data Analyst</td><td>Apologies (async input provided)</td></tr>
+</table>
+
+<h2>Agenda</h2>
+<ol>
+  <li>Review previous sprint outcomes and carry-over work (10 min)</li>
+  <li>Confirm sprint goal (10 min)</li>
+  <li>Review and prioritise the backlog candidates (25 min)</li>
+  <li>Capacity check and commitment (10 min)</li>
+  <li>Risks, dependencies and open questions (5 min)</li>
+</ol>
+
+<h2>Discussion</h2>
+<h3>1. Review of Sprint 23 outcomes and carry-over</h3>
+<p>Sprint 23 closed with 14 of 17 committed story points delivered (82%). Two stories carried over: the email verification retry flow (blocked on a vendor API key until Thursday) and the analytics event schema update (QA found a regression late in the sprint). Lee noted that both regressions were caught before release. Daniel flagged that the vendor key delay was the main cause of slippage and asked that secrets requests be raised at sprint start, not mid-sprint.</p>
+
+<h3>2. Sprint goal</h3>
+<p>Maya proposed the goal: <em>ship self-serve onboarding v1 to 100% of new signups</em>. Aisha said the goal is clear but should explicitly exclude the enterprise invite flow, which is a separate track. The group agreed and added that success will be measured by onboarding completion rate, tracked from the first day of rollout.</p>
+
+<h3>3. Backlog review and prioritisation</h3>
+<p>Eleven candidate items were reviewed. Discussion centred on three:</p>
+<ul>
+  <li><strong>Onboarding checklist UI</strong> — Priya confirmed the component is ready; the remaining work is responsive layout on small screens. Must-have.</li>
+  <li><strong>Progress-saving across sessions</strong> — Tomás noted this requires a schema migration on the user profile table. Estimated at 5 points; the team wants it scheduled early so the migration can be verified in staging. Must-have.</li>
+  <li><strong>Skip-for-now analytics tagging</strong> — Grace (via async input) asked that events fire from day one. Nice-to-have if capacity allows, but instrumentation for the core flow is non-negotiable.</li>
+</ul>
+<p>The enterprise invite flow and the dark-mode settings page were deferred to the backlog for future refinement.</p>
+
+<h3>4. Capacity and commitment</h3>
+<p>Team capacity is 42 points across six engineers after accounting for the planned on-call rotation and the public holiday on Thursday, November 26. The team committed to 34 points, leaving a buffer of 8 points for unplanned work and bugs. Lee asked for at least one day of QA time to be reserved in the final three days of the sprint for regression testing.</p>
+
+<h3>5. Risks and dependencies</h3>
+<ul>
+  <li>Vendor API key for the email provider must be confirmed before Day 2 of the sprint.</li>
+  <li>The profile schema migration depends on a staging database refresh; the timing is not yet confirmed.</li>
+  <li>Legal has not yet signed off on the updated consent copy shown during onboarding.</li>
+</ul>
+
+<h2>Decisions</h2>
+<div class="decision"><strong>D1.</strong> Sprint 24 goal: ship self-serve onboarding v1 to 100% of new signups. Enterprise invite flow is out of scope.</div>
+<div class="decision"><strong>D2.</strong> Progress-saving and the onboarding checklist UI are must-haves. Analytics tagging for the core flow is must-have; extended analytics is a stretch goal.</div>
+<div class="decision"><strong>D3.</strong> Team commits to 34 story points, leaving an 8-point buffer.</div>
+<div class="decision"><strong>D4.</strong> Secrets and third-party access requests are raised at sprint kickoff going forward, not mid-sprint.</div>
+<div class="decision"><strong>D5.</strong> Enterprise invite flow and dark-mode settings page move to the backlog for refinement in the next session.</div>
+
+<h2>Action Items</h2>
+<table>
+  <tr><th>#</th><th>Action</th><th>Owner</th><th>Due date</th><th>Status</th></tr>
+  <tr><td>A1</td><td>Obtain and verify the email provider API key for the verification retry flow</td><td>Daniel Okafor</td><td>Tue, Nov 24, 2026</td><td>Open</td></tr>
+  <tr><td>A2</td><td>Confirm staging database refresh date for the profile schema migration</td><td>Tomás Silva</td><td>Wed, Nov 25, 2026</td><td>Open</td></tr>
+  <tr><td>A3</td><td>Finalise responsive layout for the onboarding checklist on small screens</td><td>Priya Raman</td><td>Fri, Dec 4, 2026</td><td>Open</td></tr>
+  <tr><td>A4</td><td>Chase Legal for sign-off on updated consent copy</td><td>Maya Chen</td><td>Wed, Nov 25, 2026</td><td>Open</td></tr>
+  <tr><td>A5</td><td>Write acceptance criteria for progress-saving and the onboarding checklist</td><td>Maya Chen</td><td>Tue, Nov 24, 2026</td><td>Open</td></tr>
+  <tr><td>A6</td><td>Define the onboarding completion event schema and send to Grace for review</td><td>Aisha Bello</td><td>Wed, Nov 25, 2026</td><td>Open</td></tr>
+  <tr><td>A7</td><td>Reserve QA capacity for Dec 3–4 regression testing on the calendar</td><td>Lee Hoffman</td><td>Tue, Nov 24, 2026</td><td>Open</td></tr>
+  <tr><td>A8</td><td>Add enterprise invite flow and dark-mode page to backlog with refinement notes</td><td>Sam Park</td><td>Mon, Nov 30, 2026</td><td>Open</td></tr>
+  <tr><td>A9</td><td>Circulate these notes and the sprint goal to stakeholders</td><td>Sam Park</td><td>Tue, Nov 24, 2026</td><td>Open</td></tr>
+</table>
+
+<h2>Open Questions</h2>
+<ul class="checklist">
+  <li>Will Legal sign off on the consent copy before the sprint's mid-point, or do we need a fallback copy ready?</li>
+  <li>Can the staging database refresh happen before Wednesday, or does the migration need to move to the second week?</li>
+  <li>What is the exact definition of "onboarding completion" for the success metric (all steps, or required steps only)?</li>
+  <li>Should progress-saving be behind a feature flag so it can be disabled without a rollback?</li>
+  <li>Who is the on-call engineer for the week of Nov 30, and does that reduce the 42-point capacity further?</li>
+  <li>Does the email provider's sandbox key work for staging, or is a production key required for end-to-end testing?</li>
+</ul>
+</body>
+</html>

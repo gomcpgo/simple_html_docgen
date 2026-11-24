@@ -1,0 +1,8 @@
+model: grok-4.7
+doc: resume
+images: false
+conversation: 3MUYO5ub6nkkK8Vi3EutNLmME4B
+prompt: |
+  Create a one-to-two page résumé for Priya Raman, a senior backend engineer with 10 years of experience (Go, Postgres, Kubernetes), with a summary, skills, experience at three companies, education and certifications. Use a modern, attractive layout.
+  
+  Create it as an HTML document with the document tools. Do not export it.

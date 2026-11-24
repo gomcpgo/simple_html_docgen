@@ -1,0 +1,8 @@
+model: grok-4.7
+doc: research-brief
+images: false
+conversation: 3MUhANNloO0a8cDvJLxxeGcnQvV
+prompt: |
+  Write a research brief on the health effects of intermittent fasting: abstract, introduction, methods summary, findings with numbered citations, a table summarising five studies, block-quoted key statements, limitations, and a references list.
+  
+  Create it as an HTML document with the document tools. Do not export it.

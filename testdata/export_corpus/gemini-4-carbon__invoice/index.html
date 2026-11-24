@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice INV-2026-0148 — Brightline Design Studio</title>
+  <style>
+    :root {
+      --ink: #0f172a;
+      --ink-muted: #475569;
+      --ink-subtle: #64748b;
+      --accent: #0284c7;
+      --accent-soft: #f0f9ff;
+      --border: #e2e8f0;
+      --surface-subtle: #f8fafc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background-color: #f1f5f9;
+      padding: 36px 16px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      max-width: 840px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 52px 56px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    /* Header & Logo Area */
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      padding-bottom: 32px;
+      border-bottom: 2px solid var(--ink);
+      margin-bottom: 32px;
+    }
+
+    .brand-block {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .logo-area {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7 0%, #0f172a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-text-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .studio-name {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      line-height: 1.15;
+    }
+
+    .studio-tagline {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    .sender-details {
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
+
+    .invoice-meta-block {
+      text-align: right;
+      min-width: 240px;
+    }
+
+    .invoice-title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 6px 18px;
+      justify-content: end;
+      font-size: 13px;
+    }
+
+    .meta-label {
+      color: var(--ink-subtle);
+      font-weight: 500;
+    }
+
+    .meta-value {
+      color: var(--ink);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status-pill {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      background-color: var(--accent-soft);
+      border: 1px solid #bae6fd;
+      border-radius: 999px;
+    }
+
+    /* Address Blocks */
+    .addresses-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-bottom: 36px;
+    }
+
+    .address-card {
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-subtle);
+      margin-bottom: 8px;
+    }
+
+    .client-company {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .address-lines {
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
+
+    /* Line-Item Table */
+    .items-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 28px;
+    }
+
+    .items-table thead th {
+      text-align: left;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-subtle);
+      padding: 12px 14px;
+      background-color: var(--surface-subtle);
+      border-top: 1px solid var(--border);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .items-table thead th.num,
+    .items-table tbody td.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .items-table tbody td {
+      padding: 16px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .item-title {
+      font-weight: 600;
+      color: var(--ink);
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .item-desc {
+      font-size: 12.5px;
+      color: var(--ink-muted);
+    }
+
+    /* Summary & Totals */
+    .summary-layout {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 40px;
+    }
+
+    .totals-box {
+      width: 340px;
+    }
+
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 4px;
+      font-size: 13.5px;
+      color: var(--ink-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .totals-row.discount {
+      color: #059669;
+    }
+
+    .totals-row .val {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .totals-row.discount .val {
+      color: #059669;
+    }
+
+    .totals-row.grand-total {
+      margin-top: 8px;
+      padding: 14px 14px;
+      background-color: var(--ink);
+      color: #ffffff;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .totals-row.grand-total .val {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* Footer: Payment Terms & Bank Details */
+    .payment-footer {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 28px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-block h3 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .footer-block p {
+      font-size: 13px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin-bottom: 8px;
+    }
+
+    .bank-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .bank-table td {
+      padding: 4px 0;
+      vertical-align: top;
+    }
+
+    .bank-table td.label {
+      color: var(--ink-subtle);
+      width: 130px;
+    }
+
+    .bank-table td.value {
+      color: var(--ink);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .thank-you-note {
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--ink-subtle);
+    }
+
+    @media print {
+      html {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      body {
+        background: #ffffff !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 16px 20px !important;
+        max-width: 100% !important;
+      }
+      .logo-mark {
+        background: none !important;
+        border: 2px solid #0f172a !important;
+      }
+      .logo-mark svg path,
+      .logo-mark svg line {
+        stroke: #0f172a !important;
+      }
+      .address-card,
+      .items-table thead th,
+      .status-pill {
+        background: #ffffff !important;
+      }
+      .totals-row.grand-total {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-top: 2px solid #0f172a !important;
+        border-bottom: 2px solid #0f172a !important;
+        border-radius: 0 !important;
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+      }
+      .totals-row.grand-total .val {
+        color: #0f172a !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="invoice-header">
+    <div class="brand-block">
+      <div class="logo-area">
+        <div class="logo-mark" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M4 17L10 7L15 14L20 6" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="4" y1="20" x2="20" y2="20" stroke="#38bdf8" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="logo-text-group">
+          <span class="studio-name">Brightline Design Studio</span>
+          <span class="studio-tagline">Brand &amp; Digital Experience</span>
+        </div>
+      </div>
+      <div class="sender-details">
+        742 Evergreen Terrace, Suite 400<br>
+        San Francisco, CA 94107, United States<br>
+        billing@brightlinedesign.studio &bull; (415) 555-0194<br>
+        Tax ID / EIN: 94-3829104
+      </div>
+    </div>
+
+    <div class="invoice-meta-block">
+      <h1 class="invoice-title">INVOICE</h1>
+      <div class="meta-grid">
+        <span class="meta-label">Invoice No.</span>
+        <span class="meta-value">INV-2026-0148</span>
+        <span class="meta-label">Issue Date</span>
+        <span class="meta-value">November 23, 2026</span>
+        <span class="meta-label">Due Date</span>
+        <span class="meta-value">December 23, 2026</span>
+        <span class="meta-label">PO Reference</span>
+        <span class="meta-value">PO-ACME-8841</span>
+      </div>
+      <span class="status-pill">Net 30 &bull; Due Dec 23, 2026</span>
+    </div>
+  </header>
+  <section class="addresses-grid" aria-label="Client Addresses">
+    <div class="address-card">
+      <div class="section-eyebrow">Bill To</div>
+      <div class="client-company">Acme Corp</div>
+      <div class="address-lines">
+        Attn: Accounts Payable &mdash; Elena Rostova<br>
+        1200 Market Street, Floor 18<br>
+        Chicago, IL 60607, United States<br>
+        ap@acmecorp.com &bull; (312) 555-0142
+      </div>
+    </div>
+
+    <div class="address-card">
+      <div class="section-eyebrow">Ship To</div>
+      <div class="client-company">Acme Corp &mdash; Brand &amp; Marketing Hub</div>
+      <div class="address-lines">
+        Attn: Marcus Vance, VP of Marketing<br>
+        450 West Fulton Market, Suite 310<br>
+        Chicago, IL 60661, United States<br>
+        deliveries@acmecorp.com &bull; (312) 555-0188
+      </div>
+    </div>
+  </section>
+
+  <section aria-label="Invoice Line Items">
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width: 52%;">Description</th>
+          <th class="num" style="width: 14%;">Quantity</th>
+          <th class="num" style="width: 16%;">Rate</th>
+          <th class="num" style="width: 18%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-title">Brand Identity System &amp; Visual Guidelines</div>
+            <div class="item-desc">Primary &amp; secondary logo lockups, color architecture, typography scale, and 48-page digital brand book.</div>
+          </td>
+          <td class="num">1</td>
+          <td class="num">$4,500.00</td>
+          <td class="num">$4,500.00</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-title">Responsive Web Design &amp; Figma UI Kit</div>
+            <div class="item-desc">12 core responsive page templates, tokenized component library, and developer handoff specifications.</div>
+          </td>
+          <td class="num">40 hrs</td>
+          <td class="num">$165.00</td>
+          <td class="num">$6,600.00</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-title">Custom Packaging &amp; Print Collateral Suite</div>
+            <div class="item-desc">Press-ready dielines for flagship product launch kit, executive stationery, and event signage assets (shipped to Fulton Market).</div>
+          </td>
+          <td class="num">1</td>
+          <td class="num">$2,200.00</td>
+          <td class="num">$2,200.00</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-title">Interactive Prototype &amp; Stakeholder Review Sessions</div>
+            <div class="item-desc">High-fidelity clickable user flows, two moderated usability walkthroughs, and final design revisions.</div>
+          </td>
+          <td class="num">12 hrs</td>
+          <td class="num">$150.00</td>
+          <td class="num">$1,800.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+  <section class="summary-layout" aria-label="Invoice Totals">
+    <div class="totals-box">
+      <div class="totals-row">
+        <span>Subtotal</span>
+        <span class="val">$15,100.00</span>
+      </div>
+      <div class="totals-row discount">
+        <span>Discount (10% Partner Retainer)</span>
+        <span class="val">&minus;$1,510.00</span>
+      </div>
+      <div class="totals-row">
+        <span>Taxable Amount</span>
+        <span class="val">$13,590.00</span>
+      </div>
+      <div class="totals-row">
+        <span>Sales Tax (8.5%)</span>
+        <span class="val">$1,155.15</span>
+      </div>
+      <div class="totals-row grand-total">
+        <span>Total Due (USD)</span>
+        <span class="val">$14,745.15</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="payment-footer">
+    <div class="footer-block">
+      <h3>Payment Terms &amp; Notes</h3>
+      <p>
+        <strong>Terms: Net 30 Days.</strong> Payment in full is due on or before <strong>December 23, 2026</strong>. Please include invoice number <strong>INV-2026-0148</strong> in your wire or ACH remittance memo.
+      </p>
+      <p>
+        Balances unpaid after the due date are subject to a 1.5% monthly late fee. All final production files and brand intellectual property transfer to Acme Corp upon receipt of full payment.
+      </p>
+    </div>
+
+    <div class="footer-block">
+      <h3>Bank &amp; Remittance Details</h3>
+      <table class="bank-table">
+        <tbody>
+          <tr>
+            <td class="label">Bank Name</td>
+            <td class="value">First Republic Commercial Bank</td>
+          </tr>
+          <tr>
+            <td class="label">Account Name</td>
+            <td class="value">Brightline Design Studio LLC</td>
+          </tr>
+          <tr>
+            <td class="label">Account Number</td>
+            <td class="value">4092 8817 3304</td>
+          </tr>
+          <tr>
+            <td class="label">ACH Routing</td>
+            <td class="value">121000358</td>
+          </tr>
+          <tr>
+            <td class="label">Wire Routing</td>
+            <td class="value">026009593</td>
+          </tr>
+          <tr>
+            <td class="label">SWIFT / BIC</td>
+            <td class="value">FRCBUS6SXXX</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </footer>
+
+  <div class="thank-you-note">
+    <span>Thank you for partnering with Brightline Design Studio.</span>
+    <span>Questions? Contact billing@brightlinedesign.studio</span>
+  </div>
+</body>
+</html>
